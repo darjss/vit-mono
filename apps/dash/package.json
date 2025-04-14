@@ -28,6 +28,7 @@
     "@trpc/next": "^11.1.0",
     "@trpc/react-query": "^11.1.0",
     "@trpc/server": "^11.1.0",
+    "@vit/api": "workspace:*",
     "@vit/db": "workspace:*",
     "@types/lodash": "^4.17.16",
     "@uploadthing/react": "^7.3.0",

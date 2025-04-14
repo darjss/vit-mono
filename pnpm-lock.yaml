@@ -4,6 +4,24 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@trpc/server':
+      specifier: ^11.0.0
+      version: 11.1.0
+    eslint:
+      specifier: ^9.23.0
+      version: 9.24.0
+    prettier:
+      specifier: ^3.5.3
+      version: 3.5.3
+    typescript:
+      specifier: ^5.8.2
+      version: 5.8.3
+    zod:
+      specifier: ^3.24.2
+      version: 3.24.2
+
 importers:
 
   .:
@@ -74,6 +92,9 @@ importers:
       '@vercel/speed-insights':
         specifier: ^1.2.0
         version: 1.2.0(next@15.3.1-canary.7(babel-plugin-react-compiler@19.0.0-beta-e993439-20250405)(react-dom@19.2.0-canary-ea05b750-20250408(react@19.2.0-canary-ea05b750-20250408))(react@19.2.0-canary-ea05b750-20250408))(react@19.2.0-canary-ea05b750-20250408)
+      '@vit/api':
+        specifier: workspace:*
+        version: link:../../packages/api
       '@vit/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -225,6 +246,37 @@ importers:
       tailwindcss:
         specifier: ^4.1.3
         version: 4.1.3
+
+  packages/api:
+    dependencies:
+      '@trpc/server':
+        specifier: 'catalog:'
+        version: 11.1.0(typescript@5.8.3)
+      '@vit/db':
+        specifier: workspace:*
+        version: link:../db
+      superjson:
+        specifier: 2.2.2
+        version: 2.2.2
+      zod:
+        specifier: 'catalog:'
+        version: 3.24.2
+    devDependencies:
+      '@workspace/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      eslint:
+        specifier: 'catalog:'
+        version: 9.24.0(jiti@2.4.2)
+      prettier:
+        specifier: 'catalog:'
+        version: 3.5.3
+      typescript:
+        specifier: 'catalog:'
+        version: 5.8.3
 
   packages/db:
     dependencies:

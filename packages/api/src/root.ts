@@ -1,5 +1,5 @@
-import { cart } from "@/server/api/routers/cart";
-import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
+import { cart } from "./router/cart";
+import { createCallerFactory, createTRPCRouter } from "./trpc";
 
 /**
  * This is the primary router for your server.
