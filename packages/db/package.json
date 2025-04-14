@@ -1,0 +1,56 @@
+{
+  "name": "@vit/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./schema": {
+      "types": "./src/schema.ts",
+      "default": "./src/schema.ts"
+    },
+    "./redis": {
+      "types": "./src/redis.ts",
+      "default": "./src/redis.ts"
+    }
+  },
+  "license": "MIT",
+  "scripts": {
+    "db:generate": "drizzle-kit generate --config=drizzle-dev.config.ts",
+    "db:migrate": "drizzle-kit migrate --config=drizzle-dev.config.ts",
+    "db:push": " drizzle-kit push --config=drizzle-dev.config.ts",
+    "db:generate:prod": "NODE_ENV=production drizzle-kit generate --config=drizzle-prod.config.ts",
+    "db:migrate:prod": " NODE_ENV=production  drizzle-kit migrate --config=drizzle-prod.config.ts",
+    "db:push:prod": "NODE_ENV=production  drizzle-kit push --config=drizzle-prod.config.ts",
+    "db:studio": "drizzle-kit studio",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.15.2",
+    "better-sqlite3": "^11.9.1",
+    "drizzle-orm": "^0.38.4",
+    "@upstash/redis": "^1.34.5"
+
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "drizzle-kit": "^0.30.5",
+    "eslint": "^9.22.0",
+    "eslint-plugin-drizzle": "^0.2.3",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@workspace/eslint-config/base"
+    ]
+  }
+}
