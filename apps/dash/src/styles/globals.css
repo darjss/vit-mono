@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --main: #ffdc58;
+    --overlay: rgba(0, 0, 0, 0.8);
+
+    --background: 39 100% 95%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 45 100% 67%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 39 100% 95%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 45 100% 67%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 0%;
+    --input: 0 0% 0%;
+    --ring: 0 0% 0%;
+
+    --chart-1: 45 100% 67%;
+    --chart-2: 173 38% 59%;
+    --chart-3: 197 27% 54%;
+    --chart-4: 43 54% 76%;
+    --chart-5: 27 67% 77%;
+
+    /* Updated sidebar colors to match the yellow/gold theme */
+    --sidebar-background: 39 100% 98%;
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: 45 100% 67%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 45 80% 90%;
+    --sidebar-accent-foreground: 0 0% 20%;
+    --sidebar-border: 45 30% 80%;
+    --sidebar-ring: 45 100% 67%;
+
+    --radius: 0.5rem;
+    --box-shadow-x: 3px;
+    --box-shadow-y: 3px;
+    --reverse-box-shadow-x: -3px;
+    --reverse-box-shadow-y: -3px;
+    --base-font-weight: 500;
+    --heading-font-weight: 800;
+  }
+
+  .dark {
+    --background: 215 22% 26%;
+    --foreground: 0 0% 90%;
+    --card: 215 28% 13%;
+    --card-foreground: 0 0% 90%;
+    --popover: 215 28% 13%;
+    --popover-foreground: 0 0% 90%;
+    --primary: 45 100% 67%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 215 22% 26%;
+    --secondary-foreground: 0 0% 90%;
+    --muted: 215 28% 13%;
+    --muted-foreground: 217 19% 27%;
+    --accent: 45 100% 67%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 90%;
+    --border: 0 0% 0%;
+    --input: 0 0% 0%;
+    --ring: 0 0% 100%;
+
+    --chart-1: 45 100% 67%; 
+    --chart-2: 160 40% 55%;
+    --chart-3: 30 60% 65%;
+    --chart-4: 280 45% 70%;
+    --chart-5: 340 55% 65%;
+
+    /* Updated dark mode sidebar colors to match the theme */
+    --sidebar-background: 215 28% 18%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 45 100% 67%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 215 22% 26%;
+    --sidebar-accent-foreground: 45 100% 67%;
+    --sidebar-border: 215 20% 30%;
+    --sidebar-ring: 45 100% 67%;
+  }
+}
+
+:root {
+  --bg: #fef2e8;
+  --bw: #fff;
+  --blank: #000;
+  --border: #000;
+  --text: #000;
+  --mtext: #000;
+  --ring: #000;
+  --ring-offset: #fff;
+
+  --border-radius: 8px;
+  --box-shadow-x: 3px;
+  --box-shadow-y: 3px;
+  --reverse-box-shadow-x: -3px;
+  --reverse-box-shadow-y: -3px;
+  --base-font-weight: 500;
+  --heading-font-weight: 800;
+
+  --shadow: var(--box-shadow-x) var(--box-shadow-y) 0px 0px var(--border);
+}
+
+.dark {
+  --bg: #374151;
+  --bw: #212121;
+  --blank: #fff;
+  --border: #000;
+  --text: #e6e6e6;
+  --mtext: #000;
+  --ring: #fff;
+  --ring-offset: #000;
+
+  --shadow: var(--box-shadow-x) var(--box-shadow-y) 0px 0px var(--border);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
