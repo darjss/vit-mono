@@ -1,8 +1,8 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { type NextRequest } from "next/server";
 
-import { appRouter } from "@/server/api/root";
-import { createTRPCContext } from "@/server/api/trpc";
+import { appRouter } from "@vit/api";
+import { createTRPCContext } from "@vit/api";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
@@ -14,8 +14,9 @@ const createContext = async (req: NextRequest) => {
   });
 };
 
-const handler = (req: NextRequest) =>
-  fetchRequestHandler({
+const handler = (req: NextRequest) =>{
+  console.log("sent trpc request to",req.url)
+  return fetchRequestHandler({
     endpoint: "/api/trpc",
     req,
     router: appRouter,
@@ -28,6 +29,6 @@ const handler = (req: NextRequest) =>
             );
           }
         : undefined,
-  });
+  });}
 
 export { handler as GET, handler as POST };

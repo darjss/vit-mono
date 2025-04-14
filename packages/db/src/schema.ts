@@ -7,7 +7,7 @@ import {
   paymentProvider,
   paymentStatus,
   status,
-} from "@/lib/constants";
+} from "./constants";
 
 export const createTable = sqliteTableCreator((name) => `ecom_vit_${name}`);
 
