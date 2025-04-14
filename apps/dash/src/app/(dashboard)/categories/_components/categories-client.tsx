@@ -11,7 +11,7 @@ import {
 } from "@workspace/ui/components/dialog";
 import { Plus } from "lucide-react";
 import CategoryForm from "./category-form";
-import type { CategorySelectType } from "@/server/db/schema";
+import type { CategorySelectType } from "@vit/db/schema";
 import RowActions from "./row-actions";
 import { deleteCategory } from "@/server/actions/category";
 import { Card, CardContent } from "@workspace/ui/components/card";

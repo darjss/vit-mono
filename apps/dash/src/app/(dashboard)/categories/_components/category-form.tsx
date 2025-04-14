@@ -15,7 +15,7 @@ import { Dispatch, SetStateAction } from "react";
 import { Card, CardContent } from "@workspace/ui/components/card";
 import SubmitButton from "@/components/submit-button";
 import { addCategory, updateCategory } from "@/server/actions/category";
-import type { CategorySelectType } from "@/server/db/schema";
+import type { CategorySelectType } from "@vit/db/schema";
 
 interface CategoryFormProps {
   category?: CategorySelectType;

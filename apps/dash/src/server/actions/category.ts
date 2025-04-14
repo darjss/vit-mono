@@ -1,8 +1,9 @@
 "use server";
 import "server-only";
 import { unstable_cacheLife as cacheLife, revalidateTag } from "next/cache";
-import { db } from "../db";
-import { CategoryInsertType, CategoriesTable } from "../db/schema";
+import { cache } from "react";
+import { db } from "@vit/db";
+import { CategoryInsertType, CategoriesTable } from "@vit/db/schema";
 import { unstable_cacheTag as cacheTag } from "next/cache";
 import { eq } from "drizzle-orm";
 import { addCategoryType } from "@/lib/zod/schema";

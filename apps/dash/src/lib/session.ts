@@ -1,6 +1,6 @@
 "use server";
 import "server-only";
-import { UserSelectType } from "@/server/db/schema";
+import { UserSelectType } from "@vit/db/schema";
 import {
   deleteSession,
   getSession as getDbSession,
@@ -10,7 +10,8 @@ import { sha256 } from "@oslojs/crypto/sha2";
 import { encodeHexLowerCase } from "@oslojs/encoding";
 import { cookies } from "next/headers";
 import { Session } from "./types";
-import { redis } from "@/server/db/redis";
+import { redis } from "@vit/db/redis";
+
 
 export async function createSession(
   token: string,
@@ -42,7 +43,7 @@ export async function validateSessionToken(
   token: string,
 ): Promise<SessionValidationResult> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-  console.log("decoded session id")
+  console.log("decoded session id");
   const result = await getDbSession(sessionId);
 
   if (result === null) {
@@ -102,7 +103,7 @@ export const auth = async (): Promise<SessionValidationResult> => {
   const cookieStore = await cookies();
   const token = cookieStore.get("session")?.value ?? null;
 
-  console.log("checking auth with session", token)
+  console.log("checking auth with session", token);
 
   if (token === null) {
     return { session: null, user: null };

@@ -10,13 +10,15 @@ import {
   PurchasesTable,
   BrandsTable,
   CategoriesTable,
-} from "@/server/db/schema";
+  type UserInsertType,
+} from "@vit/db/schema";
 import { addProductType } from "@/lib/zod/schema";
 import { addBrand } from "@/server/actions/brand";
 import { addCategory } from "@/server/actions/category";
 import { revalidateTag } from "next/cache";
+import { generateOrderNumber } from "./utils";
 
-import { db } from "@/server/db";
+import { db } from "@vit/db";
 import { eq, sql } from "drizzle-orm";
 import { faker } from "@faker-js/faker";
 import { deliveryProvider, orderStatus, paymentStatus } from "./constants";
@@ -330,13 +332,11 @@ export const seedDatabase = async () => {
 
               // Add images for this product in parallel
               await Promise.all(
-                (
-                  product.images 
-                ).map((image,index) =>
+                product.images.map((image, index) =>
                   db.insert(ProductImagesTable).values({
                     productId: productId,
                     url: image.url,
-                    isPrimary: index===0,
+                    isPrimary: index === 0,
                   }),
                 ),
               );

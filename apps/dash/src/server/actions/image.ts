@@ -1,10 +1,11 @@
 "use server";
 import "server-only";
 import { addImageType } from "@/lib/zod/schema";
-import { db } from "../db";
-import { ProductImageInsertType, ProductImagesTable } from "../db/schema";
+import { db } from "@vit/db";
+import { ProductImageInsertType, ProductImagesTable } from "@vit/db/schema";
 import { eq } from "drizzle-orm";
 import { SQLiteNumericBuilderInitial } from "drizzle-orm/sqlite-core";
+import { revalidateTag } from "next/cache";
 
 export const addImage = async (image: ProductImageInsertType) => {
   try {

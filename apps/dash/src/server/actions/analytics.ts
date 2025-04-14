@@ -1,7 +1,7 @@
 "use server";
 import "server-only";
-import { db } from "../db";
-import { redis } from "../db/redis";
+import { db } from "@vit/db";
+import { redis } from "@vit/db/redis";
 import {
   OrdersTable,
   ProductsTable,
@@ -12,11 +12,12 @@ import {
   BrandsTable,
   CategoriesTable,
   ProductImagesTable,
-} from "../db/schema";
+  PurchasesTable,
+} from "@vit/db/schema";
 import { AnalyticsData, TimeRange } from "@/lib/types";
 import { and, eq, gte, sql, count, lt, or, desc } from "drizzle-orm";
 import { calculateExpiration, getDaysFromTimeRange } from "./utils";
-import { connection } from "next/server";
+
 
 // Get average order value
 export const getAverageOrderValue = async (timeRange: TimeRange) => {
@@ -61,7 +62,7 @@ export const getSalesByCategory = async (timeRange: TimeRange) => {
     .leftJoin(ProductsTable, eq(SalesTable.productId, ProductsTable.id))
     .leftJoin(CategoriesTable, eq(ProductsTable.categoryId, CategoriesTable.id))
     .leftJoin(BrandsTable, eq(ProductsTable.brandId, BrandsTable.id))
-    .where(gte(SalesTable.createdAt,await getDaysFromTimeRange(timeRange)))
+    .where(gte(SalesTable.createdAt, await getDaysFromTimeRange(timeRange)))
     .groupBy(CategoriesTable.name, BrandsTable.name);
 };
 
@@ -70,11 +71,12 @@ export const getCustomerLifetimeValue = async () => {
   const result = await db
     .select({
       averageLifetimeValue: sql<number>`ROUND(AVG(total_spent), 2)`.as(
-        "average_lifetime_value"
+        "average_lifetime_value",
       ),
-      totalCustomers: sql<number>`COUNT(DISTINCT ${OrdersTable.customerPhone})`.as(
-        "total_customers"
-      ),
+      totalCustomers:
+        sql<number>`COUNT(DISTINCT ${OrdersTable.customerPhone})`.as(
+          "total_customers",
+        ),
       maxLifetimeValue: sql<number>`MAX(total_spent)`.as("max_lifetime_value"),
       minLifetimeValue: sql<number>`MIN(total_spent)`.as("min_lifetime_value"),
     })
@@ -86,16 +88,16 @@ export const getCustomerLifetimeValue = async () => {
         })
         .from(OrdersTable)
         .groupBy(OrdersTable.customerPhone)
-        .as("customer_totals")
+        .as("customer_totals"),
     );
-    if(result[0] === undefined){
-      return {
-        averageLifetimeValue: 0,
-        totalCustomers: 0,
-        maxLifetimeValue: 0,
-        minLifetimeValue: 0,
-      };
-    }
+  if (result[0] === undefined) {
+    return {
+      averageLifetimeValue: 0,
+      totalCustomers: 0,
+      maxLifetimeValue: 0,
+      minLifetimeValue: 0,
+    };
+  }
 
   return {
     averageLifetimeValue: result[0].averageLifetimeValue,
@@ -103,7 +105,7 @@ export const getCustomerLifetimeValue = async () => {
     maxLifetimeValue: result[0].maxLifetimeValue,
     minLifetimeValue: result[0].minLifetimeValue,
   };
-}
+};
 
 // Get repeat customers count
 export const getRepeatCustomersCount = async (timeRange: TimeRange) => {
@@ -114,7 +116,7 @@ export const getRepeatCustomersCount = async (timeRange: TimeRange) => {
     .from(OrdersTable)
     .where(
       and(
-        gte(OrdersTable.createdAt,await getDaysFromTimeRange(timeRange)),
+        gte(OrdersTable.createdAt, await getDaysFromTimeRange(timeRange)),
         sql`${OrdersTable.customerPhone} IN (
           SELECT customer_phone 
           FROM ecom_vit_order 
@@ -154,10 +156,11 @@ export const getFailedPayments = async (timeRange: TimeRange) => {
     .leftJoin(OrdersTable, eq(PaymentsTable.orderId, OrdersTable.id))
     .where(
       and(
-        gte(PaymentsTable.createdAt,await getDaysFromTimeRange(timeRange)),
+        gte(PaymentsTable.createdAt, await getDaysFromTimeRange(timeRange)),
         eq(PaymentsTable.status, "failed"),
       ),
-    ).get();
+    )
+    .get();
 };
 
 export const getLowInventoryProducts = async () => {
@@ -196,11 +199,9 @@ export const getTopBrandsBySales = async (timeRange: TimeRange) => {
     .from(SalesTable)
     .leftJoin(ProductsTable, eq(SalesTable.productId, ProductsTable.id))
     .leftJoin(BrandsTable, eq(ProductsTable.brandId, BrandsTable.id))
-.where(gte(SalesTable.createdAt, await getDaysFromTimeRange(timeRange)))
+    .where(gte(SalesTable.createdAt, await getDaysFromTimeRange(timeRange)))
     .groupBy(BrandsTable.name)
-    .orderBy(
-      sql`SUM(${SalesTable.sellingPrice} * ${SalesTable.quantitySold})`
-    )
+    .orderBy(sql`SUM(${SalesTable.sellingPrice} * ${SalesTable.quantitySold})`)
     .limit(5);
 };
 
@@ -211,7 +212,7 @@ export const getCurrentProductsValue = async () => {
     })
     .from(ProductsTable);
   return result[0]?.total || 0;
-}
+};
 
 export const getAnalyticsData = async (timeRange: TimeRange) => {
   try {

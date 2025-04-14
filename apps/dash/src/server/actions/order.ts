@@ -2,14 +2,16 @@
 import "server-only";
 
 import { addOrderType } from "@/lib/zod/schema";
-import { db } from "../db";
+import { db } from "@vit/db";
 import {
   CustomersTable,
   OrderDetailsTable,
   OrdersTable,
   PaymentsTable,
   ProductImagesTable,
-} from "../db/schema";
+  type OrderSelectType,
+  SalesTable,
+} from "@vit/db/schema";
 import { generateOrderNumber } from "@/lib/utils";
 import { createPayment } from "./payment";
 import {
@@ -24,6 +26,7 @@ import {
   gt,
   lt,
   SQL,
+  count,
 } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 import { unstable_cacheTag as cacheTag } from "next/cache";
@@ -35,12 +38,15 @@ import {
   getDaysFromTimeRange,
   shapeOrderResult,
   shapeOrderResults,
+  getDaysAgo,
+  getStartAndEndofDayAgo,
+  getStartOfDay,
 } from "./utils";
 import { addSale } from "./sales";
 import { getAverageCostOfProduct } from "./purchases";
-import { cacheLife } from "next/dist/server/use-cache/cache-life";
+
 import { redirect } from "next/navigation";
-import { redis } from "../db/redis";
+import { redis } from "@vit/db/redis";
 
 export const addOrder = async (orderInfo: addOrderType, createdAt?: Date) => {
   console.log("addOrder called with", orderInfo);
@@ -735,12 +741,12 @@ export const getPaginatedOrders = async (
 
 export const getOrderCount = async (timeRange: TimeRange) => {
   "use cache";
-  cacheTag("orders");
-  cacheLife({
-    expire: 24 * 60 * 60, // 24 hours
-    stale: 60 * 5, // 5 minutes
-    revalidate: 60 * 15, // 15 minutes
-  });
+  // cacheTag("orders");
+  // cacheLife({
+  //   expire: 24 * 60 * 60, // 24 hours
+  //   stale: 60 * 5, // 5 minutes
+  //   revalidate: 60 * 15, // 15 minutes
+  // });
 
   try {
     const result = await db

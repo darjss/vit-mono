@@ -5,10 +5,13 @@ import { FormWrapper } from "@/components/form-wrapper";
 import { editPurchaseSchema } from "@/lib/zod/schema";
 import { useAction } from "@/hooks/use-action";
 import { updatePurchase } from "@/server/actions/purchases";
-import type { PurchaseSelectType } from "@/server/db/schema";
+import type { PurchaseSelectType } from "@vit/db/schema";
 import type { Dispatch, SetStateAction } from "react";
 import SelectPurchaseProductForm from "./select-purchase-product-form";
 import SubmitButton from "@/components/submit-button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 
 const EditPurchaseForm = ({
   purchase,

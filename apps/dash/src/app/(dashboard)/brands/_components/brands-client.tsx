@@ -11,11 +11,12 @@ import {
 } from "@workspace/ui/components/dialog";
 import { Plus } from "lucide-react";
 import BrandForm from "./brand-form";
-import type { BrandSelectType } from "@/server/db/schema";
+import type { BrandSelectType } from "@vit/db/schema";
 import RowActions from "./row-actions";
 import { deleteBrand } from "@/server/actions/brand";
 import { Card, CardContent } from "@workspace/ui/components/card";
 import Image from "next/image";
+
 
 interface BrandsClientProps {
   brands: BrandSelectType[];

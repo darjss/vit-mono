@@ -1,7 +1,7 @@
 "use server";
 import "server-only";
-import { db } from "@/server/db";
-import { ProductImagesTable, ProductsTable } from "../db/schema";
+import { db } from "@vit/db";
+import { ProductImagesTable, ProductsTable } from "@vit/db/schema";
 import { and, asc, desc, eq, SQL, sql, like, gt, lt, or } from "drizzle-orm";
 import { addProductType } from "@/lib/zod/schema";
 import { z } from "zod";

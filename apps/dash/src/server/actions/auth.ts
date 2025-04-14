@@ -1,7 +1,7 @@
 "use server";
 import "server-only";
-import { db } from "../db";
-import { UserSelectType, UsersTable } from "../db/schema";
+import { db } from "@vit/db";
+import { UserSelectType, UsersTable } from "@vit/db/schema";
 import { eq } from "drizzle-orm";
 import { Session } from "@/lib/types";
 import {
@@ -9,7 +9,8 @@ import {
   revalidateTag,
   unstable_cacheTag as cacheTag,
 } from "next/cache";
-import { redis } from "../db/redis";
+import { redis } from "@vit/db/redis";
+
 export const insertSession = async (session: Session) => {
   const sessionToStore = {
     ...session,
@@ -54,16 +55,18 @@ export const redisBenchmark = async () => {
       get: 0,
     };
   }
-};  
+};
 
 export const deleteSession = async (sessionId: string) => {
   revalidateTag("session");
   return await redis.del(`session:${sessionId}`);
 };
+
 export const updateSession = async (session: Session) => {
   revalidateTag("session");
   return await redis.set(session.id, JSON.stringify(session));
 };
+
 export const createUser = async (
   googleId: string,
   username: string,
@@ -89,6 +92,7 @@ export const createUser = async (
   }
   return user;
 };
+
 export const getUserFromGoogleId = async (googleId: string) => {
   const result = await db
     .select({ user: UsersTable })

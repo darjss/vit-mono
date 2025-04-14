@@ -15,7 +15,7 @@ import { Dispatch, SetStateAction } from "react";
 import { Card, CardContent } from "@workspace/ui/components/card";
 import SubmitButton from "@/components/submit-button";
 import { addBrand, updateBrand } from "@/server/actions/brand";
-import type { BrandSelectType } from "@/server/db/schema";
+import type { BrandSelectType } from "@vit/db/schema";
 
 interface BrandFormProps {
   brand?: BrandSelectType;

@@ -9,7 +9,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@workspace/ui/components/card";
-import type { PurchaseSelectType } from "@/server/db/schema";
+import type { PurchaseSelectType } from "@vit/db/schema";
 import RowActions from "../../../(dashboard)/products/_components/row-actions";
 import { deletePurchase } from "@/server/actions/purchases";
 import EditPurchaseForm from "./edit-purchase-form";

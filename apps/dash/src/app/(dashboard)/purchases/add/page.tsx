@@ -1,5 +1,5 @@
-import { db } from "@/server/db";
 import AddPurchaseForm from "../_components/add-purchase-form";
+import { db } from "@vit/db";
 
 export default async function Page() {
   const products = await db.query.ProductsTable.findMany({

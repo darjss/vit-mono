@@ -15,7 +15,9 @@ import { ResultSet } from "@libsql/client";
 import { SQLiteTransaction } from "drizzle-orm/sqlite-core";
 import { ExtractTablesWithRelations } from "drizzle-orm";
 import { getOrderById } from "@/server/actions/order";
-import { UserSelectType } from "@/server/db/schema";
+import { UserSelectType } from "@vit/db/schema";
+import { z } from "zod";
+
 export type BrandType = Awaited<ReturnType<typeof getAllBrands>>;
 export type CategoryType = Awaited<ReturnType<typeof getAllCategories>>;
 export type ProductStatusType = (typeof status)[number];
@@ -36,8 +38,8 @@ export type OrderDeliveryProviderType = (typeof deliveryProvider)[number];
 export type TransactionType = SQLiteTransaction<
   "async",
   ResultSet,
-  typeof import("@/server/db/schema"),
-  ExtractTablesWithRelations<typeof import("@/server/db/schema")>
+  typeof import("@vit/db/schema"),
+  ExtractTablesWithRelations<typeof import("@vit/db/schema")>
 >;
 export interface ProductImageType {
   id: number;

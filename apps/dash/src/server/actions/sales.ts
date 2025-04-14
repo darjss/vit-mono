@@ -1,12 +1,14 @@
 "use server";
 import "server-only";
-import { db } from "../db";
+import { db } from "@vit/db";
 import {
   OrdersTable,
   ProductImagesTable,
   ProductsTable,
   SalesTable,
-} from "../db/schema";
+  CategoriesTable,
+  type SalesSelectType,
+} from "@vit/db/schema";
 import {
   AddSalesType,
   DashboardHomePageData,
@@ -20,7 +22,7 @@ import {
   getDaysFromTimeRange,
   getStartAndEndofDayAgo,
 } from "./utils";
-import { redis } from "../db/redis";
+import { redis } from "@vit/db/redis";
 import { getCachedOrderCount, getPendingOrders, getOrderCount } from "./order";
 
 export const addSale = async (sale: AddSalesType, tx?: TransactionType) => {
@@ -34,7 +36,7 @@ export const addSale = async (sale: AddSalesType, tx?: TransactionType) => {
 export const getAnalyticsForHome = async (timeRange: TimeRange = "daily") => {
   try {
     const result = await db
-      .select({
+    .select({
         sum: sql<number>`SUM(${SalesTable.sellingPrice} * ${SalesTable.quantitySold})`,
         cost: sql<number>`SUM(${SalesTable.productCost} * ${SalesTable.quantitySold})`,
         salesCount: sql<number>`COUNT(*)`,
@@ -191,7 +193,7 @@ export const getDashboardHomePageData = async (): Promise<
       // Proceed to fetch fresh data if cache read fails
     }
   }
-  sleep(2000)
+  sleep(2000);
   console.log("Fetching fresh dashboard homepage data");
   try {
     const [

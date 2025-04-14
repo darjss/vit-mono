@@ -5,8 +5,11 @@ import {
   PaymentStatusType,
   TransactionType,
 } from "@/lib/types";
-import { db } from "../db";
-import { PaymentsTable } from "../db/schema";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { z } from "zod";
+
+import { db } from "@vit/db";
+import { PaymentsTable } from "@vit/db/schema";
 import { eq } from "drizzle-orm";
 
 export const createPayment = async (

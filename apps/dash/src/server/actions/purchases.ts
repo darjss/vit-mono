@@ -12,10 +12,12 @@ import {
   like,
   SQLWrapper,
 } from "drizzle-orm";
-import { db } from "../db";
-import { ProductsTable, PurchasesTable } from "../db/schema";
+import { db } from "@vit/db";
+import { ProductsTable, PurchasesTable } from "@vit/db/schema";
 import { PRODUCT_PER_PAGE } from "@/lib/constants";
 import type { addPurchaseType } from "@/lib/zod/schema";
+import { revalidateTag, revalidatePath } from "next/cache";
+import { unstable_cacheTag as cacheTag } from "next/cache";
 
 // Define cursor type for purchases
 type PurchaseCursor = {
