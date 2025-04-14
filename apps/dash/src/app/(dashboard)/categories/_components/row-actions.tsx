@@ -9,14 +9,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@workspace/ui/components/alert-dialog";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@workspace/ui/components/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,7 +24,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@workspace/ui/components/dropdown-menu";
 import { useAction } from "@/hooks/use-action";
 import { Edit2, MoreVertical, Trash2 } from "lucide-react";
 import { Dispatch, JSX, SetStateAction, useState } from "react";

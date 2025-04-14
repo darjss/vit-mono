@@ -1,5 +1,10 @@
 "use client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
 import { TopBrandItem } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
 import {
@@ -10,7 +15,6 @@ import {
   YAxis,
   Tooltip,
 } from "recharts";
-
 
 interface TopBrandsChartProps {
   data: TopBrandItem[];

@@ -5,23 +5,28 @@ import {
   Calendar,
   DollarSign,
   MapPin,
-  CheckCircle, Copy
+  CheckCircle,
+  Copy,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@workspace/ui/components/badge";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import type { OrderType } from "@/lib/types";
 import RowActions from "../../../(dashboard)/products/_components/row-actions";
 import { deleteOrder, updateOrderStatus } from "@/server/actions/order";
 import EditOrderForm from "./edit-order-form";
 import type { Dispatch, SetStateAction } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@workspace/ui/components/button";
 import { toast } from "sonner";
-import { getPaymentProviderIcon, getPaymentStatusColor, getStatusColor } from "@/lib/utils";
+import {
+  getPaymentProviderIcon,
+  getPaymentStatusColor,
+  getStatusColor,
+} from "@/lib/utils";
 import { useAction } from "@/hooks/use-action";
 
 const OrderCard = ({ order }: { order: OrderType }) => {
-  const [editOrderAction, isPending]= useAction(updateOrderStatus)
-console.log("id",order.id)
+  const [editOrderAction, isPending] = useAction(updateOrderStatus);
+  console.log("id", order.id);
   return (
     <Card
       className="overflow-hidden border-l-4 transition-all duration-200 hover:shadow-md"

@@ -8,13 +8,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+} from "@workspace/ui/components/alert-dialog";
+import { Button } from "@workspace/ui/components/button";
 import {
-  Dialog, DialogContent, DialogHeader,
+  Dialog,
+  DialogContent,
+  DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from "@/components/ui/dialog";
+  DialogTrigger,
+} from "@workspace/ui/components/dialog";
 
 import {
   DropdownMenu,
@@ -23,7 +25,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@workspace/ui/components/dropdown-menu";
 import { useAction } from "@/hooks/use-action";
 import { AlertDialogAction } from "@radix-ui/react-alert-dialog";
 import { Edit2, MoreVertical, Trash2 } from "lucide-react";

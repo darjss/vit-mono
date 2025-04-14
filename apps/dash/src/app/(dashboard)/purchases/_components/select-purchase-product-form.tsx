@@ -3,8 +3,8 @@
 import { useState, useCallback } from "react";
 import { useFieldArray, type UseFormReturn } from "react-hook-form";
 import { XIcon, SearchIcon, PackageIcon, Loader2Icon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@workspace/ui/components/button";
+import { Input } from "@workspace/ui/components/input";
 import type { ProductSearchForOrderType } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { searchProductByNameForOrder } from "@/server/actions/product";
@@ -16,7 +16,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from "@workspace/ui/components/form";
 
 const SelectPurchaseProductForm = ({
   form,

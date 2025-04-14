@@ -6,7 +6,7 @@ import {
   PaginationItem,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "@workspace/ui/components/pagination";
 
 // Updated Props for Cursor Pagination
 export interface CursorPaginationProps {

@@ -1,12 +1,17 @@
 // src/app/dashboard/page.tsx (or wherever DashboardHome is)
 import { Suspense } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@workspace/ui/components/tabs";
 import { MetricsGrid } from "./_components/metric-grid";
 import TopProductsList from "./_components/top-product-list";
 import PendingOrdersList from "./_components/pending-order-list";
 import OrderSalesChart from "./_components/order-sales-chart";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardHeader, CardTitle } from "@workspace/ui/components/card";
+import { Skeleton } from "@workspace/ui/components/skeleton";
 import { getDashboardHomePageData } from "@/server/actions/sales"; // Import the action
 
 // --- Loading Component (Keep as is) ---
@@ -185,7 +190,7 @@ async function DashboardContent() {
 const DashboardHome = () => {
   return (
     <Suspense fallback={<DashboardLoading />}>
-      <DashboardContent /> 
+      <DashboardContent />
     </Suspense>
   );
 };

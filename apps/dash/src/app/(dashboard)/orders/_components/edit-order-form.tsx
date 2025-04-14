@@ -7,9 +7,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+} from "@workspace/ui/components/form";
+import { Input } from "@workspace/ui/components/input";
+import { Textarea } from "@workspace/ui/components/textarea";
 import { addOrderSchema, addOrderType } from "@/lib/zod/schema";
 import { useAction } from "@/hooks/use-action";
 import {
@@ -18,9 +18,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@workspace/ui/components/select";
 import { FormWrapper } from "@/components/form-wrapper";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import SubmitButton from "@/components/submit-button";
 import { orderStatus, paymentStatus } from "@/lib/constants";
 import { updateOrder } from "@/server/actions/order";
@@ -28,7 +28,13 @@ import { getCustomerByPhone } from "@/server/actions/customer";
 import type { UseFormReturn } from "react-hook-form";
 import SelectProductForm from "./select-product-form";
 
-const EditOrderForm = ({  order, setDialogOpen }: {  order:addOrderType, setDialogOpen:Dispatch<SetStateAction<boolean>> }) => {
+const EditOrderForm = ({
+  order,
+  setDialogOpen,
+}: {
+  order: addOrderType;
+  setDialogOpen: Dispatch<SetStateAction<boolean>>;
+}) => {
   const [action] = useAction(updateOrder);
   const [searchByPhone, isSearchByLoading] = useAction(getCustomerByPhone);
 
@@ -217,7 +223,7 @@ const EditOrderForm = ({  order, setDialogOpen }: {  order:addOrderType, setDial
                   <h3 className="mb-4 text-lg font-semibold text-primary">
                     Products
                   </h3>
-                  <SelectProductForm  form={form} />
+                  <SelectProductForm form={form} />
                 </CardContent>
               </Card>
 

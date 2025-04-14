@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes, ReactNode } from "react";
 import { Loader2 } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "@workspace/ui/components/button";
 
 interface SubmitButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isPending: boolean;

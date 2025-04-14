@@ -1,6 +1,6 @@
 "use client";
 import { Loader2Icon, Search } from "lucide-react";
-import { Input } from "../ui/input";
+import { Input } from "@workspace/ui/components/input";
 import { useCallback, useState } from "react";
 import { debounce } from "lodash";
 import { useQuery } from "@tanstack/react-query";

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import SubmitButton from "./submit-button";
-import { Input } from "./ui/input";
+import { Input } from "@workspace/ui/components/input";
 import { UseFieldArrayAppend } from "react-hook-form";
 
 export const UploadButton = ({

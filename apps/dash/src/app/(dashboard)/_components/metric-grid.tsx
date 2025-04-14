@@ -1,5 +1,5 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import {
   ArrowDown,
   ArrowUp,
@@ -14,7 +14,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@workspace/ui/components/tooltip";
 import { formatCurrency } from "@/lib/utils";
 
 export const MetricsGrid = ({

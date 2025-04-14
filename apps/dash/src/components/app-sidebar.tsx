@@ -8,7 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from "@workspace/ui/components/sidebar";
 import { sideNavItems } from "@/lib/constants";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { Edit, Package } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@workspace/ui/components/button";
+import { Badge } from "@workspace/ui/components/badge";
+import { Input } from "@workspace/ui/components/input";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import type { BrandType, CategoryType, ProductType } from "@/lib/types";
 import { deleteProduct, setProductStock } from "@/server/actions/product";
 import withEditForm from "./edit-product-form";
@@ -17,11 +17,7 @@ interface ProductCardProps {
   categories: CategoryType;
 }
 
-const ProductCard = ({
-  product,
-  brands,
-  categories,
-}: ProductCardProps) => {
+const ProductCard = ({ product, brands, categories }: ProductCardProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [stockValue, setStockValue] = useState(product.stock);
 
@@ -145,11 +141,7 @@ const ProductCard = ({
 
               <RowActions
                 id={product.id}
-                renderEditComponent={withEditForm(
-                  product,
-                  categories,
-                  brands,
-                )}
+                renderEditComponent={withEditForm(product, categories, brands)}
                 deleteFunction={deleteProduct}
               />
             </div>

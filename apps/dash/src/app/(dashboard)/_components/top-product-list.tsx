@@ -5,10 +5,10 @@ import {
   CardTitle,
   CardDescription,
   CardFooter,
-} from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+} from "@workspace/ui/components/card";
+import { ScrollArea } from "@workspace/ui/components/scroll-area";
+import { Badge } from "@workspace/ui/components/badge";
+import { Button } from "@workspace/ui/components/button";
 import { Package, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -75,7 +75,7 @@ const TopProductsList: React.FC<TopProductsListProps> = ({
 
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-medium">
-                    {product.name || "Unnamed Product"}
+                      {product.name || "Unnamed Product"}
                     </p>
                     <p className="text-sm text-muted-foreground">
                       {product.totalSold} sold

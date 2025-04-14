@@ -1,8 +1,23 @@
 {
   "extends": "@workspace/typescript-config/react-library.json",
+  
   "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "checkJs": true,
+
+    /* Bundled projects */
+    
+    "lib": ["dom", "dom.iterable", "ES2023.Array", "ES6", "ES5"],
+    "noEmit": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "preserve",
+    "plugins": [{ "name": "next" }],
+    "incremental": true,
     "baseUrl": ".",
     "paths": {
+      "@/*": ["./src/*"],
       "@workspace/ui/*": ["./src/*"]
     }
   },

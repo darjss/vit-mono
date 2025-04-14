@@ -3,16 +3,16 @@
 import Link from "next/link";
 import { parseAsString, useQueryState, createParser, parseAsJson } from "nuqs";
 import { Search, PlusCircle, ArrowUpDown, X, RotateCcw } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@workspace/ui/components/button";
+import { Input } from "@workspace/ui/components/input";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@workspace/ui/components/select";
 import { Suspense, useState, useCallback, useEffect } from "react";
 
 import { getPaginatedOrders, searchOrder } from "@/server/actions/order";

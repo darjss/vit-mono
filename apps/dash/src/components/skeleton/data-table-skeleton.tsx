@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@workspace/ui/components/skeleton";
 import {
   Table,
   TableBody,
@@ -6,8 +6,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+  } from "@workspace/ui/components/table";
+import {
+  ScrollArea,
+  ScrollBar,
+} from "@workspace/ui/components/scroll-area";
 
 export function DataTableSkeleton({
   columnCount = 1,

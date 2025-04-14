@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import { FormWrapper } from "@/components/form-wrapper";
 import { addPurchaseSchema } from "@/lib/zod/schema";
 import { useAction } from "@/hooks/use-action";

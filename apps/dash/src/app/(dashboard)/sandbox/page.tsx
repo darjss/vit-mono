@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@workspace/ui/components/button";
 import { seedDatabase, seedOnlyOrders } from "@/lib/seed";
 import { redisBenchmark } from "@/server/actions/auth";
 import { getProductBenchmark } from "@/server/actions/product";
@@ -7,7 +7,7 @@ import { Suspense } from "react";
 
 const Page = async () => {
   const dbQueryTime = await getProductBenchmark();
-  
+
   const redisQueryTime = await redisBenchmark();
   return (
     <div className="space-y-4">

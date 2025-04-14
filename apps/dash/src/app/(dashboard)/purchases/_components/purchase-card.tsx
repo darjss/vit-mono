@@ -1,14 +1,14 @@
 "use client";
 
 import { Package, Calendar, DollarSign } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@workspace/ui/components/badge";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
+} from "@workspace/ui/components/card";
 import type { PurchaseSelectType } from "@/server/db/schema";
 import RowActions from "../../../(dashboard)/products/_components/row-actions";
 import { deletePurchase } from "@/server/actions/purchases";

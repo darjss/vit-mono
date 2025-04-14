@@ -1,20 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@workspace/ui/components/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@workspace/ui/components/dialog";
 import { Plus } from "lucide-react";
 import BrandForm from "./brand-form";
 import type { BrandSelectType } from "@/server/db/schema";
 import RowActions from "./row-actions";
 import { deleteBrand } from "@/server/actions/brand";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import Image from "next/image";
 
 interface BrandsClientProps {

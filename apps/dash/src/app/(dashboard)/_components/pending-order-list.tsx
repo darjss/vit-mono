@@ -1,14 +1,15 @@
 // "use client"
-import { CardContent } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { CardContent } from "@workspace/ui/components/card";
+import { ScrollArea } from "@workspace/ui/components/scroll-area";
+import { Avatar } from "@workspace/ui/components/avatar";
+import { Button } from "@workspace/ui/components/button";
 import {
-  Card, CardFooter,
+  Card,
+  CardFooter,
   CardHeader,
-  CardTitle
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+  CardTitle,
+} from "@workspace/ui/components/card";
+import { Badge } from "@workspace/ui/components/badge";
 import {
   ShoppingBag,
   Clock,
@@ -16,7 +17,8 @@ import {
   User2Icon,
   Phone,
   MapPin,
-  MoreHorizontal, CreditCard
+  MoreHorizontal,
+  CreditCard,
 } from "lucide-react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
@@ -29,7 +31,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@workspace/ui/components/dropdown-menu";
 
 const PendingOrdersList = async ({ orders }: { orders: ShapedOrder[] }) => {
   await connection();

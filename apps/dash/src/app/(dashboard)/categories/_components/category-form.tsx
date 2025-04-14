@@ -6,13 +6,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@workspace/ui/components/form";
+import { Input } from "@workspace/ui/components/input";
 import { addCategorySchema } from "@/lib/zod/schema";
 import { useAction } from "@/hooks/use-action";
 import { FormWrapper } from "@/components/form-wrapper";
 import { Dispatch, SetStateAction } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import SubmitButton from "@/components/submit-button";
 import { addCategory, updateCategory } from "@/server/actions/category";
 import type { CategorySelectType } from "@/server/db/schema";

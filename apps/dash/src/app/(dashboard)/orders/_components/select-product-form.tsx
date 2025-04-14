@@ -10,13 +10,11 @@ import {
   ShoppingCartIcon,
   Loader2Icon,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@workspace/ui/components/button";
+import { Input } from "@workspace/ui/components/input";
 import type { ProductSearchForOrderType } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
-import {
-  searchProductByNameForOrder
-} from "@/server/actions/product";
+import { searchProductByNameForOrder } from "@/server/actions/product";
 import { debounce } from "lodash";
 
 const SelectProductForm = ({ form }: { form: UseFormReturn<any> }) => {
@@ -59,7 +57,7 @@ const SelectProductForm = ({ form }: { form: UseFormReturn<any> }) => {
       handleQuantityChange(existingIndex, "add");
     } else {
       append({
-      productId: product.id,
+        productId: product.id,
         quantity: 1,
         price: product.price,
         name: product.name,

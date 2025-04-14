@@ -1,5 +1,8 @@
 import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import {
+  SidebarProvider,
+  SidebarTrigger,
+} from "@workspace/ui/components/sidebar";
 import "@/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";

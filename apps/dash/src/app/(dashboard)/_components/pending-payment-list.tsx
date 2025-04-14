@@ -1,5 +1,5 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@workspace/ui/components/scroll-area";
+import { Button } from "@workspace/ui/components/button";
 import {
   Card,
   CardContent,
@@ -7,8 +7,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+} from "@workspace/ui/components/card";
+import { Badge } from "@workspace/ui/components/badge";
 import { CreditCard, Clock, CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
@@ -46,7 +46,7 @@ const PendingPaymentsList = async ({ payments }: { payments: any[] }) => {
                     <div className="flex items-center gap-3">
                       <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary/10">
                         {getPaymentProviderIcon(payment.provider)}
-                    </div>
+                      </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
                           <p className="truncate text-sm font-medium capitalize">
@@ -69,7 +69,7 @@ const PendingPaymentsList = async ({ payments }: { payments: any[] }) => {
                         {formatCurrency(payment.amount) || "N/A"}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        Order #{payment.orderId} 
+                        Order #{payment.orderId}
                       </p>
                     </div>
                   </div>

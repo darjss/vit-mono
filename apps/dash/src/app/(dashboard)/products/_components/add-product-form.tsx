@@ -6,9 +6,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+} from "@workspace/ui/components/form";
+import { Input } from "@workspace/ui/components/input";
+import { Textarea } from "@workspace/ui/components/textarea";
 import { addProductSchema } from "@/lib/zod/schema";
 import { BrandType, CategoryType } from "@/lib/types";
 import { useAction } from "@/hooks/use-action";
@@ -18,10 +18,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@workspace/ui/components/select";
 import { FormWrapper } from "@/components/form-wrapper";
 import { Suspense } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import SubmitButton from "@/components/submit-button";
 import { status } from "@/lib/constants";
 import { AddImageForm } from "./image-form";

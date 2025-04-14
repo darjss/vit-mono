@@ -5,8 +5,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+} from "@workspace/ui/components/table";
+import { Badge } from "@workspace/ui/components/badge";
 import Image from "next/image";
 import { LowInventoryProductItem } from "@/lib/types";
 
@@ -55,8 +55,8 @@ export function LowInventoryTable({ data }: LowInventoryTableProps) {
                   item.status === "Out of Stock"
                     ? "default"
                     : item.status === "Low Stock"
-                    ? "neutral"
-                    : "default"
+                      ? "neutral"
+                      : "default"
                 }
               >
                 {item.status}
@@ -64,8 +64,8 @@ export function LowInventoryTable({ data }: LowInventoryTableProps) {
             </TableCell>
             <TableCell>₹{item.price}</TableCell>
           </TableRow>
-          ))}
-        </TableBody>
+        ))}
+      </TableBody>
     </Table>
   );
 }

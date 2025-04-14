@@ -1,7 +1,7 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import Header from "@/components/header";
 import LoadingScreen from "@/components/loading-screen";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@workspace/ui/components/sidebar";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import type React from "react";

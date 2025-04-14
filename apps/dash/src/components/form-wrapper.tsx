@@ -9,7 +9,7 @@ import {
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodSchema } from "zod";
-import { Form } from "@/components/ui/form";
+import { Form } from "@workspace/ui/components/form";
 import { QueryFunction } from "@/hooks/use-action";
 import { toast } from "sonner";
 import { generateDefaultValues } from "@/lib/zod/utils";

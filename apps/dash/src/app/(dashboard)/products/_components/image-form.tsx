@@ -6,12 +6,12 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@workspace/ui/components/form";
+import { Input } from "@workspace/ui/components/input";
 import { useFieldArray, type UseFormReturn, useWatch } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { Button } from "@workspace/ui/components/button";
 import { XIcon, ImageIcon } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import { UploadButton } from "@/components/upload-button";
 import { type imageType, imageSchema } from "@/lib/zod/schema";
 import { debounce } from "lodash";

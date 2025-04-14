@@ -1,11 +1,15 @@
 // "use client";
 import { UserRound, Search } from "lucide-react";
-import { SidebarTrigger } from "../ui/sidebar";
+import { SidebarTrigger } from "@workspace/ui/components/sidebar";
 import { Suspense } from "react";
 
 import UserData from "./user-data";
 import SearchBar from "./search-bar";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@workspace/ui/components/popover";
 import Link from "next/link";
 
 const Header = () => {

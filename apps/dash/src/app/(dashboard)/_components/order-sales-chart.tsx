@@ -1,7 +1,5 @@
 "use client";
-import {
-  CardContent
-} from "@/components/ui/card";
+import { CardContent } from "@workspace/ui/components/card";
 import {
   BarChart,
   Bar,
@@ -14,7 +12,7 @@ import {
 } from "recharts";
 import { useQuery } from "@tanstack/react-query";
 import { getOrderCountForWeek } from "@/server/actions/sales";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@workspace/ui/components/skeleton";
 import { ArrowUpRight, BarChart3 } from "lucide-react";
 import { max } from "lodash";
 
@@ -47,8 +45,8 @@ const OrderSalesChart = () => {
       </CardContent>
     );
   }
-  if(data===undefined){
-    return <div>Loading...</div>
+  if (data === undefined) {
+    return <div>Loading...</div>;
   }
   const chartData = [...data].reverse();
 
@@ -106,7 +104,7 @@ const OrderSalesChart = () => {
               tick={{ fontSize: 12 }}
               tickLine={false}
               axisLine={false}
-              domain={[0, maxValue ]}
+              domain={[0, maxValue]}
               width={40}
             />
             <Tooltip

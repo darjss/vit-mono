@@ -7,13 +7,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import {
-  Users,
-  AlertCircle,
-  Banknote,
-  DollarSign,
-} from "lucide-react";
+} from "@workspace/ui/components/card";
+import { Users, AlertCircle, Banknote, DollarSign } from "lucide-react";
 import { getAnalyticsData } from "@/server/actions/analytics";
 import { StatsCard } from "./_components/stats-card";
 import { formatCurrency } from "@/lib/utils";
@@ -23,8 +18,8 @@ import LoadingScreen from "@/components/loading-screen";
 
 async function AnalyticsPage() {
   const [analytics] = await Promise.all([getAnalyticsData("monthly")]);
-  if(analytics === undefined){
-    return <div>Loading...</div>
+  if (analytics === undefined) {
+    return <div>Loading...</div>;
   }
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
@@ -67,7 +62,7 @@ async function AnalyticsPage() {
             <div className="flex items-center space-x-2">
               <AlertCircle className="h-4 w-4 text-destructive" />
               <span className="text-2xl font-bold">
-                {analytics.failedPayments?.count || 0} 
+                {analytics.failedPayments?.count || 0}
               </span>
               <span className="text-muted-foreground">
                 ({formatCurrency(analytics.failedPayments?.total || 0)})
