@@ -1,6 +1,7 @@
   import { ErrorBoundary } from "@/components/error/error-boundary";
   import Providers from "@/components/Providers";
   import "@/styles/globals.css";
+  import "@workspace/ui/styles/globals.css";
 
   import { GeistSans } from "geist/font/sans";
   import { type Metadata } from "next";
