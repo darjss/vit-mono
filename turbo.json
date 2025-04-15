@@ -13,7 +13,8 @@
         "GOOGLE_CLIENT_SECRET",
         "GOOGLE_CALLBACK_URL",
         "UPSTASH_REDIS_REST_URL",
-        "UPSTASH_REDIS_REST_TOKEN"
+        "UPSTASH_REDIS_REST_TOKEN",
+        "VITE_API_URL"
       ]
     },
     "lint": {
