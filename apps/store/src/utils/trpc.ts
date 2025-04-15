@@ -19,20 +19,20 @@ const getBackendUrl = () => {
   // This depends on your deployment strategy
   console.warn("API URL not configured via VITE_API_URL environment variable.");
   // Fallback to a relative path, might not work if domains differ or if Astro app isn't serving the API
-  return "/api/trpc";
+  return "http://localhost:3000/api/trpc";
   // OR: throw new Error("API URL is not configured.");
 };
 
-const trpc = createTRPCClient<AppRouter>({
+const api = createTRPCClient<AppRouter>({
   links: [
     loggerLink({
       enabled: (opts) =>
-        (process.env.NODE_ENV === 'development' &&
-          typeof window !== 'undefined') ||
-        (opts.direction === 'down' && opts.result instanceof Error),
+        (process.env.NODE_ENV === "development" &&
+          typeof window !== "undefined") ||
+        (opts.direction === "down" && opts.result instanceof Error),
     }),
     httpBatchLink({
-      url: "http://localhost:3000/api/trpc",
+      url: getBackendUrl(),
       transformer: SuperJSON,
       headers: () => {
         const headers = new Headers();
@@ -43,4 +43,4 @@ const trpc = createTRPCClient<AppRouter>({
   ],
 });
 
-export default trpc;
+export default api;

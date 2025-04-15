@@ -1,9 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import trpc from '../utils/trpc';
+import api from '../utils/trpc';
 import {Button} from '@workspace/ui/components/button';
 
-const message = await trpc.cart.hello.query({ text: "fjiowf ewomf" });
+const message = await api.cart.hello.query({ text: "fjiowf ewomf" });
 console.log(message)
 ---
 
