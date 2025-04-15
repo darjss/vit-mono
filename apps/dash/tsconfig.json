@@ -24,9 +24,10 @@
     "plugins": [{ "name": "next" }],
     "incremental": true,
     "baseUrl": ".",
-    "paths": {
+    "paths": {  
       "@/*": ["./src/*"],
-      "@workspace/ui/*": ["../../packages/ui/src/*"]
+      "@workspace/ui/*": ["../../packages/ui/src/*"],
+      "@vit/api": ["../../packages/api/src"],
     }
   },
   "include": [

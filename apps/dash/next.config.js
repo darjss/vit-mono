@@ -5,6 +5,7 @@
 
 /** @type {import("next").NextConfig} */
 const config = {
+  transpilePackages: ["@vit/api", "@vit/db"],
   experimental: {
     ppr: "incremental",
     dynamicIO: true,
@@ -21,22 +22,22 @@ const config = {
         revalidate: 900,
         expire: 3600,
       },
-      analytics:{
+      analytics: {
         stale: 60 * 60 * 12,
         revalidate: 60 * 60 * 12,
-        expire: 60 * 60 * 24 ,
-      }
+        expire: 60 * 60 * 24,
+      },
     },
   },
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'example.com',
+        protocol: "https",
+        hostname: "example.com",
       },
       {
-        protocol: 'https',
-        hostname: 'picsum.photos',
+        protocol: "https",
+        hostname: "picsum.photos",
       },
     ],
   },
