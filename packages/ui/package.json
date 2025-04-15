@@ -4,7 +4,6 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
     "lint": "eslint . --max-warnings 0"
   },
   "dependencies": {
