@@ -1,12 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import trpc from '../utils/trpc';
+import {Button} from '@workspace/ui/components/button';
 
-// const message = await trpc.cart.hello.query({ text: "fjiowf ewomf" });
+const message = await trpc.cart.hello.query({ text: "fjiowf ewomf" });
+console.log(message)
 ---
 
 <Layout>
 	<div>
-		
+		<h1>Home page</h1>
+		<p>{message.greeting}</p>
+		<div class="bg-main h-10 w-10 rounded-full"> Hello </div>
+		<Button client:load onClick={()=>console.log("hello")} >Hello</Button>
 	</div>
 </Layout>

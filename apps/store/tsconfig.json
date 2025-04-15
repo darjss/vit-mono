@@ -1,19 +1,21 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "include": [
-    ".astro/types.d.ts",
-    "**/*"
-  ],
-  "exclude": [
-    "dist"
-  ],
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"],
 
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@workspace/ui/*": ["../../packages/ui/src/*"],
+      "@vit/api": ["../../packages/api/src"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "preact"
-  }
+  },
+
+  "references": [
+    { "path": "../../packages/api" },
+    { "path": "../../packages/ui" }
+  ]
 }

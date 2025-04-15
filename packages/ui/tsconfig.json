@@ -1,26 +1,31 @@
 {
   "extends": "@workspace/typescript-config/react-library.json",
-  
   "compilerOptions": {
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    "checkJs": true,
+    "checkJs": true, // Keep this if you want JS files *within src* checked
 
     /* Bundled projects */
-    
     "lib": ["dom", "dom.iterable", "ES2023.Array", "ES6", "ES5"],
-    "noEmit": true,
+    // "noEmit": true, // Should be false or removed
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "./dist",
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "jsx": "preserve",
+    "composite": true,
     "plugins": [{ "name": "next" }],
     "incremental": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
       "@workspace/ui/*": ["./src/*"]
-    }
+    },
+    // If all your compilable source is under src, set rootDir
+    "rootDir": "./src"
   },
-  "include": ["."],
-  "exclude": ["node_modules", "dist"]
+  // Change "include" to only target your source directory
+  "include": ["src/**/*"], // Or just ["src"]
+  "exclude": ["node_modules", "dist"] // Keep existing excludes
 }

@@ -4,6 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "build": "turbo run build",
     "lint": "eslint . --max-warnings 0"
   },
   "dependencies": {
@@ -41,7 +42,6 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",

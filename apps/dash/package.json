@@ -82,6 +82,5 @@
   },
   "ct3aMetadata": {
     "initVersion": "7.38.1"
-  },
-  "packageManager": "bun@1.2.5"
+  }
 }

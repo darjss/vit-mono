@@ -1,0 +1,25 @@
+---
+// src/icons/ProductIcon.astro
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"svg"> {}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  fill="none"
+  viewBox="0 0 24 24"
+  stroke-width="1.5"
+  stroke="currentColor"
+  aria-hidden="true"
+  class:list={["inline-block w-6 h-6", className]}
+  {...rest}
+>
+  <path
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.372l2.508-1.447a2.25 2.25 0 0 0 1.141-1.986V7.75a2.25 2.25 0 0 0-2.25-2.25h-4.132a2.25 2.25 0 0 1-1.591-.659l-2.25-2.25a2.25 2.25 0 0 0-1.591-.659ZM10.5 6h.008v.008h-.008V6Z"
+  ></path>
+</svg>
