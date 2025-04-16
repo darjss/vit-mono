@@ -28,6 +28,7 @@
       "@/*": ["./src/*"],
       "@workspace/ui/*": ["../../packages/ui/src/*"],
       "@vit/api": ["../../packages/api/src"],
+      "@vit/db": ["../../packages/db/src"],
     }
   },
   "include": [

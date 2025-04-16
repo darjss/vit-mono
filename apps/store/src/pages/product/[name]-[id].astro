@@ -1,0 +1,23 @@
+---
+import AddToCart from "@/components/add-to-cart";
+import { slugify } from "@/utils";
+import api from "@/utils/trpc";
+
+export async function getStaticPaths() {
+  const allProducts = await api.product.getAllProducts.query();
+  return allProducts.map((product) => ({
+    params: {
+      id: product.id,
+      name: slugify(product.name),
+    },
+    props: { id: product.id },
+  }));
+}
+const { id } = Astro.params;
+console.log(id);
+---
+
+<div>
+  <h1>Product Page with id {id}</h1>
+  <AddToCart client:load id={id} />
+</div>

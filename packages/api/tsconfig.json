@@ -15,7 +15,8 @@
 		"baseUrl": "./",
 		"outDir": "./dist",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      // "@vit/db": ["../db/src"]
     }
   }
 }

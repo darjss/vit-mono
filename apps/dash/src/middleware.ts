@@ -14,12 +14,13 @@ const publicPaths = [
   "/_next",
   "/favicon.ico",
   "/public",
+  "/api/trpc",
 ];
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   console.log("Middleware");
   if (process.env.NODE_ENV === "development") {
-    console.log("sending request to url:", request.url)
+    console.log("sending request to url:", request.url);
     return NextResponse.next();
   }
 
@@ -33,20 +34,18 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     return new NextResponse(null, { status: 429 });
   }
 
-  if (request.method === "GET") {
+  const isPublicPath = publicPaths.some((publicPath) =>
+    path.startsWith(publicPath),
+  );
+
+  if (request.method === "GET" || request.method === "POST") {
     console.log("GET REQUEST MIDDLEWARE");
-    if (publicPaths.some((publicPath) => path.startsWith(publicPath))) {
+    if (isPublicPath) {
       return NextResponse.next();
     }
 
-    // const token = request.cookies.get("session")?.value ?? null;
-      const result = await auth();
-
-      if (result.session === null) {
-        return NextResponse.redirect(new URL("/login", request.url));
-      }
-
-    // if (!token) {
+    // const result = await auth();
+    // if (result.session === null) {
     //   return NextResponse.redirect(new URL("/login", request.url));
     // }
 
@@ -57,29 +56,35 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   const hostHeader = request.headers.get("Host");
 
   if (originHeader === null || hostHeader === null) {
+    console.warn("Missing Origin or Host header for non-GET request");
     return new NextResponse(null, { status: 403 });
   }
 
-  let origin: URL;
   try {
-    origin = new URL(originHeader);
-  } catch {
-    return new NextResponse(null, { status: 403 });
-  }
-
-  if (origin.host !== hostHeader) {
-    return new NextResponse(null, { status: 403 });
-  }
-
-  if (!publicPaths.some((publicPath) => path.startsWith(publicPath))) {
-    const token = request.cookies.get("session")?.value ?? null;
-    if (!token) {
-      return new NextResponse(null, { status: 401 });
+    const origin = new URL(originHeader);
+    if (origin.host !== hostHeader) {
+      console.warn(
+        `Origin (${origin.host}) does not match Host (${hostHeader})`,
+      );
+      return new NextResponse(null, { status: 403 });
     }
+  } catch {
+    console.warn("Invalid Origin header:", originHeader);
+    return new NextResponse(null, { status: 403 });
+  }
+
+  if (isPublicPath) {
+    return NextResponse.next();
+  }
+
+  const token = request.cookies.get("session")?.value ?? null;
+  if (!token) {
+    return new NextResponse(null, { status: 401 });
   }
 
   return NextResponse.next();
 }
+
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };

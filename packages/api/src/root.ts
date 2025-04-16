@@ -1,4 +1,5 @@
 import { cart } from "./router/cart";
+import { product } from "./router/product";
 import { createCallerFactory, createTRPCRouter } from "./trpc";
 
 /**
@@ -8,6 +9,7 @@ import { createCallerFactory, createTRPCRouter } from "./trpc";
  */
 export const appRouter = createTRPCRouter({
   cart: cart,
+  product: product
 });
 
 // export type definition of API

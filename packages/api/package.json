@@ -22,6 +22,7 @@
     "@vit/db": "workspace:*",
     "@trpc/server": "catalog:",
     "superjson": "2.2.2",
+      "drizzle-orm": "^0.38.4",
     "zod": "catalog:"
   },
   "devDependencies": {
