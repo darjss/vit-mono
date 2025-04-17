@@ -82,26 +82,53 @@ const Page = async ({
   await queryClient.prefetchQuery({
     queryKey: ["products", brand, category, sort, dir, query, cursor],
     queryFn: async () => {
-      if (query) {
-        const searchResults = await searchProductByName(query);
+      try {
+        if (query) {
+          const searchResults = await searchProductByName(query);
+          // Ensure we always return a consistent structure
+          return {
+            products: Array.isArray(searchResults) ? searchResults : [],
+            nextCursor: null, // No pagination for search results
+          };
+        }
+
+        const result = await getPaginatedProducts(
+          PRODUCT_PER_PAGE,
+          sort || undefined,
+          dir as "asc" | "desc",
+          brand === 0 ? undefined : brand,
+          category === 0 ? undefined : category,
+          cursor,
+        );
+
+        // Handle potential errors in the result
+        if (
+          typeof result === "object" &&
+          result !== null &&
+          "error" in result
+        ) {
+          console.error("Error fetching products:", result.error);
+          throw new Error(
+            (result.error as string) || "Failed to fetch products",
+          );
+        }
+
         return {
-          products: searchResults,
+          products: result?.products || [],
+          nextCursor: result?.nextCursor || null,
+        };
+      } catch (error) {
+        console.error("Error in products query:", error);
+        return {
+          products: [],
           nextCursor: null,
         };
       }
-      return getPaginatedProducts(
-        PRODUCT_PER_PAGE,
-        sort || undefined,
-        dir as "asc" | "desc",
-        brand === 0 ? undefined : brand,
-        category === 0 ? undefined : category,
-        cursor, // Pass the processed cursor to the API
-      );
     },
   });
   const categories = await getAllCategories();
   const brands: BrandType = await getAllBrands();
-  console.log("brands", brands, "categories", categories)
+  console.log("brands", brands, "categories", categories);
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Suspense fallback={<DataTableSkeleton columnCount={6} rowCount={3} />}>

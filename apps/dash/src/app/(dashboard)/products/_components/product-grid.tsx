@@ -105,6 +105,57 @@ const ProductGridSkeleton = () => (
   </Card>
 );
 
+const ProductList = ({
+  products,
+  nextCursor,
+  hasNextPage,
+  hasPreviousPage,
+  isUpdating,
+  handleNextPage,
+  handlePreviousPage,
+  brands,
+  categories,
+}: {
+  products: ProductType[];
+  nextCursor: ProductCursor;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  isUpdating: boolean;
+  handleNextPage: () => void;
+  handlePreviousPage: () => void;
+  brands: BrandType;
+  categories: CategoryType;
+}) => {
+  const [isPending, startTransition] = useTransition();
+
+  if (products.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      <div className="space-y-4">
+        {products.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            brands={brands}
+            categories={categories}
+          />
+        ))}
+      </div>
+
+      <DataPagination
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        onNextPage={() => startTransition(() => handleNextPage())}
+        onPreviousPage={() => startTransition(() => handlePreviousPage())}
+        isLoading={isUpdating || isPending}
+      />
+    </>
+  );
+};
+
 const ProductGridContent = ({
   brands,
   categories,
@@ -517,25 +568,20 @@ const ProductGridContent = ({
                 : "No products found. Try adjusting filters."}
             </div>
           )}
-          {!isUpdating &&
-            products.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                brands={brands}
-                categories={categories}
-              />
-            ))}
+          {!isUpdating && products.length > 0 && (
+            <ProductList
+              products={products}
+              nextCursor={nextCursor}
+              hasNextPage={hasNextPage}
+              hasPreviousPage={hasPreviousPage}
+              isUpdating={isUpdating}
+              handleNextPage={handleNextPage}
+              handlePreviousPage={handlePreviousPage}
+              brands={brands}
+              categories={categories}
+            />
+          )}
         </div>
-
-        {/* Pagination */}
-        <DataPagination
-          hasNextPage={hasNextPage}
-          hasPreviousPage={hasPreviousPage}
-          onNextPage={handleNextPage}
-          onPreviousPage={handlePreviousPage}
-          isLoading={isUpdating} // Use combined loading state
-        />
       </CardContent>
     </Card>
   );

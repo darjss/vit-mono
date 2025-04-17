@@ -24,7 +24,7 @@ const Page = async () => {
             Seed Database
           </Button>
         </form>
-        <form action={seedOnlyOrders.bind(null, 100)}>
+        <form action={seedOnlyOrders.bind(null, 1)}>
           <Button
             type="submit"
             variant="destructive"
@@ -32,7 +32,7 @@ const Page = async () => {
             className="h-9 sm:h-10"
           >
             <Database className="mr-2 h-4 w-4" />
-            Seed 100 Orders
+            Seed 1 Orders
           </Button>
         </form>
       </div>

@@ -27,6 +27,7 @@ out/
 build
 dist
 
+dev.db
 
 # Debug
 npm-debug.log*

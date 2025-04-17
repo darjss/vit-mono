@@ -44,10 +44,10 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
       return NextResponse.next();
     }
 
-    // const result = await auth();
-    // if (result.session === null) {
-    //   return NextResponse.redirect(new URL("/login", request.url));
-    // }
+    const result = await auth();
+    if (result.session === null) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
 
     return NextResponse.next();
   }

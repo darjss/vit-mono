@@ -13,7 +13,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select";
-import { Suspense, useState, useCallback, useEffect } from "react";
+import {
+  Suspense,
+  useState,
+  useCallback,
+  useEffect,
+  useTransition,
+} from "react";
 
 import { getPaginatedOrders, searchOrder } from "@/server/actions/order";
 import { orderStatus, paymentStatus, PRODUCT_PER_PAGE } from "@/lib/constants";
@@ -80,6 +86,8 @@ const OrderList = ({
   handlePreviousPage: () => void;
   hasPreviousPage: boolean;
 }) => {
+  const [isPending, startTransition] = useTransition();
+
   const { data, isFetching } = useSuspenseQuery({
     queryKey: [
       "orders",
@@ -151,9 +159,11 @@ const OrderList = ({
         <DataPagination
           hasNextPage={hasNextPage}
           hasPreviousPage={hasPreviousPage}
-          onNextPage={() => handleNextPage(data.nextCursor)}
-          onPreviousPage={handlePreviousPage}
-          isLoading={isFetching}
+          onNextPage={() =>
+            startTransition(() => handleNextPage(data.nextCursor))
+          }
+          onPreviousPage={() => startTransition(() => handlePreviousPage())}
+          isLoading={isFetching || isPending}
         />
       </div>
     </>
@@ -201,11 +211,14 @@ const OrderGrid = () => {
 
   // Local state for UI loading indicators (separate from Suspense)
   const [isFetching, setIsFetching] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   // Function to reset pagination state
   const resetPagination = useCallback(() => {
-    setCurrentCursor(null);
-    setCursorHistory([]);
+    startTransition(() => {
+      setCurrentCursor(null);
+      setCursorHistory([]);
+    });
   }, [setCurrentCursor]);
 
   // Event handlers using nuqs setters
@@ -213,53 +226,62 @@ const OrderGrid = () => {
     // Only update searchTerm if inputValue actually changed
     if (inputValue.trim() === searchTerm) return;
     setIsFetching(true);
-    await setSearchTerm(inputValue.trim()); // Set URL state from input
-    resetPagination();
-    setIsFetching(false);
-    // No need to setInputValue here, it's already the source
+    startTransition(async () => {
+      await setSearchTerm(inputValue.trim()); // Set URL state from input
+      resetPagination();
+      setIsFetching(false);
+    });
   }, [inputValue, searchTerm, setSearchTerm, resetPagination]);
 
   const clearSearch = useCallback(async () => {
     setIsFetching(true);
-    await setSearchTerm(null); // Clear URL state
-    setInputValue(""); // Clear local input state
-    resetPagination();
-    setIsFetching(false);
+    startTransition(async () => {
+      await setSearchTerm(null); // Clear URL state
+      setInputValue(""); // Clear local input state
+      resetPagination();
+      setIsFetching(false);
+    });
   }, [setSearchTerm, resetPagination]);
 
   const handleFilterChange = useCallback(
     async (type: "status" | "payment", value: string | null) => {
       setIsFetching(true);
-      if (type === "status") {
-        await setOrderStatusFilter(value);
-      } else {
-        await setPaymentStatusFilter(value);
-      }
-      resetPagination();
-      setIsFetching(false);
+      startTransition(async () => {
+        if (type === "status") {
+          await setOrderStatusFilter(value);
+        } else {
+          await setPaymentStatusFilter(value);
+        }
+        resetPagination();
+        setIsFetching(false);
+      });
     },
     [setOrderStatusFilter, setPaymentStatusFilter, resetPagination],
   );
 
   const resetFilters = useCallback(async () => {
     setIsFetching(true);
-    await setOrderStatusFilter(null);
-    await setPaymentStatusFilter(null);
-    resetPagination();
-    setIsFetching(false);
+    startTransition(async () => {
+      await setOrderStatusFilter(null);
+      await setPaymentStatusFilter(null);
+      resetPagination();
+      setIsFetching(false);
+    });
   }, [setOrderStatusFilter, setPaymentStatusFilter, resetPagination]);
 
   const handleSort = useCallback(
     async (field: string) => {
       setIsFetching(true);
-      if (sortField === field) {
-        await setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-      } else {
-        await setSortField(field);
-        await setSortDirection("asc"); // Default to asc when changing field
-      }
-      resetPagination();
-      setIsFetching(false);
+      startTransition(async () => {
+        if (sortField === field) {
+          await setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+        } else {
+          await setSortField(field);
+          await setSortDirection("asc"); // Default to asc when changing field
+        }
+        resetPagination();
+        setIsFetching(false);
+      });
     },
     [sortField, sortDirection, setSortField, setSortDirection, resetPagination],
   );
@@ -267,8 +289,10 @@ const OrderGrid = () => {
   // Pagination Handlers
   const handleNextPage = useCallback(
     (nextCursor: OrderCursor) => {
-      setCursorHistory((prev) => [...prev, currentCursor]);
-      setCurrentCursor(nextCursor);
+      startTransition(() => {
+        setCursorHistory((prev) => [...prev, currentCursor]);
+        setCurrentCursor(nextCursor);
+      });
     },
     [currentCursor, setCurrentCursor],
   );
@@ -276,19 +300,22 @@ const OrderGrid = () => {
   const handlePreviousPage = useCallback(() => {
     if (cursorHistory.length === 0) return;
     setIsFetching(true); // Indicate loading for pagination buttons too
-    const newHistory = [...cursorHistory];
-    const previousCursor = newHistory.pop() ?? null;
-    setCursorHistory(newHistory);
-    setCurrentCursor(previousCursor);
-    // Note: Setting isFetching false here might be too soon if data fetch is slow
-    // A better approach might involve useTransition or feedback from useSuspenseQuery
-    setIsFetching(false);
+    startTransition(() => {
+      const newHistory = [...cursorHistory];
+      const previousCursor = newHistory.pop() ?? null;
+      setCursorHistory(newHistory);
+      setCurrentCursor(previousCursor);
+      setIsFetching(false);
+    });
   }, [cursorHistory, setCurrentCursor]);
 
   // Determine if any filters are active
   const filtersActive =
     orderStatusFilter !== null || paymentStatusFilter !== null;
   const hasPreviousPage = cursorHistory.length > 0;
+
+  // Update isLoading state to include the transition state
+  const isLoading = isFetching || isPending;
 
   return (
     <Card className="w-full">
@@ -303,14 +330,14 @@ const OrderGrid = () => {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 className="h-9 w-full rounded-lg bg-background pl-8"
-                disabled={isFetching}
+                disabled={isLoading}
               />
               {inputValue && (
                 <Button
                   size="icon"
                   className="absolute right-10 top-1/2 h-6 w-6 -translate-y-1/2 transform"
                   onClick={clearSearch}
-                  disabled={isFetching}
+                  disabled={isLoading}
                   aria-label="Clear search"
                 >
                   <X className="h-4 w-4" />
@@ -319,7 +346,7 @@ const OrderGrid = () => {
               <SubmitButton
                 onClick={handleSearch}
                 className="absolute right-0 top-1/2 h-9 w-9 -translate-y-1/2 transform rounded-l-none p-0"
-                isPending={isFetching}
+                isPending={isLoading}
                 aria-label="Search"
               >
                 <Search className="h-4 w-4" />
@@ -329,7 +356,7 @@ const OrderGrid = () => {
               size="sm"
               className="h-9 gap-1"
               asChild
-              disabled={isFetching}
+              disabled={isLoading}
             >
               <Link href="/orders/new">
                 <PlusCircle className="h-3.5 w-3.5" />
@@ -347,7 +374,7 @@ const OrderGrid = () => {
                 onValueChange={(value) =>
                   handleFilterChange("status", value === "all" ? null : value)
                 }
-                disabled={isFetching}
+                disabled={isLoading}
               >
                 <SelectTrigger className="h-9 w-full sm:w-[140px]">
                   <SelectValue placeholder="All Statuses" />
@@ -368,7 +395,7 @@ const OrderGrid = () => {
                 onValueChange={(value) =>
                   handleFilterChange("payment", value === "all" ? null : value)
                 }
-                disabled={isFetching}
+                disabled={isLoading}
               >
                 <SelectTrigger className="h-9 w-full sm:w-[140px]">
                   <SelectValue placeholder="All Payments" />
@@ -391,7 +418,7 @@ const OrderGrid = () => {
                   size="sm"
                   onClick={resetFilters}
                   className="h-9 px-3 text-xs"
-                  disabled={isFetching}
+                  disabled={isLoading}
                 >
                   <RotateCcw className="mr-1 h-3 w-3" />
                   Reset
@@ -402,7 +429,7 @@ const OrderGrid = () => {
                 size="sm"
                 onClick={() => handleSort("total")}
                 className="h-9 px-3"
-                disabled={isFetching}
+                disabled={isLoading}
               >
                 Total
                 <ArrowUpDown
@@ -416,7 +443,7 @@ const OrderGrid = () => {
                 size="sm"
                 onClick={() => handleSort("createdAt")}
                 className="h-9 px-3"
-                disabled={isFetching}
+                disabled={isLoading}
               >
                 Date
                 <ArrowUpDown
