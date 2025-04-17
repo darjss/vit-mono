@@ -6,12 +6,14 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
+      "react": ["preact/compat"],
+      "react-dom": ["preact/compat"],
       "@/*": ["./src/*"],
       "@workspace/ui/*": ["../../packages/ui/src/*"],
       "@vit/api": ["../../packages/api/src"]
     },
     "jsx": "react-jsx",
-    "jsxImportSource": "preact"
+    "jsxImportSource": "react"
   },
 
   "references": [

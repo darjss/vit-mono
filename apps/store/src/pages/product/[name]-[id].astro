@@ -1,23 +1,103 @@
 ---
 import AddToCart from "@/components/add-to-cart";
-import { slugify } from "@/utils";
+import ImageCarousel from "@/components/image-carousel";
+import Layout from "@/layouts/Layout.astro";
 import api from "@/utils/trpc";
 
 export async function getStaticPaths() {
   const allProducts = await api.product.getAllProducts.query();
   return allProducts.map((product) => ({
     params: {
+      name: product.slug,
       id: product.id,
-      name: slugify(product.name),
     },
     props: { id: product.id },
   }));
 }
-const { id } = Astro.params;
+const { id } = Astro.props;
 console.log(id);
+const product = await api.product.getProductById.query({ id });
+if (product === null) {
+  throw new Error("Product not found");
+}
+const images = product.images
+  .sort((a, b) => (a.isPrimary === b.isPrimary ? 0 : a.isPrimary ? -1 : 1))
+  .map((image) => image.url);
+
+console.log(product);
 ---
 
-<div>
-  <h1>Product Page with id {id}</h1>
-  <AddToCart client:load id={id} />
-</div>
+<Layout>
+  <div class="container mx-auto py-12 px-4 md:px-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div class="w-full max-w-md mx-auto">
+        <div class="rounded-lg overflow-hidden shadow-[var(--shadow)]">
+          <ImageCarousel
+            client:only
+            images={[
+              "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/obn/obn60030/l/24.jpg",
+              "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/obn/obn60030/l/24.jpg",
+            ]}
+          />
+        </div>
+      </div>
+
+      <div class="flex flex-col">
+        <h1 class="text-3xl md:text-4xl font-[var(--heading-font-weight)] mb-4">
+          {product.name}
+        </h1>
+
+        <div class="flex items-center mb-6">
+          <span class="text-2xl font-bold text-primary"
+            >{product.price.toLocaleString()} ₮</span
+          >
+          {
+            product.discount && (
+              <span class="ml-3 px-2 py-1 bg-destructive text-destructive-foreground text-sm font-semibold rounded">
+                {product.discount}% OFF
+              </span>
+            )
+          }
+        </div>
+
+        <div class="prose max-w-none mb-8">
+          <p class="text-lg">{product.description}</p>
+        </div>
+
+        {
+          (product.potency || product.dailyIntake) && (
+            <div class="bg-secondary rounded-lg p-4 mb-8">
+              <h3 class="text-lg font-semibold mb-2">Product Details</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {product.potency && (
+                  <div>
+                    <span class="font-medium">Potency:</span> {product.potency}
+                  </div>
+                )}
+                {product.dailyIntake && (
+                  <div>
+                    <span class="font-medium">Daily Intake:</span>{" "}
+                    {product.dailyIntake}
+                  </div>
+                )}
+                {product.amount && (
+                  <div>
+                    <span class="font-medium">Amount:</span> {product.amount}
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        }
+
+        <div class="mt-auto">
+          <div class="flex flex-col sm:flex-row gap-4">
+            <div class="w-full sm:w-1/2">
+              <AddToCart client:load id={id} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
