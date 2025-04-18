@@ -1,0 +1,15 @@
+---
+import type { Cart } from "@/utils/types";
+export const prerender = false;
+import Layout from "@/layouts/Layout.astro";
+import api from "@/utils/trpc";
+const cart=JSON.parse(Astro.cookies.get("cart")?.value || "[]") as Cart[];
+const productIds=cart.map((item)=>item.productId);
+console.log(cart)
+const products= await api.product.getProductsByIds.query({ids: productIds})
+console.log(products)
+---
+<Layout>
+    <h1>Cart</h1>
+
+</Layout>
