@@ -5,7 +5,7 @@ import react from "@astrojs/react";
 
 import vercel from "@astrojs/vercel";
 import node from "@astrojs/node";
-const isProd = process.env.CONTEXT === "production";
+const isVercel = process.env.VERCEL === "1";
 // https://astro.build/config
 export default defineConfig({
   vite: {
@@ -13,8 +13,7 @@ export default defineConfig({
   },
 
   integrations: [react(), tailwind()],
-  output:"static",
-  adapter: isProd
+  adapter: isVercel
     ? vercel()
     : node({
         mode: "standalone",
