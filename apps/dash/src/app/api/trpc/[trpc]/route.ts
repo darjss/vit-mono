@@ -4,7 +4,9 @@ import { type NextRequest } from "next/server";
 import { appRouter } from "@vit/api";
 import { createTRPCContext } from "@vit/api";
 
-const allowedOrigin = "https://vit-mono-store.vercel.app"; // Allow your specific frontend origin
+// Allowed origin check is now primarily handled in middleware,
+// but we still need it here to set the header on the *actual* response.
+const allowedOrigin = "https://vit-mono-store.vercel.app";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
@@ -17,17 +19,16 @@ const createContext = async (req: NextRequest) => {
 };
 
 const handler = async (req: NextRequest) => {
-  console.log("sent trpc request to", req.url);
+  console.log(
+    "tRPC Handler: Received request for",
+    req.url,
+    "Method:",
+    req.method,
+  );
 
-  // Handle OPTIONS requests for CORS preflight
-  if (req.method === "OPTIONS") {
-    const headers = new Headers();
-    headers.set("Access-Control-Allow-Origin", allowedOrigin);
-    headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    headers.set("Access-Control-Allow-Headers", "Content-Type, x-trpc-source"); // Adjust headers as needed
-    headers.set("Access-Control-Max-Age", "86400"); // Cache preflight response for 1 day
-    return new Response(null, { status: 204, headers });
-  }
+  // Middleware should have already handled OPTIONS requests.
+  // If an OPTIONS request somehow reaches here, fetchRequestHandler might handle it,
+  // or it might result in an error depending on the adapter version.
 
   // Handle actual GET/POST requests
   const response = await fetchRequestHandler({
@@ -45,14 +46,32 @@ const handler = async (req: NextRequest) => {
         : undefined,
   });
 
-  // Add CORS headers to the actual response
-  response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
-  response.headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  response.headers.set(
-    "Access-Control-Allow-Headers",
-    "Content-Type, x-trpc-source",
-  ); // Ensure this matches OPTIONS
+  // Add CORS headers to the actual tRPC response.
+  // Important: Check the origin of the request dynamically if needed,
+  // or rely on the middleware having set it correctly.
+  // Here we use the statically defined one for simplicity, assuming middleware allows it.
+  const requestOrigin = req.headers.get("origin");
+  if (requestOrigin === allowedOrigin) {
+    // Or check against allowedOrigins array if middleware doesn't block
+    response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
+    // Potentially add other headers like Allow-Credentials if needed and configured
+    // response.headers.set('Access-Control-Allow-Credentials', 'true');
+  } else if (requestOrigin) {
+    console.warn(
+      `tRPC Handler: Request origin "${requestOrigin}" not in allowed list "${allowedOrigin}". Not adding CORS header.`,
+    );
+  } else {
+    console.log("tRPC Handler: Request does not have an Origin header.");
+  }
 
+  // You might still need to set Allow-Methods and Allow-Headers here
+  // if the fetchRequestHandler doesn't do it automatically based on router config.
+  // However, for the actual response (not preflight), only Allow-Origin
+  // and potentially Allow-Credentials are strictly required by the browser.
+  // response.headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  // response.headers.set("Access-Control-Allow-Headers", "Content-Type, x-trpc-source");
+
+  console.log("tRPC Handler: Sending response with status", response.status);
   return response;
 };
 
