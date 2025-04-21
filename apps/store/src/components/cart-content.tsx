@@ -8,7 +8,12 @@ import { deliveryFee } from "@/utils/constants";
 const CartContent = () => {
   const { cart,productIds, getQuantityFromId} = useCart();
   const { data: products, isLoading } = useQuery(
-    trpc.product.getProductsByIds.queryOptions({ ids: productIds })
+    trpc.product.getProductsByIds.queryOptions({ ids: productIds },
+      {
+        enabled: productIds.length > 0,
+        queryKey: ["cart-products", productIds],
+      },
+    )
   );
 
     console.log("fd", isLoading);
