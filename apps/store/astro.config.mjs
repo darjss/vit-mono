@@ -13,9 +13,9 @@ export default defineConfig({
   },
 
   integrations: [react(), tailwind()],
-  adapter: isProd
-    ? vercel()
-    : node({
-        mode: "standalone",
-      }),
+  // adapter: isProd
+  //   ? vercel()
+  //   : node({
+  //       mode: "standalone",
+  //     }),
 });

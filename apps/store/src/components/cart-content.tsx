@@ -11,8 +11,14 @@ const CartContent = () => {
     trpc.product.getProductsByIds.queryOptions({ ids: productIds },
       {
         enabled: productIds.length > 0,
-        queryKey: ["cart-products", productIds],
-      },
+        staleTime: 1000 * 60 * 60 * 24,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        refetchInterval: false,
+        refetchIntervalInBackground: false,
+        // queryKey: ["cart-products", productIds],
+      }
     )
   );
 
