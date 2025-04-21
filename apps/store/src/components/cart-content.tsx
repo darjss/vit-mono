@@ -11,7 +11,7 @@ const CartContent = () => {
     trpc.product.getProductsByIds.queryOptions({ ids: productIds },
       {
         enabled: productIds.length > 0,
-        staleTime: 1000 * 60 * 60 * 24,
+        staleTime: 1000 * 60 * 5,
         refetchOnWindowFocus: false,
         refetchOnMount: false,
         refetchOnReconnect: false,
@@ -21,8 +21,8 @@ const CartContent = () => {
       }
     )
   );
-
-    console.log("fd", isLoading);
+  console.log(process.env.NODE_ENV);
+  console.log("fd", isLoading);
 
   const totalPrice = products?.reduce((acc, product) => {
     const quantity = getQuantityFromId(product.id);

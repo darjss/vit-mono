@@ -1,8 +1,10 @@
 import { createTRPCClient, httpBatchLink, loggerLink } from "@trpc/client";
-import type { AppRouter } from "@vit/api"; 
+import type { AppRouter } from "@vit/api";
+import type { TRPCLink } from "@trpc/client";
 import superjson, { SuperJSON } from "superjson";
-import { QueryClient } from '@tanstack/react-query';
-import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query';
+import { QueryClient } from "@tanstack/react-query";
+import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
+import { observable } from "@trpc/server/observable";
 
 const getBackendUrl = () => {
   const apiUrlFromEnv = import.meta.env.PUBLIC_API_URL;
@@ -18,6 +20,37 @@ const getBackendUrl = () => {
 
 export const queryClient = new QueryClient();
 
+const timingLink: TRPCLink<AppRouter> = () => {
+  // here we just got initialized in the app - this happens once per link
+  // --->
+  return ({ next, op }) => {
+    // this is when an actual request is passing through this link
+    // --->
+    return observable((observer) => {
+      const startTime = Date.now();
+      const unsubscribe = next(op).subscribe({
+        next(value) {
+          const duration = Date.now() - startTime;
+          console.log(`[TRPC Request] ${op.path} completed in ${duration}ms`);
+          observer.next(value);
+        },
+        error(err) {
+          const duration = Date.now() - startTime;
+          console.error(
+            `[TRPC Request] ${op.path} failed in ${duration}ms`,
+            err
+          );
+          observer.error(err);
+        },
+        complete() {
+          observer.complete();
+        },
+      });
+      return unsubscribe;
+    });
+  };
+};
+
 const api = createTRPCClient<AppRouter>({
   links: [
     loggerLink({
@@ -26,6 +59,7 @@ const api = createTRPCClient<AppRouter>({
           typeof window !== "undefined") ||
         (opts.direction === "down" && opts.result instanceof Error),
     }),
+    timingLink,
     httpBatchLink({
       url: getBackendUrl(),
       transformer: SuperJSON,
