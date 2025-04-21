@@ -43,7 +43,8 @@ const AddToCart = ({ id }: { id: number }) => {
           <Button
             onClick={() => setQuantity(Math.min(10, quantity + 1))}
             disabled={quantity === 10}
-            className="h-9 w-9 rounded-full p-0 flex items-center justify-center bg-background hover:bg-background/80 border border-border"
+            className="h-9 w-9 rounded-full p-0 flex items-center 
+            justify-center bg-background hover:bg-background/80 border border-border"
             aria-label="Increase quantity"
           >
             <svg

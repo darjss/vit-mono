@@ -1,15 +1,34 @@
 ---
-import type { Cart } from "@/utils/types";
-export const prerender = false;
+// import CartContent from '@/components/CartContent.tsx';
+// import CartContent from "@/components/cart-content"; // Remove old import
+import CartContentWrapper from "@/components/cart-content-wrapper"; // Import the wrapper
+import Loading from "@/components/loading.astro";
 import Layout from "@/layouts/Layout.astro";
-import api from "@/utils/trpc";
-const cart=JSON.parse(Astro.cookies.get("cart")?.value || "[]") as Cart[];
-const productIds=cart.map((item)=>item.productId);
-console.log(cart)
-const products= await api.product.getProductsByIds.query({ids: productIds})
-console.log(products)
 ---
 <Layout>
-    <h1>Cart</h1>
-
+    <div class="container mx-auto py-10 md:py-16 px-4 md:px-8">
+        <h1 class="text-4xl md:text-5xl font-[var(--heading-font-weight)] mb-10 uppercase tracking-tight">Миний сагс</h1>
+        
+        <div class="border-4 border-border shadow-[var(--shadow)] p-6 transform transition-transform hover:-translate-y-1">
+            {/* Desktop Headers */}
+            <div class="hidden md:flex justify-between text-foreground pb-4 mb-6 border-b-4 border-border font-bold">
+                <div class="w-2/5">
+                    <p class="text-lg uppercase">Бүтээгдэхүүн</p>
+                </div>
+                <div class="w-1/5 text-center">
+                    <p class="text-lg uppercase">Тоо</p>
+                </div>
+                <div class="w-1/5 text-center">
+                    <p class="text-lg uppercase">Үнэ</p>
+                </div>
+                <div class="w-1/5 text-right">
+                    <p class="text-lg uppercase">Нийт</p>
+                </div>
+            </div>
+            
+            <CartContentWrapper client:load> {/* Use the wrapper */} 
+                <Loading slot={"fallback"} />
+            </CartContentWrapper>
+        </div>
+    </div>
 </Layout>

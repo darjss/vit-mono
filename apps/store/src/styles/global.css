@@ -92,7 +92,6 @@
 }
 
 :root {
-  --main: #ffdc58;
   --bg: #fef2e8;
   --bw: #fff;
   --blank: #000;
@@ -133,4 +132,4 @@
   body {
     @apply bg-background text-foreground;
   }
-}
+} 

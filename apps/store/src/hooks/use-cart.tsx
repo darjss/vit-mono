@@ -32,6 +32,7 @@ export const useCart = () => {
     Cookies.set("cart", JSON.stringify(newCart));
     localStorage.setItem("cartUpdatedAt", new Date().toISOString());
     window.dispatchEvent(new Event("cartUpdated"));
+    console.log("New cart", cart);
   };
 
   const addToCart = (id: number, quantity: number) => {
@@ -43,7 +44,6 @@ export const useCart = () => {
 
       let newCart: Cart[];
       if (existingItemIndex >= 0) {
-        // Update quantity if item exists
         newCart = cart.map((item, index) => {
           if (index === existingItemIndex) {
             return { ...item, quantity: item.quantity + quantity };
@@ -51,16 +51,11 @@ export const useCart = () => {
           return item;
         });
       } else {
-        // Add new item if it doesn't exist
         newCart = [...cart, { productId: id, quantity }];
       }
 
       updateCartAndNotify(newCart);
-
-      // Show success feedback
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 100);
+      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       console.error("Failed to add to cart:", error);
@@ -73,11 +68,7 @@ export const useCart = () => {
     try {
       const newCart = cart.filter((item) => item.productId !== id);
       updateCartAndNotify(newCart);
-
-      // Show success feedback
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 100);
+      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       console.error("Failed to remove from cart:", error);
@@ -92,16 +83,55 @@ export const useCart = () => {
       localStorage.setItem("cartUpdatedAt", new Date().toISOString());
       window.dispatchEvent(new Event("cartUpdated"));
 
-      // Show success feedback
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 100);
+      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       console.error("Failed to clear cart:", error);
     }
   };
 
+  const updateItem = (id: number, type: "add" | "remove") => {
+    try {
+      // Check if product already exists in cart
+      const existingItemIndex = cart.findIndex((item) => item.productId === id);
+
+      let newCart: Cart[];
+      if (existingItemIndex >= 0) {
+        newCart = cart.map((item, index) => {
+          if (index === existingItemIndex) {
+            const newQuantity =
+              type === "add" ? item.quantity + 1 : item.quantity - 1;
+            return { ...item, quantity: newQuantity };
+          }
+          return item;
+        });
+        updateCartAndNotify(newCart);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Failed to add to cart:", error);
+    }
+  };
+
+  const getQuantityFromId = (id: number) => {
+    const item = cart.find((item) => item.productId === id);
+    if (item === undefined) {
+      return 1;
+    }
+    return item.quantity;
+  };
+
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
-  return { cart, isLoading, addToCart, removeFromCart, clearCart, cartCount };
+  const productIds = cart.map((item) => item.productId);
+  return {
+    cart,
+    isLoading,
+    addToCart,
+    removeFromCart,
+    clearCart,
+    cartCount,
+    productIds,
+    updateItem,
+    getQuantityFromId,
+  };
 };
