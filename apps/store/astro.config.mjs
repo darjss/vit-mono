@@ -13,9 +13,5 @@ export default defineConfig({
   },
 
   integrations: [react(), tailwind()],
-  adapter: isVercel
-    ? vercel()
-    : node({
-        mode: "standalone",
-      }),
+  adapter: vercel(),
 });
