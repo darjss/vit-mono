@@ -7,7 +7,7 @@ import { deliveryFee } from "@/utils/constants";
 
 const CartContent = () => {
   const { cart,productIds, getQuantityFromId} = useCart();
-  const { data: products, isLoading } = useQuery(
+  const { data: products, isLoading , error} = useQuery(
     trpc.product.getProductsByIds.queryOptions({ ids: productIds },
       {
         enabled: productIds.length > 0,
@@ -28,6 +28,9 @@ const CartContent = () => {
     const quantity = getQuantityFromId(product.id);
     return acc + product.price * quantity;
   }, 0) || 0;
+  if(error){
+    return <div>Error: {error.message}</div>;
+  }
   if (isLoading || products === undefined) {
     return (
       <div className="h-screen border-b-4 border-border">
