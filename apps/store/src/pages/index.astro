@@ -3,6 +3,7 @@ import ProductCard from "@/components/product-card.astro";
 import Layout from "../layouts/Layout.astro";
 import api from "../utils/trpc";
 import FeaturedProducts from "@/components/featured-products.astro";
+import FeaturedProductsSkeleton from "@/components/featured-products-skeleton.astro";
 
 // const products = await api.product.getFeauturedProducts.query(); // Moved to FeaturedProducts component
 // console.log(message);
@@ -49,7 +50,10 @@ import FeaturedProducts from "@/components/featured-products.astro";
   </section>
 
   <!-- Featured Products -->
-  <FeaturedProducts />
+  <FeaturedProducts server:defer>
+    <FeaturedProductsSkeleton slot={"fallback"}/>
+    </FeaturedProducts>
+
 
   <!-- Benefit Blocks -->
   <section class="py-16 bg-secondary">

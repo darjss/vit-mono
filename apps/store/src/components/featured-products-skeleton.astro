@@ -1,0 +1,20 @@
+---
+import ProductCardSkeleton from "@/components/product-card-skeleton.astro";
+---
+
+<section class="py-16 md:py-24">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col md:flex-row justify-between items-baseline mb-10 border-b-4 border-border pb-4">
+      <h2 class="text-3xl md:text-4xl font-[var(--heading-font-weight)] uppercase tracking-tight">Онцлох бүтээгдэхүүн</h2>
+      <a href="/products" class="text-lg font-bold uppercase hover:text-primary transition-colors mt-2 md:mt-0">
+        Бүгдийг үзэх →
+      </a>
+    </div>
+    
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+      {[...Array(5)].map(() => (
+        <ProductCardSkeleton />
+      ))}
+    </div>
+  </div>
+</section> 

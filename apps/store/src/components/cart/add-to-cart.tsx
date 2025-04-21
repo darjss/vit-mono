@@ -19,14 +19,16 @@ const AddToCart = ({ id, name, price, image }: AddToCartProps) => {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between p-3 bg-secondary/40 rounded-lg border border-border">
-        <span className="font-medium text-foreground">Quantity</span>
-        <div className="flex items-center gap-4">
-          <Button
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between p-3 bg-secondary/40 border-4 border-border rounded-none shadow-[var(--shadow)]">
+        <span className="font-[var(--heading-font-weight)] text-foreground uppercase text-sm md:text-base">
+          Quantity
+        </span>
+        <div className="flex items-center gap-2 md:gap-4">
+          <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
             disabled={quantity === 1}
-            className="h-9 w-9 rounded-full p-0 flex items-center justify-center bg-background hover:bg-background/80 border border-border"
+            className="h-8 w-8 md:h-10 md:w-10 rounded-none p-0 flex items-center justify-center bg-background hover:bg-primary/20 border-2 border-border shadow-[2px_2px_0_0_var(--border)] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             aria-label="Decrease quantity"
           >
             <svg
@@ -36,23 +38,22 @@ const AddToCart = ({ id, name, price, image }: AddToCartProps) => {
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
               <path d="M5 12h14" />
             </svg>
-          </Button>
+          </button>
 
-          <span className="font-semibold text-lg min-w-[1.5rem] text-center">
+          <span className="font-[var(--heading-font-weight)] text-lg min-w-[1.5rem] text-center border-b-2 border-primary">
             {quantity}
           </span>
 
-          <Button
+          <button
             onClick={() => setQuantity(Math.min(10, quantity + 1))}
             disabled={quantity === 10}
-            className="h-9 w-9 rounded-full p-0 flex items-center 
-            justify-center bg-background hover:bg-background/80 border border-border"
+            className="h-8 w-8 md:h-10 md:w-10 rounded-none p-0 flex items-center justify-center bg-background hover:bg-primary/20 border-2 border-border shadow-[2px_2px_0_0_var(--border)] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             aria-label="Increase quantity"
           >
             <svg
@@ -62,27 +63,26 @@ const AddToCart = ({ id, name, price, image }: AddToCartProps) => {
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
               <path d="M5 12h14" />
               <path d="M12 5v14" />
             </svg>
-          </Button>
+          </button>
         </div>
       </div>
 
-      <Button
-        className="w-full py-6 px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-md shadow-[var(--shadow)] transition-all active:scale-[0.98] text-base"
-        variant={"default"}
+      <button
+        className="w-full py-4 md:py-5 px-6 bg-main hover:bg-main/90 text-background font-[var(--heading-font-weight)] text-base md:text-lg uppercase tracking-wide rounded-none border-4 border-border shadow-[var(--shadow)] hover:shadow-[5px_5px_0_0_var(--border)] transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
         onClick={handleAddToCart}
         disabled={isLoading}
       >
         {isLoading ? (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2">
             <svg
-              className="animate-spin -ml-1 mr-2 h-4 w-4 text-primary-foreground"
+              className="animate-spin h-5 w-5 text-background"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -111,7 +111,7 @@ const AddToCart = ({ id, name, price, image }: AddToCartProps) => {
               height="20"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="currentColor"
+              stroke="black"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -120,10 +120,12 @@ const AddToCart = ({ id, name, price, image }: AddToCartProps) => {
               <circle cx="19" cy="21" r="1" />
               <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
             </svg>
+            <p className="text-foreground">
             Add to cart
+            </p>
           </div>
         )}
-      </Button>
+      </button>
     </div>
   );
 };
