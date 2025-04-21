@@ -2,6 +2,7 @@ import "server-only";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { TokenBucket } from "@/lib/rate-limit";
+import { auth } from "./lib/session";
 // import { auth } from "./lib/session"; // Keep auth commented if not used
 
 const getRequestBucket = new TokenBucket<string>(100, 1);
@@ -10,6 +11,7 @@ const postRequestBucket = new TokenBucket<string>(30, 1);
 // Define allowed origins - update if you need more
 const allowedOrigins = [
   "https://vit-mono-store.vercel.app",
+  "http://localhost:4321",
   // Add localhost for development if needed: e.g., "http://localhost:4321"
 ];
 
@@ -20,7 +22,7 @@ const publicPaths = [
   "/_next",
   "/favicon.ico",
   "/public",
-  "/api/trpc", // Ensure /api/trpc is considered public for direct access check later
+  "/api/trpc", 
 ];
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
@@ -110,18 +112,18 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   }
 
   // --- Authentication/Authorization (Example - keep commented if not needed) ---
-  // const result = await auth(); // Assuming auth() checks cookie/session
-  // if (result.session === null) {
-  //   console.log("Middleware: No session found, redirecting to login for path:", path);
-  //   const loginUrl = new URL("/login", request.url);
-  //   // Add CORS headers even to redirects if needed, although usually not required
-  //   const redirectResponse = NextResponse.redirect(loginUrl);
-  //   if (isAllowedOrigin) {
-  //        redirectResponse.headers.set("Access-Control-Allow-Origin", origin);
-  //   }
-  //   return redirectResponse;
-  // }
-  // console.log("Middleware: Session found, allowing access to:", path);
+  const result = await auth(); // Assuming auth() checks cookie/session
+  if (result.session === null) {
+    console.log("Middleware: No session found, redirecting to login for path:", path);
+    const loginUrl = new URL("/login", request.url);
+    // Add CORS headers even to redirects if needed, although usually not required
+    const redirectResponse = NextResponse.redirect(loginUrl);
+    if (isAllowedOrigin) {
+         redirectResponse.headers.set("Access-Control-Allow-Origin", origin);
+    }
+    return redirectResponse;
+  }
+  console.log("Middleware: Session found, allowing access to:", path);
   // --- End Auth Example ---
 
   console.log("Middleware: Path allowed:", path);

@@ -13,6 +13,7 @@ export default defineConfig({
   },
 
   integrations: [react(), tailwind()],
+  output:"static",
   adapter: isProd
     ? vercel()
     : node({
