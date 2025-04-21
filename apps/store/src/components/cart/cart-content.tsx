@@ -1,5 +1,5 @@
 import { useCart } from "@/hooks/use-cart";
-import Loading from "./loading";
+import Loading from "../loading";
 import CartActions from "./cart-actions";
 import { deliveryFee } from "@/utils/constants";
 
