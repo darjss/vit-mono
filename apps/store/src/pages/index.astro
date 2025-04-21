@@ -6,30 +6,119 @@ import { Button } from "@workspace/ui/components/button";
 
 const message = await api.cart.hello.query({ text: "fjiowf ewomf" });
 const products = await api.product.getFeauturedProducts.query();
-console.log(message);
+// console.log(message);
 ---
 
 <Layout>
-  <div class="flex justify-center flex-col">
-    <h1>Home page</h1>
-    <p>{message.greeting}</p>
-    <div class="bg-main h-10 w-10 rounded-full">Hello</div>
-    <Button client:load onClick={() => console.log("hello")}>Hello</Button>
-
-    <h2 class="text-2xl font-bold text-foreground">Products</h2>
-    <div class="flex flex-wrap gap-4 justify-center">
-      {
-        products.map((product) => (
-          <ProductCard
-            product={{
-              id: product.id + "",
-              name: product.name,
-              price: product.price,
-              image: product.image,
-            }}
-          />
-        ))
-      }
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden border-b-4 border-border py-12 md:py-20">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl relative z-20">
+        <h1 class="text-5xl md:text-7xl font-[var(--heading-font-weight)] uppercase mb-6 tracking-tight">
+          Америкийн чанартай витаминууд 
+        </h1>
+        <p class="text-xl md:text-2xl mb-8">
+          АНУ-ын итгэмжлэгдсэн брендуудаас шууд импортолсон, таны эрүүл мэндэд зориулсан өндөр чанарын бүтээгдэхүүн.
+        </p>
+        <div class="flex flex-wrap gap-4 relative z-30">
+          <a href="/products" class="inline-block px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg uppercase tracking-wider rounded-none border-4 border-border shadow-[var(--shadow)] transition-transform hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none active:scale-[0.98]">
+            Дэлгүүр үзэх
+          </a>
+        </div>
+      </div>
     </div>
-  </div>
+
+    <!-- Brand Logo Animations -->
+    <div class="absolute inset-0 w-full h-full -z-5 overflow-hidden">
+      <img src="/logo1.png" alt="Brand Logo" class="absolute w-24 md:w-32 opacity-70 animate-float-1 top-[15%] left-[60%] rotate-[10deg] delay-[0ms] z-10" />
+      <img src="/logo2.png" alt="Brand Logo" class="absolute w-24 md:w-32 opacity-70 animate-float-2 top-[65%] left-[80%] -rotate-[5deg] delay-[1000ms] z-10" />
+      <img src="/logo3.png" alt="Brand Logo" class="absolute w-24 md:w-32 opacity-70 animate-float-3 top-[75%] left-[20%] rotate-[8deg] delay-[2000ms] z-10" />
+      <img src="/logo4.png" alt="Brand Logo" class="absolute w-24 md:w-32 opacity-70 animate-float-1 top-[25%] left-[85%] -rotate-[12deg] delay-[3000ms] z-10" />
+      <img src="/logo5.png" alt="Brand Logo" class="absolute w-24 md:w-32 opacity-70 animate-float-2 top-[45%] left-[15%] rotate-[15deg] delay-[2500ms] z-10" />
+      <img src="/logo6.png" alt="Brand Logo" class="absolute w-24 md:w-32 opacity-70 animate-float-3 top-[10%] left-[10%] -rotate-[8deg] delay-[1500ms] z-10" />
+      <img src="/logo7.png" alt="Brand Logo" class="absolute w-24 md:w-32 opacity-70 animate-float-1 top-[70%] left-[65%] rotate-[5deg] delay-[500ms] z-10" />
+
+      <img 
+        src="/logo8.png" 
+        alt="Brand Logo" 
+        class="absolute w-24 md:w-32 opacity-80 animate-float-2 md:right-[2%] md:top-[35%] top-[30%] -right-[10%] -rotate-[5deg] delay-[3500ms] -z-[1] md:z-10 pointer-events-none filter drop-shadow-lg"  
+      />
+    </div>
+
+    <div class="absolute -right-20 bottom-0 w-80 h-80 bg-accent/30 rounded-full blur-3xl -z-10"></div>
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-primary/20 rounded-full blur-3xl -z-10"></div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="py-16 md:py-24">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-baseline mb-10 border-b-4 border-border pb-4">
+        <h2 class="text-3xl md:text-4xl font-[var(--heading-font-weight)] uppercase tracking-tight">Онцлох бүтээгдэхүүн</h2>
+        <a href="/products" class="text-lg font-bold uppercase hover:text-primary transition-colors mt-2 md:mt-0">
+          Бүгдийг үзэх →
+        </a>
+      </div>
+      
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+        {products.map((product) => (
+          <ProductCard product={product} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefit Blocks -->
+  <section class="py-16 bg-secondary">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 bg-background border-4 border-border shadow-[var(--shadow)] transform transition-transform hover:-translate-y-1">
+          <div class="w-16 h-16 flex items-center justify-center mb-4 bg-primary rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold uppercase mb-2">Шууд үйлдвэрээс</h3>
+          <p>Бүх бүтээгдэхүүнийг АНУ-ын итгэмжлэгдсэн үйлдвэрээс шууд импортолж байна.</p>
+        </div>
+        
+        <div class="p-6 bg-background border-4 border-border shadow-[var(--shadow)] transform transition-transform hover:-translate-y-1">
+          <div class="w-16 h-16 flex items-center justify-center mb-4 bg-primary rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 10.5a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5zm0 9.75a7.5 7.5 0 100-15 7.5 7.5 0 000 15zm6-15a7.5 7.5 0 110 15 7.5 7.5 0 010-15zm-10.5 0a7.5 7.5 0 110 15 7.5 7.5 0 010-15zm10.5 0a7.5 7.5 0 110 15 7.5 7.5 0 010-15z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold uppercase mb-2">Баталгаат бүтээгдэхүүн</h3>
+          <p>FDA болон GMP-ийн стандартын дагуу үйлдвэрлэсэн, чанарын баталгаатай амин дэм, эрдэс бодис.</p>
+        </div>
+        
+        <div class="p-6 bg-background border-4 border-border shadow-[var(--shadow)] transform transition-transform hover:-translate-y-1">
+          <div class="w-16 h-16 flex items-center justify-center mb-4 bg-primary rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold uppercase mb-2">Хүртээмжтэй үнэ</h3>
+          <p>Шууд импортын бодлогоор дамжуулан зах зээлийн үнээс илүү хүртээмжтэй үнээр санал болгож байна.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="py-16 md:py-20">
+    <div class="container mx-auto px-4">
+      <div class="border-4 border-border p-8 md:p-12 bg-primary/20 shadow-[var(--shadow)] relative overflow-hidden">
+        <div class="max-w-2xl relative z-10">
+          <h2 class="text-3xl md:text-4xl font-[var(--heading-font-weight)] uppercase mb-6 tracking-tight">Эрүүл мэнддээ анхаарал хандуулаарай</h2>
+          <p class="text-lg mb-8">АНУ-ын чанарын витамин, амин дэмээр дамжуулан эрүүл мэндээ дэмжиж, урт наслах боломжийг бүрдүүлээрэй.</p>
+          
+          <a href="/products" class="inline-block px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg uppercase tracking-wider rounded-none border-4 border-border shadow-[var(--shadow)] transition-transform hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none active:scale-[0.98]">
+            Дэлгүүр үзэх
+          </a>
+        </div>
+        
+        <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-primary/40 rounded-full blur-3xl"></div>
+      </div>
+    </div>
+  </section>
 </Layout>

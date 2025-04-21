@@ -16,7 +16,7 @@ export const product = createTRPCRouter({
                     price: true,
                 },
                 orderBy: sql`RANDOM()`,
-                limit: 6,
+                limit: 10,
                 where: eq(ProductsTable.status, "active"),
                 with: {
                     images: {

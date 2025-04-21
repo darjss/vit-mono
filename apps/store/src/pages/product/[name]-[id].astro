@@ -21,6 +21,9 @@ const product = await api.product.getProductById.query({ id });
 if (product === null) {
   throw new Error("Product not found");
 }
+const primaryImage = product.images.find((img) => img.isPrimary)?.url ||
+                  (product.images.length > 0 ? product.images[0].url : "/placeholder-image.jpg"); // Fallback image
+
 const images = product.images
   .sort((a, b) => (a.isPrimary === b.isPrimary ? 0 : a.isPrimary ? -1 : 1))
   .map((image) => image.url);
@@ -31,8 +34,8 @@ console.log(product);
 <Layout>
   <div class="container mx-auto py-8 md:py-16 px-4 md:px-6">
     <!-- Breadcrumb navigation -->
-    <nav class="mb-8 text-sm">
-      <ol class="flex items-center space-x-2">
+    <nav class="mb-8 inline-block border-4 border-border bg-secondary/50 p-2 rounded">
+      <ol class="flex items-center space-x-2 text-sm font-base">
         <li><a href="/" class="text-muted-foreground hover:text-primary transition-colors">Home</a></li>
         <li><span class="text-muted-foreground">/</span></li>
         <li><a href="/products" class="text-muted-foreground hover:text-primary transition-colors">Products</a></li>
@@ -41,25 +44,23 @@ console.log(product);
       </ol>
     </nav>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+    <div class="flex flex-col md:flex-row md:space-x-12 space-y-12 md:space-y-0 border-4 border-border p-6 bg-card shadow-shadow hover:shadow-[5px_5px_0_0_var(--border)] transition-all">
       <!-- Image Section -->
-      <div class="w-full mx-auto">
-        <div class="rounded-xl overflow-hidden shadow-[var(--shadow)] bg-card">
-          <ImageCarousel
-            client:only
-            images={images.length > 0 ? images : [
-              "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/obn/obn60030/l/24.jpg",
-              "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/obn/obn60030/l/24.jpg",
-            ]}
-            className="aspect-square"
-          />
-        </div>
+      <div class="flex-shrink-0 border-4 border-border rounded p-2 bg-card shadow-shadow">
+        <ImageCarousel
+          client:only
+          images={images.length > 0 ? images : [
+            "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/obn/obn60030/l/24.jpg",
+            "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/obn/obn60030/l/24.jpg",
+          ]}
+          className="aspect-square"
+        />
       </div>
 
       <!-- Product Info Section -->
-      <div class="flex flex-col space-y-6">
+      <div class="flex-1 flex flex-col space-y-6">
         <div>
-          <h1 class="text-3xl md:text-4xl font-[var(--heading-font-weight)] mb-2">
+          <h1 class="text-4xl md:text-5xl font-heading border-b-4 border-border pb-2">
             {product.name}
           </h1>
           
@@ -69,8 +70,8 @@ console.log(product);
             </div>
           )}
           
-          <div class="flex items-center mb-6">
-            <span class="text-3xl font-bold text-primary">
+          <div class="flex items-center space-x-4 mb-6">
+            <span class="text-3xl font-heading border-4 border-border p-2 bg-main text-foreground">
               {product.price.toLocaleString()} ₮
             </span>
             {
@@ -94,8 +95,8 @@ console.log(product);
 
         {
           (product.potency || product.dailyIntake || product.amount) && (
-            <div class="bg-secondary/50 rounded-xl p-6 backdrop-blur-sm border border-border">
-              <h3 class="text-lg font-semibold mb-4">Product Details</h3>
+            <div class="border-4 border-border p-4 rounded bg-secondary/50 shadow-shadow">
+              <h3 class="text-lg font-heading border-b-2 border-border pb-1 mb-4">Product Details</h3>
               <div class="grid grid-cols-1 gap-4">
                 {product.potency && (
                   <div class="flex items-center">
@@ -121,19 +122,24 @@ console.log(product);
         }
 
         <!-- Delivery Information -->
-        <div class="bg-primary/10 rounded-xl p-6 border border-primary/20">
-          <div class="flex items-center gap-3 mb-2">
+        <div class="mt-6 border-4 border-border p-4 rounded bg-primary/10 shadow-shadow">
+          <div class="flex items-center gap-3 mb-2 border-b-2 border-border pb-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
-            <h3 class="text-lg font-semibold">Fast Delivery</h3>
+            <h3 class="text-lg font-heading">Fast Delivery</h3>
           </div>
           <p class="text-sm text-muted-foreground">Free shipping on orders over 50,000 ₮</p>
         </div>
 
         <div class="mt-auto pt-4">
-          <div class="flex flex-col sm:flex-row gap-4">
-            <div class="w-full">
-              <AddToCart client:load id={id} />
-            </div>
+          <div class="flex space-x-4">
+            <AddToCart
+              client:load
+              id={product.id} 
+              name={product.name}
+              price={product.price}
+              image={primaryImage}
+              class="border-4 border-border bg-foreground text-background font-heading uppercase px-6 py-3 shadow-shadow hover:shadow-[5px_5px_0_0_var(--border)] transition-all"
+            />
           </div>
         </div>
       </div>
@@ -141,7 +147,7 @@ console.log(product);
     
     <!-- Related Products Section (Placeholder) -->
     <div class="mt-16 md:mt-24">
-      <h2 class="text-2xl font-[var(--heading-font-weight)] mb-8">You may also like</h2>
+      <h2 class="text-2xl font-heading border-b-4 border-border pb-2 mb-8">You may also like</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
         <!-- This would be populated with actual related products -->
       <div class="animate-pulse">

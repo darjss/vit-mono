@@ -73,7 +73,7 @@
     --input: 0 0% 0%;
     --ring: 0 0% 100%;
 
-    --chart-1: 45 100% 67%; 
+    --chart-1: 45 100% 67%;
     --chart-2: 160 40% 55%;
     --chart-3: 30 60% 65%;
     --chart-4: 280 45% 70%;
@@ -132,4 +132,64 @@
   body {
     @apply bg-background text-foreground;
   }
-} 
+}
+
+/* Brand Logo Animations */
+@keyframes float-1 {
+  0% {
+    transform: translateY(0) rotate(var(--rotation));
+  }
+  50% {
+    transform: translateY(-15px) rotate(calc(var(--rotation) + 5deg));
+  }
+  100% {
+    transform: translateY(0) rotate(var(--rotation));
+  }
+}
+
+@keyframes float-2 {
+  0% {
+    transform: translateY(0) rotate(var(--rotation));
+  }
+  50% {
+    transform: translateY(15px) rotate(calc(var(--rotation) - 5deg));
+  }
+  100% {
+    transform: translateY(0) rotate(var(--rotation));
+  }
+}
+
+@keyframes float-3 {
+  0% {
+    transform: translateY(0) translateX(0) rotate(var(--rotation));
+  }
+  33% {
+    transform: translateY(-10px) translateX(10px)
+      rotate(calc(var(--rotation) + 3deg));
+  }
+  66% {
+    transform: translateY(10px) translateX(-10px)
+      rotate(calc(var(--rotation) - 3deg));
+  }
+  100% {
+    transform: translateY(0) translateX(0) rotate(var(--rotation));
+  }
+}
+
+.animate-float-1 {
+  --rotation: 0deg;
+  animation: float-1 6s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+.animate-float-2 {
+  --rotation: 0deg;
+  animation: float-2 7s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+.animate-float-3 {
+  --rotation: 0deg;
+  animation: float-3 8s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}

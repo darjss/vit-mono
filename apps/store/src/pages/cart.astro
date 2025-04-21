@@ -1,6 +1,7 @@
 ---
 // import CartContent from '@/components/CartContent.tsx';
 // import CartContent from "@/components/cart-content"; // Remove old import
+import CartContent from "@/components/cart-content";
 import CartContentWrapper from "@/components/cart-content-wrapper"; // Import the wrapper
 import Loading from "@/components/loading.astro";
 import Layout from "@/layouts/Layout.astro";
@@ -26,9 +27,8 @@ import Layout from "@/layouts/Layout.astro";
                 </div>
             </div>
             
-            <CartContentWrapper client:load> {/* Use the wrapper */} 
-                <Loading slot={"fallback"} />
-            </CartContentWrapper>
+            <CartContent client:load> 
+            </CartContent>
         </div>
     </div>
 </Layout>

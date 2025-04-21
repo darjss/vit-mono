@@ -3,13 +3,21 @@ import { useCart } from "@/hooks/use-cart";
 import { Button } from "@workspace/ui/components/button";
 import { useState } from "react";
 
-const AddToCart = ({ id }: { id: number }) => {
+interface AddToCartProps {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+}
+
+const AddToCart = ({ id, name, price, image }: AddToCartProps) => {
   const [quantity, setQuantity] = useState(1);
   const { addToCart, isLoading } = useCart();
   const handleAddToCart = () => {
-    addToCart(id, quantity);
+    const productToAdd = { id, name, price, image };
+    addToCart(productToAdd, quantity);
   };
- 
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between p-3 bg-secondary/40 rounded-lg border border-border">

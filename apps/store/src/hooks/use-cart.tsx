@@ -1,15 +1,30 @@
 import type { Cart } from "@/utils/types";
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+
+interface ProductDetails {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+}
 
 export const useCart = () => {
   const [cart, setCart] = useState<Cart[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     const updateCart = () => {
-      const cart = JSON.parse(Cookies.get("cart") || "[]") as Cart[];
-      setCart(cart);
+      try {
+        const cartData = localStorage.getItem("cart");
+        const cart = cartData ? (JSON.parse(cartData) as Cart[]) : [];
+        setCart(cart);
+      } catch (error) {
+        console.error("Failed to parse cart from localStorage:", error);
+        setCart([]);
+      } finally {
+        setIsLoading(false);
+      }
     };
     updateCart();
 
@@ -29,18 +44,19 @@ export const useCart = () => {
   }, []);
 
   const updateCartAndNotify = (newCart: Cart[]) => {
-    Cookies.set("cart", JSON.stringify(newCart));
+    localStorage.setItem("cart", JSON.stringify(newCart));
     localStorage.setItem("cartUpdatedAt", new Date().toISOString());
     window.dispatchEvent(new Event("cartUpdated"));
-    console.log("New cart", cart);
+    console.log("New cart", newCart);
   };
 
-  const addToCart = (id: number, quantity: number) => {
+  const addToCart = (product: ProductDetails, quantity: number) => {
     setIsLoading(true);
 
     try {
-      // Check if product already exists in cart
-      const existingItemIndex = cart.findIndex((item) => item.productId === id);
+      const existingItemIndex = cart.findIndex(
+        (item) => item.productId === product.id
+      );
 
       let newCart: Cart[];
       if (existingItemIndex >= 0) {
@@ -51,7 +67,16 @@ export const useCart = () => {
           return item;
         });
       } else {
-        newCart = [...cart, { productId: id, quantity }];
+        newCart = [
+          ...cart,
+          {
+            productId: product.id,
+            quantity,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+          },
+        ];
       }
 
       updateCartAndNotify(newCart);
@@ -79,7 +104,7 @@ export const useCart = () => {
     setIsLoading(true);
 
     try {
-      Cookies.remove("cart");
+      localStorage.removeItem("cart");
       localStorage.setItem("cartUpdatedAt", new Date().toISOString());
       window.dispatchEvent(new Event("cartUpdated"));
 
@@ -91,38 +116,39 @@ export const useCart = () => {
   };
 
   const updateItem = (id: number, type: "add" | "remove") => {
+    setIsLoading(true);
     try {
-      // Check if product already exists in cart
       const existingItemIndex = cart.findIndex((item) => item.productId === id);
 
-      let newCart: Cart[];
       if (existingItemIndex >= 0) {
-        newCart = cart.map((item, index) => {
-          if (index === existingItemIndex) {
-            const newQuantity =
-              type === "add" ? item.quantity + 1 : item.quantity - 1;
-            return { ...item, quantity: newQuantity };
-          }
-          return item;
-        });
+        const currentItem = cart[existingItemIndex];
+        const newQuantity =
+          type === "add" ? currentItem.quantity + 1 : currentItem.quantity - 1;
+
+        let newCart: Cart[];
+        if (newQuantity <= 0) {
+          newCart = cart.filter((_, index) => index !== existingItemIndex);
+        } else {
+          newCart = cart.map((item, index) => {
+            if (index === existingItemIndex) {
+              return { ...item, quantity: newQuantity };
+            }
+            return item;
+          });
+        }
         updateCartAndNotify(newCart);
+      } else {
+        console.warn("Attempted to update item not in cart:", id);
       }
+      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      console.error("Failed to add to cart:", error);
+      console.error("Failed to update item quantity:", error);
     }
-  };
-
-  const getQuantityFromId = (id: number) => {
-    const item = cart.find((item) => item.productId === id);
-    if (item === undefined) {
-      return 1;
-    }
-    return item.quantity;
   };
 
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
-  const productIds = cart.map((item) => item.productId);
+
   return {
     cart,
     isLoading,
@@ -130,8 +156,6 @@ export const useCart = () => {
     removeFromCart,
     clearCart,
     cartCount,
-    productIds,
     updateItem,
-    getQuantityFromId,
   };
 };
