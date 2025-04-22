@@ -111,19 +111,19 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     return response; // Allow public paths, return response with potential CORS headers
   }
 
-  // --- Authentication/Authorization (Example - keep commented if not needed) ---
-  const result = await auth(); // Assuming auth() checks cookie/session
-  if (result.session === null) {
-    console.log("Middleware: No session found, redirecting to login for path:", path);
-    const loginUrl = new URL("/login", request.url);
-    // Add CORS headers even to redirects if needed, although usually not required
-    const redirectResponse = NextResponse.redirect(loginUrl);
-    if (isAllowedOrigin) {
-         redirectResponse.headers.set("Access-Control-Allow-Origin", origin);
-    }
-    return redirectResponse;
-  }
-  console.log("Middleware: Session found, allowing access to:", path);
+  // // --- Authentication/Authorization (Example - keep commented if not needed) ---
+  // const result = await auth(); // Assuming auth() checks cookie/session
+  // if (result.session === null) {
+  //   console.log("Middleware: No session found, redirecting to login for path:", path);
+  //   const loginUrl = new URL("/login", request.url);
+  //   // Add CORS headers even to redirects if needed, although usually not required
+  //   const redirectResponse = NextResponse.redirect(loginUrl);
+  //   if (isAllowedOrigin) {
+  //        redirectResponse.headers.set("Access-Control-Allow-Origin", origin);
+  //   }
+  //   return redirectResponse;
+  // }
+  // console.log("Middleware: Session found, allowing access to:", path);
   // --- End Auth Example ---
 
   console.log("Middleware: Path allowed:", path);
