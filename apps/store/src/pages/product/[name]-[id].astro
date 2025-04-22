@@ -14,9 +14,7 @@ export async function getStaticPaths() {
     props: { id: product.id },
   }));
 }
-
 const { id } = Astro.props;
-console.log(id);
 const product = await api.product.getProductById.query({ id });
 if (product === null) {
   throw new Error("Product not found");
@@ -28,7 +26,7 @@ const images = product.images
   .sort((a, b) => (a.isPrimary === b.isPrimary ? 0 : a.isPrimary ? -1 : 1))
   .map((image) => image.url);
 
-console.log(product);
+
 ---
 
 <Layout>

@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.5.0",
     "@astrojs/node": "^9.2.0",
     "@astrojs/react": "^4.2.4",
     "@astrojs/tailwind": "^6.0.2",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@types/react": "^19.1.2",
-    "@types/react-dom": "^19.1.2"
+    "@types/react-dom": "^19.1.2",
+    "wrangler": "^4.12.0"
   }
 }
