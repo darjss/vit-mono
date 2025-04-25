@@ -1,5 +1,5 @@
 ---
-import AddToCart from "@/components/cart/add-to-cart";
+import AddToCart from "@/components/add-to-cart";
 import ImageCarousel from "@/components/image-carousel";
 import Layout from "@/layouts/Layout.astro";
 import api from "@/utils/trpc";
@@ -15,109 +15,74 @@ export async function getStaticPaths() {
   }));
 }
 const { id } = Astro.props;
+console.log(id);
 const product = await api.product.getProductById.query({ id });
 if (product === null) {
   throw new Error("Product not found");
 }
-const primaryImage = product.images.find((img) => img.isPrimary)?.url ||
-                  (product.images.length > 0 ? product.images[0].url : "/placeholder-image.jpg"); // Fallback image
-
 const images = product.images
   .sort((a, b) => (a.isPrimary === b.isPrimary ? 0 : a.isPrimary ? -1 : 1))
   .map((image) => image.url);
 
-
+console.log(product);
 ---
 
 <Layout>
-  <div class="w-full px-3 sm:container sm:mx-auto py-6 md:py-12 md:px-4 relative">
-    <!-- Background accents -->
-    <div class="absolute -right-20 bottom-20 w-80 h-80 bg-primary/20 rounded-full blur-3xl -z-10"></div>
-    <div class="absolute -top-40 -left-40 w-96 h-96 bg-accent/20 rounded-full blur-3xl -z-10"></div>
-    
-    <!-- Breadcrumb navigation -->
-    <nav class="mb-4 md:mb-6 inline-block border-4 border-border bg-secondary/50 p-2 rounded-none shadow-[var(--shadow)] hover:shadow-[5px_5px_0_0_var(--border)] transition-all">
-      <ol class="flex items-center space-x-2 text-xs md:text-sm font-[var(--base-font-weight)]">
-        <li><a href="/" class="text-muted-foreground hover:text-primary transition-colors">Home</a></li>
-        <li><span class="text-muted-foreground">/</span></li>
-        <li><a href="/products" class="text-muted-foreground hover:text-primary transition-colors">Products</a></li>
-        <li><span class="text-muted-foreground">/</span></li>
-        <li><span class="text-foreground font-[var(--heading-font-weight)] truncate max-w-[120px] md:max-w-[200px]">{product.name}</span></li>
-      </ol>
-    </nav>
-
-    <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-10 border-4 border-border p-4 md:p-6 bg-background shadow-[var(--shadow)] hover:shadow-[5px_5px_0_0_var(--border)] transition-all">
-      <!-- Image Section -->
-      <div class="w-full flex-shrink-0 border-4 border-border rounded-none bg-background shadow-[var(--shadow)]">
-        <div class="max-h-[350px] md:max-h-[450px] w-full">
+  <div class="container mx-auto py-12 px-4 md:px-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div class="w-full max-w-md mx-auto">
+        <div class="rounded-lg overflow-hidden shadow-[var(--shadow)]">
           <ImageCarousel
             client:only
-            images={images.length > 0 ? images : [
+            images={[
               "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/obn/obn60030/l/24.jpg",
               "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/obn/obn60030/l/24.jpg",
             ]}
-            className="aspect-square max-h-full object-contain"
           />
         </div>
       </div>
 
-      <!-- Product Info Section -->
-      <div class="flex flex-col space-y-4 md:space-y-6">
-        <div>
-          <h1 class="text-3xl md:text-5xl font-[var(--heading-font-weight)] uppercase border-b-4 border-border pb-2">
-            {product.name}
-          </h1>
-          
-          {product.brandId && (
-            <div class="text-muted-foreground mt-2 mb-3 md:mb-4">
-              by <span class="text-primary font-[var(--heading-font-weight)]">{product.brandId}</span>
-            </div>
-          )}
-          
-          <div class="flex flex-wrap items-center gap-3 md:gap-4 mb-4 md:mb-6">
-            <span class="text-2xl md:text-3xl font-[var(--heading-font-weight)] border-4 border-border p-2 md:p-3 bg-primary text-primary-foreground shadow-[var(--shadow)]">
-              {product.price.toLocaleString()} ₮
-            </span>
-            {
-              product.discount && (
-                <div class="flex items-center">
-                  <span class="line-through text-muted-foreground mr-2 text-sm md:text-base">
-                    {Math.round(product.price / (1 - product.discount / 100)).toLocaleString()} ₮
-                  </span>
-                  <span class="px-2 py-1 bg-destructive text-destructive-foreground text-xs md:text-sm font-bold rounded-none border-2 border-border shadow-[2px_2px_0_0_var(--border)]">
-                    {product.discount}% OFF
-                  </span>
-                </div>
-              )
-            }
-          </div>
+      <div class="flex flex-col">
+        <h1 class="text-3xl md:text-4xl font-[var(--heading-font-weight)] mb-4">
+          {product.name}
+        </h1>
+
+        <div class="flex items-center mb-6">
+          <span class="text-2xl font-bold text-primary"
+            >{product.price.toLocaleString()} ₮</span
+          >
+          {
+            product.discount && (
+              <span class="ml-3 px-2 py-1 bg-destructive text-destructive-foreground text-sm font-semibold rounded">
+                {product.discount}% OFF
+              </span>
+            )
+          }
         </div>
 
-        <div class="prose max-w-none">
-          <p class="text-base md:text-lg border-l-4 border-primary pl-4">{product.description}</p>
+        <div class="prose max-w-none mb-8">
+          <p class="text-lg">{product.description}</p>
         </div>
 
         {
-          (product.potency || product.dailyIntake || product.amount) && (
-            <div class="border-4 border-border p-3 md:p-4 rounded-none bg-secondary/50 shadow-[var(--shadow)]">
-              <h3 class="text-base md:text-lg font-[var(--heading-font-weight)] uppercase border-b-2 border-border pb-2 mb-3 md:mb-4">Product Details</h3>
-              <div class="grid grid-cols-1 gap-3 md:gap-4">
+          (product.potency || product.dailyIntake) && (
+            <div class="bg-secondary rounded-lg p-4 mb-8">
+              <h3 class="text-lg font-semibold mb-2">Product Details</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {product.potency && (
-                  <div class="flex flex-col md:flex-row md:items-center">
-                    <div class="w-full md:w-1/3 font-[var(--heading-font-weight)] mb-1 md:mb-0">Potency:</div>
-                    <div class="w-full md:w-2/3 bg-background/80 p-2 border-l-4 border-primary">{product.potency}</div>
+                  <div>
+                    <span class="font-medium">Potency:</span> {product.potency}
                   </div>
                 )}
                 {product.dailyIntake && (
-                  <div class="flex flex-col md:flex-row md:items-center">
-                    <div class="w-full md:w-1/3 font-[var(--heading-font-weight)] mb-1 md:mb-0">Daily Intake:</div>
-                    <div class="w-full md:w-2/3 bg-background/80 p-2 border-l-4 border-primary">{product.dailyIntake}</div>
+                  <div>
+                    <span class="font-medium">Daily Intake:</span>{" "}
+                    {product.dailyIntake}
                   </div>
                 )}
                 {product.amount && (
-                  <div class="flex flex-col md:flex-row md:items-center">
-                    <div class="w-full md:w-1/3 font-[var(--heading-font-weight)] mb-1 md:mb-0">Amount:</div>
-                    <div class="w-full md:w-2/3 bg-background/80 p-2 border-l-4 border-primary">{product.amount}</div>
+                  <div>
+                    <span class="font-medium">Amount:</span> {product.amount}
                   </div>
                 )}
               </div>
@@ -125,56 +90,12 @@ const images = product.images
           )
         }
 
-        <!-- Delivery Information -->
-        <div class="border-4 border-border p-3 md:p-4 rounded-none bg-primary/10 shadow-[var(--shadow)] hover:shadow-[4px_4px_0_0_var(--border)] transition-all">
-          <div class="flex items-center gap-3 mb-2 md:mb-3 border-b-2 border-border pb-2 md:pb-3">
-            <div class="w-8 h-8 md:w-10 md:h-10 bg-primary rounded-none border-2 border-border flex items-center justify-center shadow-[2px_2px_0_0_var(--border)]">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-foreground"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+        <div class="mt-auto">
+          <div class="flex flex-col sm:flex-row gap-4">
+            <div class="w-full sm:w-1/2">
+              <AddToCart client:load id={id} />
             </div>
-            <h3 class="text-base md:text-lg font-[var(--heading-font-weight)] uppercase">Fast Delivery</h3>
           </div>
-          <p class="text-muted-foreground flex items-center gap-2 ml-1 text-sm md:text-base">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            Free shipping on orders over 50,000 ₮
-          </p>
-        </div>
-
-        <div class="pt-4 w-full">
-          <AddToCart
-            id={product.id} 
-            name={product.name}
-            price={product.price}
-            image={primaryImage}
-            client:load
-          />
-        </div>
-      </div>
-    </div>
-    
-    <!-- Related Products Section -->
-    <div class="mt-10 md:mt-16 lg:mt-24 w-full">
-      <h2 class="text-2xl md:text-3xl font-[var(--heading-font-weight)] uppercase border-b-4 border-border pb-2 mb-6 md:mb-8">You may also like</h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 w-full">
-        <!-- This would be populated with actual related products -->
-        <div class="border-4 border-border p-2 md:p-3 bg-background shadow-[var(--shadow)] hover:shadow-[5px_5px_0_0_var(--border)] transition-all animate-pulse">
-          <div class="aspect-square bg-muted rounded-none"></div>
-          <div class="mt-2 md:mt-3 h-4 md:h-5 bg-muted rounded-none w-3/4"></div>
-          <div class="mt-1 md:mt-2 h-3 md:h-4 bg-muted rounded-none w-1/2"></div>
-        </div>
-        <div class="border-4 border-border p-2 md:p-3 bg-background shadow-[var(--shadow)] hover:shadow-[5px_5px_0_0_var(--border)] transition-all animate-pulse">
-          <div class="aspect-square bg-muted rounded-none"></div>
-          <div class="mt-2 md:mt-3 h-4 md:h-5 bg-muted rounded-none w-3/4"></div>
-          <div class="mt-1 md:mt-2 h-3 md:h-4 bg-muted rounded-none w-1/2"></div>
-        </div>
-        <div class="border-4 border-border p-2 md:p-3 bg-background shadow-[var(--shadow)] hover:shadow-[5px_5px_0_0_var(--border)] transition-all animate-pulse">
-          <div class="aspect-square bg-muted rounded-none"></div>
-          <div class="mt-2 md:mt-3 h-4 md:h-5 bg-muted rounded-none w-3/4"></div>
-          <div class="mt-1 md:mt-2 h-3 md:h-4 bg-muted rounded-none w-1/2"></div>
-        </div>
-        <div class="border-4 border-border p-2 md:p-3 bg-background shadow-[var(--shadow)] hover:shadow-[5px_5px_0_0_var(--border)] transition-all animate-pulse">
-          <div class="aspect-square bg-muted rounded-none"></div>
-          <div class="mt-2 md:mt-3 h-4 md:h-5 bg-muted rounded-none w-3/4"></div>
-          <div class="mt-1 md:mt-2 h-3 md:h-4 bg-muted rounded-none w-1/2"></div>
         </div>
       </div>
     </div>

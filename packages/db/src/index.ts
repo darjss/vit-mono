@@ -6,9 +6,6 @@ import { fileURLToPath } from "node:url";
 
 import * as schema from "./schema";
 
-// Re-export drizzle-orm functions
-export { and, between, eq, gte, sql, desc, asc, type SQL } from "drizzle-orm";
-
 /**
  * Cache the database connection in development to avoid creating
  * a new connection on every HMR update.

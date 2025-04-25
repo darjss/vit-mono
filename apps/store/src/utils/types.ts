@@ -1,13 +1,10 @@
 export interface ProductCard {
-  id: number;
+  id: string;
   name: string;
   price: number;
   image: string;
 }
-export interface Cart {
+export interface Cart{
   productId: number;
   quantity: number;
-  name: string;
-  price: number;
-  image: string;
 }

@@ -1,54 +1,27 @@
 import { createTRPCClient, httpBatchLink, loggerLink } from "@trpc/client";
-import type { AppRouter } from "@vit/api";
-import type { TRPCLink } from "@trpc/client";
+import type { AppRouter } from "@vit/api"; // Import the AppRouter
+//  type from your shared package
 import superjson, { SuperJSON } from "superjson";
-import { QueryClient } from "@tanstack/react-query";
-import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
-import { observable } from "@trpc/server/observable";
-
+// Function to get the URL of the Next.js backend
 const getBackendUrl = () => {
+  // Option 1: Use an environment variable (Recommended)
+  // Set VITE_API_URL in your .env file for the Astro app
   const apiUrlFromEnv = import.meta.env.PUBLIC_API_URL;
+   // Use VITE_ prefix for Astro env vars exposed to client
   if (apiUrlFromEnv) return apiUrlFromEnv;
 
+  // Option 2: Fallback for local development (adjust port if necessary)
   if (import.meta.env.DEV) {
     // Assuming Next.js runs on 3000 during dev
     return "http://localhost:3000/api/trpc";
   }
+
+  // Option 3: Default or throw an error if no URL is found in production
+  // This depends on your deployment strategy
   console.warn("API URL not configured via VITE_API_URL environment variable.");
+  // Fallback to a relative path, might not work if domains differ or if Astro app isn't serving the API
   return "http://localhost:3000/api/trpc";
-};
-
-export const queryClient = new QueryClient();
-
-const timingLink: TRPCLink<AppRouter> = () => {
-  // here we just got initialized in the app - this happens once per link
-  // --->
-  return ({ next, op }) => {
-    // this is when an actual request is passing through this link
-    // --->
-    return observable((observer) => {
-      const startTime = Date.now();
-      const unsubscribe = next(op).subscribe({
-        next(value) {
-          const duration = Date.now() - startTime;
-          console.log(`[TRPC Request] ${op.path} completed in ${duration}ms`);
-          observer.next(value);
-        },
-        error(err) {
-          const duration = Date.now() - startTime;
-          console.error(
-            `[TRPC Request] ${op.path} failed in ${duration}ms`,
-            err
-          );
-          observer.error(err);
-        },
-        complete() {
-          observer.complete();
-        },
-      });
-      return unsubscribe;
-    });
-  };
+  // OR: throw new Error("API URL is not configured.");
 };
 
 const api = createTRPCClient<AppRouter>({
@@ -59,7 +32,6 @@ const api = createTRPCClient<AppRouter>({
           typeof window !== "undefined") ||
         (opts.direction === "down" && opts.result instanceof Error),
     }),
-    timingLink,
     httpBatchLink({
       url: getBackendUrl(),
       transformer: SuperJSON,
@@ -70,11 +42,6 @@ const api = createTRPCClient<AppRouter>({
       },
     }),
   ],
-});
-
-export const trpc = createTRPCOptionsProxy<AppRouter>({
-  client: api,
-  queryClient,
 });
 
 export default api;
