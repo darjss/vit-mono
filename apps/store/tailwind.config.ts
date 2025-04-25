@@ -109,14 +109,30 @@ const config: Config = {
             height: "0",
           },
         },
+        "float-1": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-15px)" },
+        },
+        "float-2": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(15px)" },
+        },
+        "float-3": {
+          "0%, 100%": { transform: "translateY(0) translateX(0)" },
+          "33%": { transform: "translateY(-10px) translateX(10px)" },
+          "66%": { transform: "translateY(10px) translateX(-10px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "float-1": "float-1 6s ease-in-out infinite",
+        "float-2": "float-2 7s ease-in-out infinite",
+        "float-3": "float-3 8s ease-in-out infinite",
       },
     },
   },
-//   plugins: [require("tailwindcss-animate")],
+  //   plugins: [require("tailwindcss-animate")],
 };
 
 export default config;
