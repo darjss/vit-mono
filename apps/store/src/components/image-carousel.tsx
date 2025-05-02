@@ -22,6 +22,7 @@ const ImageCarousel = ({ images, className = "" }: ImageCarouselProps) => {
                 src={image}
                 alt={`Product image ${index + 1}`}
                 className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
+                style={{ viewTransitionName: "product-image" }}
               />
             </div>
           </CarouselItem>

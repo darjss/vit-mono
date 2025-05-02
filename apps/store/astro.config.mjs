@@ -16,7 +16,9 @@ export default defineConfig({
     },
     plugins: [],
   },
-
-  integrations: [react(), tailwind()],
+  prefetch:{
+    defaultStrategy: "viewport",
+  },
+  integrations: [react(), tailwind(),],
   adapter: cloudflare(),
 });

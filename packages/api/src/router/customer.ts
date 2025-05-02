@@ -1,0 +1,42 @@
+import { z } from "zod";
+
+import { createTRPCRouter, publicProcedure } from "../trpc";
+import { CustomersTable } from "@vit/db/schema";
+import { eq } from "drizzle-orm";
+import { redis } from "@vit/db/redis";
+import { customAlphabet, nanoid } from "nanoid";
+
+export const customer = createTRPCRouter({
+
+    sendOtp: publicProcedure
+        .input(z.object({
+            phone: z.string(),
+        }))
+        .mutation( async ({ input }) => {
+            const nanoid=customAlphabet("1234567890", 4)
+           const otp=nanoid()
+        //    redis.set(input.phone,otp);
+           const body={
+            message: `Tanii nevtreh kod ${otp}`,
+            phoneNumbers: [`+976${input.phone}`],
+            simNumber:2,
+            ttl: 3600,
+            withDeliveryReport:true,
+            priority:100
+           }
+           const response=await fetch("https://api.sms-gate.app/3rdparty/v1/messages",{
+            method:"POST",
+            headers:{
+                        'Content-Type': 'application/json', 
+        'Authorization': "Basic UTFTM1FQOi16djJzeF9sMms2bnBy"
+            },
+                  body: JSON.stringify(body) 
+           })
+           
+    if (!response.ok) {
+
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+    }
+})
+});

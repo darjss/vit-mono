@@ -64,7 +64,7 @@ const images = product.images
       <!-- Product Info Section -->
       <div class="flex flex-col space-y-4 md:space-y-6">
         <div>
-          <h1 class="text-3xl md:text-5xl font-[var(--heading-font-weight)] uppercase border-b-4 border-border pb-2">
+          <h1 class="text-3xl md:text-5xl font-[var(--heading-font-weight)] uppercase border-b-4 border-border pb-2" transition:name="product-name" transition:animate="fade">
             {product.name}
           </h1>
           
@@ -75,7 +75,7 @@ const images = product.images
           )}
           
           <div class="flex flex-wrap items-center gap-3 md:gap-4 mb-4 md:mb-6">
-            <span class="text-2xl md:text-3xl font-[var(--heading-font-weight)] border-4 border-border p-2 md:p-3 bg-primary text-primary-foreground shadow-[var(--shadow)]">
+            <span class="text-2xl md:text-3xl font-[var(--heading-font-weight)] border-4 border-border p-2 md:p-3 bg-primary text-primary-foreground shadow-[var(--shadow)]" transition:name="product-price" transition:animate="fade">
               {product.price.toLocaleString()} ₮
             </span>
             {

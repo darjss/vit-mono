@@ -31,7 +31,7 @@ export const product = createTRPCRouter({
                 id: product.id,
                 name: product.name,
                 price: product.price,
-                image: product.images[0]?.url,
+                image: "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/obn/obn60030/l/24.jpg",
             }));
         },
     
@@ -71,7 +71,7 @@ getProductById: publicProcedure
             with: {
                 images: {
                     columns: {
-                        url: true,
+                    url: true,
                         isPrimary: true,
                     },
                 },
@@ -80,6 +80,10 @@ getProductById: publicProcedure
         if(result === null || result === undefined) {
             return null;
         }
+        result.images = result.images.map((image) => ({
+            url: "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/obn/obn60030/l/24.jpg",
+            isPrimary: image.isPrimary,
+        }));
         return result
     }
 ),
@@ -110,6 +114,11 @@ getProductsByIds: publicProcedure
             price: product.price,
             image: product.images[0]?.url,
         }));
-    })
+    }),
+//     getProductStock: publicProcedure
+//         .input(z.object({
+//             id: z.number(),
+//         }))
 }
+
 )

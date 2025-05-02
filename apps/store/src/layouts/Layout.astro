@@ -1,7 +1,7 @@
 ---
 import Header from "@/layouts/Header.astro";
 import Footer from "@/layouts/Footer.astro";
-
+import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 import MobileBottomNav from "./mobile-bottom-nav.astro";
 
@@ -16,6 +16,7 @@ import MobileBottomNav from "./mobile-bottom-nav.astro";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>Vitamin store</title>
+    <ClientRouter />
   </head>
   <body>
     <Header />
