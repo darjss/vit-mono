@@ -16,23 +16,65 @@ import MobileBottomNav from "./mobile-bottom-nav.astro";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>Vitamin store</title>
-    <ClientRouter />
+    <ClientRouter fallback="animate" />
+    <script>
+      // Add view transition events to handle page transitions
+      document.addEventListener('astro:page-load', () => {
+        // Reinitialize any client-side JS that needs to run after page transition
+      });
+      
+      document.addEventListener('astro:after-swap', () => {
+        // Apply any state immediately after the DOM has been swapped
+        window.scrollTo({ left: 0, top: 0, behavior: "instant" });
+      });
+    </script>
   </head>
   <body>
-    <Header />
-    <slot />
-    <MobileBottomNav currentPage={Astro.url.pathname} />
-    <Footer />
+    <Header transition:persist />
+    <main class="pt-[48px] md:pt-[72px]">
+      <slot />
+    </main>
+    <MobileBottomNav currentPage={Astro.url.pathname} transition:persist />
+    <Footer transition:persist />
     <style is:global>
       body {
-        padding-bottom: 5rem; /* Add space at the bottom */
+        padding-bottom: 5rem; /* Space for mobile bottom nav */
       }
       @media (min-width: 768px) {
-        /* Corresponds to md: breakpoint */
         body {
-          padding-bottom: 0; /* Remove space on larger screens */
+          padding-bottom: 0; /* Remove bottom padding on desktop */
         }
       }
+
+      /* View Transitions animations */
+      ::view-transition-old(root),
+      ::view-transition-new(root) {
+        animation: none;
+        mix-blend-mode: normal;
+      }
+
+      /* Slide animation */
+      /* @keyframes slide-in {
+        from {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes slide-out {
+        from {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateX(-100%);
+        }
+      } */
     </style>
   </body>
 </html>

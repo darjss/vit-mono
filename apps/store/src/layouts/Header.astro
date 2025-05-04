@@ -1,36 +1,72 @@
 ---
 import Search from "@/icons/search.astro";
 import ShoppingCart from "@/icons/shopping-cart.astro";
+import User from "@/icons/user.astro";
 import astroLogo from "../assets/astro.svg";
 
 import CartCount from "@/components/cart/cart-count";
 ---
 
-<header class="  fixed w-full top-0 z-50">
+<header class="w-full top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border transition-transform duration-300 md:fixed" id="main-header">
   <div class="container mx-auto flex justify-between items-center px-4 py-3">
     <a  
       href="/"
       class="flex items-center gap-3 hover:opacity-80 transition-opacity"
     >
       <img src={astroLogo.src} alt="Store Logo" class="h-10 w-auto" />
-      <h1 class="text-2xl font-bold text-gray-800 ">Store</h1>
+      <h1 class="text-2xl font-bold text-foreground">Store</h1>
     </a>
 
     <div class="flex items-center gap-4">
       <button
         aria-label="Search"
-        class="text-gray-600 hover:text-main transition-colors p-2 rounded-full hover:bg-gray-100"
+        class="text-foreground/80 hover:text-primary transition-colors p-2 rounded-full hover:bg-muted"
       >
         <Search class="w-5 h-5" />
       </button>
       <a
         href="/cart"
         aria-label={`Shopping Cart`}
-        class="relative text-gray-600 hover:text-main transition-colors p-2 rounded-full hover:bg-gray-100"
+        class="relative text-foreground/80 hover:text-primary transition-colors p-2 rounded-full hover:bg-muted"
       >
         <ShoppingCart class="w-6 h-6" />
         <CartCount client:only />
       </a>
+      <a
+        href="/profile"
+        aria-label="User Profile"
+        class="text-foreground/80 hover:text-primary transition-colors p-2 rounded-full hover:bg-muted md:flex hidden"
+      >
+        <User class="w-6 h-6" />
+      </a>
     </div>
   </div>
 </header>
+
+<script>
+  let lastScrollY = window.scrollY;
+  const header = document.getElementById('main-header');
+  
+  // Only run on mobile
+  if (window.innerWidth < 768 && header) {
+    // Initially position the header
+    header.style.position = 'fixed';
+    header.style.transform = 'translateY(0)';
+
+    window.addEventListener('scroll', () => {
+      if (window.innerWidth < 768) { // Check again in case of resize
+        const currentScrollY = window.scrollY;
+        
+        if (currentScrollY > lastScrollY) {
+          // Scrolling down - hide header
+          header.style.transform = 'translateY(-100%)';
+        } else {
+          // Scrolling up - show header
+          header.style.transform = 'translateY(0)';
+        }
+        
+        lastScrollY = currentScrollY;
+      }
+    });
+  }
+</script>

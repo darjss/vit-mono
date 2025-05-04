@@ -26,7 +26,8 @@ const images = product.images
   .sort((a, b) => (a.isPrimary === b.isPrimary ? 0 : a.isPrimary ? -1 : 1))
   .map((image) => image.url);
 
-
+// Convert id to string to avoid type errors
+const productIdString = String(id);
 ---
 
 <Layout>
@@ -50,21 +51,27 @@ const images = product.images
       <!-- Image Section -->
       <div class="w-full flex-shrink-0 border-4 border-border rounded-none bg-background shadow-[var(--shadow)]">
         <div class="max-h-[350px] md:max-h-[450px] w-full">
-          <ImageCarousel
-            client:only
-            images={images.length > 0 ? images : [
-              "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/obn/obn60030/l/24.jpg",
-              "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/obn/obn60030/l/24.jpg",
-            ]}
-            className="aspect-square max-h-full object-contain"
-          />
+          <div class="aspect-square max-h-full object-contain" transition:name={`product-image-${productIdString}`}>
+            <ImageCarousel
+              client:load
+              images={images.length > 0 ? images : [
+                "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/obn/obn60030/l/24.jpg",
+                "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/obn/obn60030/l/24.jpg",
+              ]}
+              className="aspect-square max-h-full object-contain"
+              productId={productIdString}
+            />
+          </div>
         </div>
       </div>
 
       <!-- Product Info Section -->
       <div class="flex flex-col space-y-4 md:space-y-6">
         <div>
-          <h1 class="text-3xl md:text-5xl font-[var(--heading-font-weight)] uppercase border-b-4 border-border pb-2" transition:name="product-name" transition:animate="fade">
+          <h1 
+            class="text-3xl md:text-5xl font-[var(--heading-font-weight)] uppercase border-b-4 border-border pb-2" 
+            transition:name={`product-name-${productIdString}`}
+          >
             {product.name}
           </h1>
           
@@ -75,7 +82,10 @@ const images = product.images
           )}
           
           <div class="flex flex-wrap items-center gap-3 md:gap-4 mb-4 md:mb-6">
-            <span class="text-2xl md:text-3xl font-[var(--heading-font-weight)] border-4 border-border p-2 md:p-3 bg-primary text-primary-foreground shadow-[var(--shadow)]" transition:name="product-price" transition:animate="fade">
+            <span 
+              class="text-2xl md:text-3xl font-[var(--heading-font-weight)] border-4 border-border p-2 md:p-3 bg-primary text-primary-foreground shadow-[var(--shadow)]" 
+              transition:name={`product-price-${productIdString}`}
+            >
               {product.price.toLocaleString()} ₮
             </span>
             {

@@ -5,15 +5,37 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@workspace/ui/components/carousel";
+import { useEffect, useRef } from "react";
 
 interface ImageCarouselProps {
   images: string[];
   className?: string;
+  productId?: string;
 }
 
-const ImageCarousel = ({ images, className = "" }: ImageCarouselProps) => {
+const ImageCarousel = ({
+  images,
+  className = "",
+  productId,
+}: ImageCarouselProps) => {
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Apply styles for view transition after component mounts
+    if (carouselRef.current) {
+      const viewTransitionAttribute = productId
+        ? `product-image-${productId}`
+        : "product-image";
+
+      // Set the view transition name directly on the DOM element to ensure it works with Astro
+      if ("startViewTransition" in document) {
+        carouselRef.current.style.viewTransitionName = viewTransitionAttribute;
+      }
+    }
+  }, [productId]);
+
   return (
-    <Carousel className={`w-full ${className}`}>
+    <Carousel className={`w-full ${className}`} ref={carouselRef}>
       <CarouselContent>
         {images.map((image, index) => (
           <CarouselItem key={index}>
@@ -22,7 +44,8 @@ const ImageCarousel = ({ images, className = "" }: ImageCarouselProps) => {
                 src={image}
                 alt={`Product image ${index + 1}`}
                 className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
-                style={{ viewTransitionName: "product-image" }}
+                // Note: The inline style viewTransitionName is a fallback,
+                // the useEffect hook above handles this more reliably for React components
               />
             </div>
           </CarouselItem>

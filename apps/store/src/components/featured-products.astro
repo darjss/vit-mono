@@ -15,11 +15,19 @@ const products = await api.product.getFeauturedProducts.query();
     </div>
     
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-      <!-- {products.map((product) => (
-        <ProductCard product={product} />
-      ))} -->
-              <ProductCard product={products[0]} />
-
+      {products.map((product) => (
+        <div class="product-card-container">
+          <ProductCard product={product} />
+        </div>
+      ))}
     </div>
   </div>
-</section> 
+</section>
+
+<style>
+  .product-card-container {
+    transform: translateZ(0); /* Force GPU acceleration */
+    backface-visibility: hidden;
+    will-change: transform;
+  }
+</style>

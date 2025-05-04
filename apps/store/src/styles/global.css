@@ -193,28 +193,96 @@
   animation: float-3 8s ease-in-out infinite;
   animation-delay: var(--delay, 0s);
 }
+
+/* View Transitions - Global Animations */
 @keyframes fade-in {
-  from { opacity: 0; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fade-out {
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
-@keyframes slide-from-right {
-  from { transform: translateX(30px); }
+@keyframes scale-in {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
-@keyframes slide-to-left {
-  to { transform: translateX(-30px); }
+@keyframes scale-out {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.85);
+    opacity: 0;
+  }
 }
 
-::view-transition-old(product-image) {
-  animation: 400ms cubic-bezier(0.4, 0, 0.2, 1) both fade-out,
-    400ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+/* Simple crossfade for smooth transitions */
+::view-transition {
+  animation-duration: 0.9s;
 }
 
-::view-transition-new(product-image) {
-  animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both fade-in,
-    300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+::view-transition-old(root) {
+  animation: 900ms cubic-bezier(0.4, 0, 0.2, 1) both fade-out;
+}
+
+::view-transition-new(root) {
+  animation: 900ms cubic-bezier(0.4, 0, 0.2, 1) both fade-in;
+}
+
+/* Apply consistent transitions to all elements with transition:name */
+::view-transition-group(*) {
+  animation-timing-function: cubic-bezier(0.3, 0.1, 0.3, 1);
+  animation-duration: 0.9s;
+}
+
+::view-transition-old(*) {
+  animation: 900ms both fade-out;
+}
+
+::view-transition-new(*) {
+  animation: 900ms both fade-in;
+}
+
+/* Product-specific transitions with subtle scaling for natural feeling */
+[id^="view-transition-product-image"] {
+  content-visibility: auto;
+  contain: layout style size;
+  transform-origin: center;
+  overflow: hidden;
+}
+
+::view-transition-old([id^="view-transition-product-image"]) {
+  animation: 900ms both scale-out;
+}
+
+::view-transition-new([id^="view-transition-product-image"]) {
+  animation: 900ms both scale-in;
+}
+
+/* Fix iOS Safari transition issues */
+@supports (height: 100dvh) {
+  html,
+  body {
+    height: 100dvh;
+    overscroll-behavior: none;
+  }
 }

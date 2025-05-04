@@ -16,9 +16,10 @@ export default defineConfig({
     },
     plugins: [],
   },
-  prefetch:{
+  prefetch: {
     defaultStrategy: "viewport",
   },
-  integrations: [react(), tailwind(),],
+  viewTransitions: true,
+  integrations: [react(), tailwind()],
   adapter: cloudflare(),
 });
