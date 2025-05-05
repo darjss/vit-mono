@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { OTPInput, type SlotProps } from "input-otp";
 import { cn } from "@workspace/ui/lib/utils";
 import { Button } from "@workspace/ui/components/button";
+import { useMutation } from "@tanstack/react-query";
+import trpc from "@/utils/trpc";
 
 interface AnimatedNumberProps {
   value: string | null;
@@ -13,7 +15,7 @@ interface AnimatedNumberProps {
 
 const AnimatedNumber = ({ value, placeholder }: AnimatedNumberProps) => {
   return (
-<div className="relative flex h-[56px] w-[48px] items-center justify-center overflow-hidden">
+    <div className="relative flex h-[56px] w-[48px] items-center justify-center overflow-hidden">
       <AnimatePresence initial={false} mode="wait">
         <motion.span
           key={value}
@@ -69,7 +71,7 @@ const Slot = (
   );
 };
 
-const Otp = () => {
+const Otp = ({ phoneNumber }: { phoneNumber: string }) => {
   const [value, setValue] = useState("");
   const [disableSubmitButton, setDisableSubmitButton] = useState(true);
   const [isVerifying, setIsVerifying] = useState(false);
@@ -77,6 +79,11 @@ const Otp = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const otpRef = useRef<HTMLInputElement>(null);
+  const mutation = useMutation({
+    mutationFn: (data: { phone: string; otp: string }) => {
+      return trpc.customer.checkOtp.mutate(data);
+    },
+  });
 
   useEffect(() => {
     setDisableSubmitButton(value.length !== 4);
@@ -89,17 +96,32 @@ const Otp = () => {
     setDisableSubmitButton(true);
     setErrorMessage("");
 
-    setTimeout(() => {
-      setIsShaking(true);
-      setErrorMessage("Буруу код");
-      setValue("");
-      setIsVerifying(false);
+    mutation.mutate(
+      { phone: phoneNumber, otp: value },
+      {
+        onSuccess: (data) => {
+          if (data) {
+            setIsVerifying(false);
+          } else {
+            setIsShaking(true);
+            setErrorMessage("Буруу код");
+            setValue("");
+            setIsVerifying(false);
+          }
+        },
+        onError: () => {
+          setIsShaking(true);
+          setErrorMessage("Буруу код");
+          setValue("");
+          setIsVerifying(false);
 
-      if (otpRef.current) {
-        otpRef.current.focus();
-        otpRef.current.setSelectionRange(0, 0);
+          if (otpRef.current) {
+            otpRef.current.focus();
+            otpRef.current.setSelectionRange(0, 0);
+          }
+        },
       }
-    }, 2000);
+    );
   };
 
   return (

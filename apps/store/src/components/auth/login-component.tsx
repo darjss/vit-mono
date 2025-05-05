@@ -45,7 +45,12 @@ const LoginComponent = () => {
                   inputMode="tel"
                   placeholder="Утасны дугаар оруулна уу"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === "" || /^[6-9]/.test(value)) {
+                      setPhone(value);
+                    }
+                  }}
                   name="phone"
                   className="block w-full pl-10 focus:ring-2 focus:ring-indigo-500"
                 />
@@ -78,7 +83,7 @@ const LoginComponent = () => {
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-8">
-          <Otp />
+          <Otp phoneNumber={phone} />
           <div className="mt-4 text-center text-sm text-gray-600">
           Код очоогүй юу?{" "}
           <button

@@ -31,7 +31,7 @@ import MobileBottomNav from "./mobile-bottom-nav.astro";
   </head>
   <body>
     <Header transition:persist />
-    <main class="pt-[48px] md:pt-[72px]">
+    <main class="pt-[48px] md:pt-[72px] w-full">
       <slot />
     </main>
     <MobileBottomNav currentPage={Astro.url.pathname} transition:persist />
@@ -84,6 +84,8 @@ import MobileBottomNav from "./mobile-bottom-nav.astro";
   body {
     margin: 0;
     width: 100%;
+    max-width: 100vw;
     height: 100%;
+    overflow-x: hidden;
   }
 </style>

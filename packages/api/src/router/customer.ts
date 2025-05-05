@@ -46,8 +46,13 @@ checkOtp: publicProcedure
     phone: z.string(),
     otp: z.string(),
 })).mutation( async ({ input }) => {
+    if(process.env.NODE_ENV==="development"){
+        return true
+    }
     const otpFromRedis=await redis.get(input.phone)
+
     if(otpFromRedis===input.otp){
+        await redis.del(input.phone)
         return true
     }else{
         return false

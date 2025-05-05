@@ -52,7 +52,7 @@ const AddToCart = ({ id, name, price, image }: AddToCartProps) => {
 
           <button
             onClick={() => setQuantity(Math.min(10, quantity + 1))}
-            disabled={quantity === 10}
+            disabled={quantity === 5}
             className="h-8 w-8 md:h-10 md:w-10 rounded-none p-0 flex items-center justify-center bg-background hover:bg-primary/20 border-2 border-border shadow-[2px_2px_0_0_var(--border)] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             aria-label="Increase quantity"
           >
@@ -120,9 +120,7 @@ const AddToCart = ({ id, name, price, image }: AddToCartProps) => {
               <circle cx="19" cy="21" r="1" />
               <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
             </svg>
-            <p className="text-foreground">
-            Add to cart
-            </p>
+            <p className="text-foreground">Add to cart</p>
           </div>
         )}
       </button>

@@ -2,13 +2,10 @@ import { useCart } from "@/hooks/use-cart";
 import Loading from "../loading";
 import CartActions from "./cart-actions";
 import { deliveryFee } from "@/utils/constants";
+import { slugify } from "@/utils";
 
 const CartContent = () => {
-  const { cart, isLoading: isCartLoading } = useCart();
-
-  const totalPrice = cart.reduce((acc, item) => {
-    return acc + item.price * item.quantity;
-  }, 0);
+  const { cart, isLoading: isCartLoading, totalPrice } = useCart();
 
   if (isCartLoading) {
     return (
@@ -46,14 +43,18 @@ const CartContent = () => {
               <div className="md:flex md:items-center hidden">
                 <div className="w-2/5 flex items-center">
                   <div className="h-20 w-20 flex-shrink-0 overflow-hidden border-4 border-border shadow-[var(--shadow)]">
-                    <img
-                      src={item.image}
-                      alt={`${item.name} image`}
-                      className="h-full w-full object-cover object-center"
-                    />
+                    <a href={`/product/${slugify(item.name)}-${item.productId}`}> 
+                      <img
+                        src={item.image}
+                        alt={`${item.name} image`}
+                        className="h-full w-full object-cover object-center"
+                      />
+                    </a>  
                   </div>
                   <div className="ml-5">
-                    <h2 className="text-xl font-bold">{item.name}</h2>
+                    <a href={`/product/${slugify(item.name)}-${item.productId}`}>
+                      <h2 className="text-xl font-bold">{item.name}</h2>
+                    </a>
                   </div>
                 </div>
 
@@ -143,10 +144,11 @@ const CartContent = () => {
               ₮{(totalPrice + deliveryFee).toLocaleString()}
             </p>
           </div>
-
-          <button className="w-full mt-6 py-3 px-6 h-14 inline-flex items-center justify-center whitespace-nowrap text-lg font-bold text-mtext bg-main border-4 border-border shadow-[var(--shadow)] hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none transform transition-transform uppercase tracking-wider">
-            Худалдан авах
-          </button>
+          <a href="/checkout">
+            <button className="w-full mt-6 py-3 px-6 h-14 inline-flex items-center justify-center whitespace-nowrap text-lg font-bold text-mtext bg-main border-4 border-border shadow-[var(--shadow)] hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none transform transition-transform uppercase tracking-wider">
+              Худалдан авах
+            </button>
+          </a>
         </div>
       </div>
     </div>
