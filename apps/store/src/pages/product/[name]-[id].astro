@@ -3,7 +3,6 @@ import AddToCart from "@/components/cart/add-to-cart";
 import ImageCarousel from "@/components/image-carousel";
 import Layout from "@/layouts/Layout.astro";
 import api from "@/utils/trpc";
-import CartActions from "@/components/cart/cart-actions";
 
 export async function getStaticPaths() {
   const allProducts = await api.product.getAllProducts.query();
@@ -167,31 +166,14 @@ const productIdString = String(id);
 
         <!-- Action Buttons -->
         <div class="pt-2 w-full">
-          <!-- Quantity selector -->
-          <div class="mb-3">
-            <CartActions client:load quantity={1} productId={Number(productIdString)} />
-          </div>
-          
-          <!-- Action Buttons -->
-          <div class="grid grid-cols-2 gap-3">
-            <!-- Add to Cart Button -->
-            <AddToCart 
-              client:load 
-              id={Number(productIdString)} 
-              name={product.name} 
-              price={product.price} 
-              image={primaryImage}
-            />
-            
-            <!-- Buy Now Button -->
-            <a 
-              href={`/checkout?productId=${product.id}`} 
-              class="border-4 border-border bg-accent hover:bg-accent/90 text-accent-foreground py-4 text-center font-[var(--heading-font-weight)] shadow-[var(--shadow)] hover:shadow-[4px_4px_0_0_var(--border)] transition-all flex items-center justify-center"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-              ОДОО АВАХ
-            </a>
-          </div>
+          <!-- Add to Cart and Buy Now Buttons -->
+          <AddToCart 
+            client:load 
+            id={Number(productIdString)} 
+            name={product.name} 
+            price={product.price} 
+            image={primaryImage}
+          />
         </div>
       </div>
     </div>

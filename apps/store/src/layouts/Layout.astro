@@ -31,7 +31,7 @@ import MobileBottomNav from "./mobile-bottom-nav.astro";
   </head>
   <body>
     <Header transition:persist />
-    <main class="pt-[48px] md:pt-[72px] w-full">
+    <main class="pt-[32px] md:pt-[48px] w-full">
       <slot />
     </main>
     <MobileBottomNav currentPage={Astro.url.pathname} transition:persist />
