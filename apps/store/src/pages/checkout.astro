@@ -2,10 +2,8 @@
 
 import Layout from "@/layouts/Layout.astro";
 import CheckoutForm from "@/components/checkout/checkout-form";
-const productId = Astro.url.searchParams.get("productId");
-const quantity = Astro.url.searchParams.get("quantity");
 ---
 <Layout>
     <h1>Checkout</h1>
-    <CheckoutForm client:load productId={Number(productId)} quantity={Number(quantity)} />
+    <CheckoutForm client:load  />
 </Layout>

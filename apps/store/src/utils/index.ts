@@ -1,4 +1,4 @@
-import { customAlphabet } from 'nanoid';
+import { customAlphabet } from "nanoid";
 export const slugify = (text: string) =>
   text
     .toString()
@@ -12,4 +12,15 @@ export const generateOrderNumber = () => {
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   const nanoId = customAlphabet(alphabet);
   return nanoId(10);
+};
+export const isAvailableForTransfer = () => {
+  const now = new Date();
+  const ubTime = new Intl.DateTimeFormat("en-us", {
+    timeZone: "Asia/Ulaanbaatar",
+    hour: "numeric",
+    hourCycle: "h23",
+  }).format(now);
+  const hourUb = parseInt(ubTime, 10);
+  console.log(hourUb);
+  return hourUb >= 8 && hourUb <= 22;
 };

@@ -11,7 +11,6 @@ const getBackendUrl = () => {
   if (apiUrlFromEnv) return apiUrlFromEnv;
 
   if (import.meta.env.DEV) {
-    // Assuming Next.js runs on 3000 during dev
     return "http://localhost:3000/api/trpc";
   }
   console.warn("API URL not configured via VITE_API_URL environment variable.");
@@ -21,11 +20,7 @@ const getBackendUrl = () => {
 export const queryClient = new QueryClient();
 
 const timingLink: TRPCLink<AppRouter> = () => {
-  // here we just got initialized in the app - this happens once per link
-  // --->
   return ({ next, op }) => {
-    // this is when an actual request is passing through this link
-    // --->
     return observable((observer) => {
       const startTime = Date.now();
       const unsubscribe = next(op).subscribe({
@@ -51,7 +46,7 @@ const timingLink: TRPCLink<AppRouter> = () => {
   };
 };
 
-const api = createTRPCClient<AppRouter>({
+export const api = createTRPCClient<AppRouter>({
   links: [
     loggerLink({
       enabled: (opts) =>
@@ -77,4 +72,4 @@ export const trpc = createTRPCOptionsProxy<AppRouter>({
   queryClient,
 });
 
-export default api;
+

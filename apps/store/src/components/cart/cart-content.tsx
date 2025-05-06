@@ -30,11 +30,13 @@ const CartContent = () => {
       </div>
     );
   }
-
+  console.log("cartcontent",cart)
   return (
     <div className="flex flex-col w-full">
       <div className="mb-10">
+
         {cart.map((item, index) => {
+          console.log(item)
           return (
             <div
               key={item.productId}
