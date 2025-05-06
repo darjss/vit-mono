@@ -6,7 +6,7 @@ import { OTPInput, type SlotProps } from "input-otp";
 import { cn } from "@workspace/ui/lib/utils";
 import { Button } from "@workspace/ui/components/button";
 import { useMutation } from "@tanstack/react-query";
-import trpc from "@/utils/trpc";
+import { trpc } from "@/lib/trpc";
 
 interface AnimatedNumberProps {
   value: string | null;
@@ -79,11 +79,7 @@ const Otp = ({ phoneNumber }: { phoneNumber: string }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const otpRef = useRef<HTMLInputElement>(null);
-  const mutation = useMutation({
-    mutationFn: (data: { phone: string; otp: string }) => {
-      return trpc.customer.checkOtp.mutate(data);
-    },
-  });
+  const mutation = useMutation(trpc.customer.checkOtp.mutationOptions({}));
 
   useEffect(() => {
     setDisableSubmitButton(value.length !== 4);

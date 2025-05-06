@@ -4,17 +4,18 @@ import { useForm } from "react-hook-form";
 import { Button } from "@workspace/ui/components/button";
 import {
   Form,
-  FormControl, FormField,
+  FormControl,
+  FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from "@workspace/ui/components/form";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { orderSchema, type orderType } from "@vit/api/lib/schema";
 import { useCart } from "@/hooks/use-cart";
 import { useMutation } from "@tanstack/react-query";
-import { trpc } from "@/utils/trpc";
+import { trpc } from "@/lib/trpc";
 import SubmitButton from "../submit-button";
 
 const AddressForm = ({
@@ -108,7 +109,7 @@ const AddressForm = ({
           </SubmitButton>
         </form>
       </Form>
-      <Button onClick={()=>setStep("payment")}>Next step</Button>
+      <Button onClick={() => setStep("payment")}>Next step</Button>
     </div>
   );
 };

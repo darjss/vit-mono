@@ -1,5 +1,5 @@
 import { useCart } from "@/hooks/use-cart";
-import { trpc } from "@/utils/trpc";
+import { trpc } from "@/lib/trpc";
 import {
   QueryClient,
   QueryClientProvider,
@@ -14,7 +14,7 @@ const CheckoutForm = () => {
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
-      {step === "address" && <AddressForm  setStep={setStep}/>}
+      {step === "address" && <AddressForm setStep={setStep} />}
       {step === "payment" && <PaymentComponent />}
     </QueryClientProvider>
   );

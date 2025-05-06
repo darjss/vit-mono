@@ -1,8 +1,8 @@
 import { useCart } from "@/hooks/use-cart";
 import Loading from "../loading";
 import CartActions from "./cart-actions";
-import { deliveryFee } from "@/utils/constants";
-import { slugify } from "@/utils";
+import { deliveryFee } from "@/lib/constants";
+import { slugify } from "@/lib/utils";
 
 const CartContent = () => {
   const { cart, isLoading: isCartLoading, totalPrice } = useCart();
@@ -30,13 +30,12 @@ const CartContent = () => {
       </div>
     );
   }
-  console.log("cartcontent",cart)
+  console.log("cartcontent", cart);
   return (
     <div className="flex flex-col w-full">
       <div className="mb-10">
-
         {cart.map((item, index) => {
-          console.log(item)
+          console.log(item);
           return (
             <div
               key={item.productId}
@@ -45,16 +44,20 @@ const CartContent = () => {
               <div className="md:flex md:items-center hidden">
                 <div className="w-2/5 flex items-center">
                   <div className="h-20 w-20 flex-shrink-0 overflow-hidden border-4 border-border shadow-[var(--shadow)]">
-                    <a href={`/product/${slugify(item.name)}-${item.productId}`}> 
+                    <a
+                      href={`/product/${slugify(item.name)}-${item.productId}`}
+                    >
                       <img
                         src={item.image}
                         alt={`${item.name} image`}
                         className="h-full w-full object-cover object-center"
                       />
-                    </a>  
+                    </a>
                   </div>
                   <div className="ml-5">
-                    <a href={`/product/${slugify(item.name)}-${item.productId}`}>
+                    <a
+                      href={`/product/${slugify(item.name)}-${item.productId}`}
+                    >
                       <h2 className="text-xl font-bold">{item.name}</h2>
                     </a>
                   </div>

@@ -1,6 +1,6 @@
 ---
 import ProductCard from "@/components/product-card.astro";
-import api from "../utils/trpc";
+import {api} from "../lib/trpc";
 
 const products = await api.product.getFeauturedProducts.query();
 ---

@@ -1,5 +1,5 @@
 import Phone from "@/icons/phone.astro";
-import { trpc } from "@/utils/trpc";
+import { trpc } from "@/lib/trpc";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -11,7 +11,7 @@ const LoginComponent = () => {
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [phone, setPhone] = useState("");
   const mutation = useMutation(trpc.customer.sendOtp.mutationOptions({}));
-  // mutation.mutate({ phone: phone });
+
   console.log("step", step);
   return step === "phone" ? (
     <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
@@ -35,9 +35,7 @@ const LoginComponent = () => {
                 Утасны дугаар
               </Label>
               <div className="relative rounded-md shadow-sm">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                
-                </div>
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"></div>
                 <Input
                   id="phone"
                   type="tel"
@@ -84,16 +82,16 @@ const LoginComponent = () => {
         <div className="bg-white rounded-lg shadow-lg p-8">
           <Otp phoneNumber={phone} />
           <div className="mt-4 text-center text-sm text-gray-600">
-          Код очоогүй юу?{" "}
-          <button
-            onClick={() => {
-              mutation.mutate({ phone: phone });
-            }}
-            className="font-medium text-indigo-600 hover:text-indigo-500"
-          >
-            Дахин илгээх
-          </button>
-        </div>
+            Код очоогүй юу?{" "}
+            <button
+              onClick={() => {
+                mutation.mutate({ phone: phone });
+              }}
+              className="font-medium text-indigo-600 hover:text-indigo-500"
+            >
+              Дахин илгээх
+            </button>
+          </div>
         </div>
       </div>
     </div>

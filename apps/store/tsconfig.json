@@ -10,14 +10,17 @@
       "react-dom": ["preact/compat"],
       "@/*": ["./src/*"],
       "@workspace/ui/*": ["../../packages/ui/src/*"],
-      "@vit/api": ["../../packages/api/src"]
+      "@vit/api": ["../../packages/api/src"],
+      "@vit/db/*": ["../../packages/db/src/*"]
     },
     "jsx": "react-jsx",
-    "jsxImportSource": "react"
+    "jsxImportSource": "react",
+    "verbatimModuleSyntax":true
   },
 
   "references": [
     { "path": "../../packages/api" },
-    { "path": "../../packages/ui" }
+    { "path": "../../packages/ui" },
+    { "path": "../../packages/db" }
   ]
 }

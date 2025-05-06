@@ -1,4 +1,4 @@
-import type { Cart } from "@/utils/types";
+import type { Cart } from "@/lib/types";
 import { useEffect, useState } from "react";
 
 interface ProductDetails {
@@ -148,7 +148,7 @@ export const useCart = () => {
   };
 
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
-    const totalPrice = cart.reduce((acc, item) => {
+  const totalPrice = cart.reduce((acc, item) => {
     return acc + item.price * item.quantity;
   }, 0);
 
@@ -160,6 +160,6 @@ export const useCart = () => {
     clearCart,
     cartCount,
     updateItem,
-    totalPrice
+    totalPrice,
   };
 };
