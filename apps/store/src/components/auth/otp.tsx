@@ -79,6 +79,7 @@ const Otp = ({ phoneNumber }: { phoneNumber: string }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const otpRef = useRef<HTMLInputElement>(null);
+
   const mutation = useMutation({
     mutationFn: actions.otpLogin,
     onSuccess: (data) => {

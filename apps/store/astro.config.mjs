@@ -14,12 +14,17 @@ export default defineConfig({
         ? { "react-dom/server": "react-dom/server.edge" }
         : undefined,
     },
+    optimizeDeps: {
+      include: ["@vit/api", "@vit/db", "@workspace/ui"],
+    },
+    ssr: {
+      noExternal: ["@vit/api", "@vit/db", "@workspace/ui"],
+    },
     plugins: [],
   },
   prefetch: {
     defaultStrategy: "viewport",
   },
-  viewTransitions: true,
   integrations: [react(), tailwind()],
   adapter: cloudflare(),
 });
