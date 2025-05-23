@@ -1,4 +1,3 @@
-import Phone from "@/icons/phone.astro";
 import { trpc } from "@/lib/trpc";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@workspace/ui/components/button";

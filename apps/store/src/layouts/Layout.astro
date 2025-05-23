@@ -4,6 +4,7 @@ import Footer from "@/layouts/Footer.astro";
 import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 import MobileBottomNav from "./mobile-bottom-nav.astro";
+import Posthog from "@/components/posthog.astro";
 
 // import "@workspace/ui/styles/globals.css"
 ---
@@ -17,6 +18,7 @@ import MobileBottomNav from "./mobile-bottom-nav.astro";
     <meta name="generator" content={Astro.generator} />
     <title>Vitamin store</title>
     <ClientRouter fallback="animate" />
+    <Posthog />
     <script>
       // Add view transition events to handle page transitions
       document.addEventListener('astro:page-load', () => {

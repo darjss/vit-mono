@@ -7,8 +7,8 @@ import { eq } from "drizzle-orm";
 
 export const brand = createTRPCRouter({
     getAllBrands: publicProcedure
-        .query( async () => {
-            return await db.query.BrandsTable.findMany({
+        .query( async (ctx) => {
+            return await ctx.db.query.BrandsTable.findMany({
                 columns: {
                     id: true,
                     name: true,

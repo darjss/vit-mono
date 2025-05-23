@@ -1,16 +1,19 @@
 import { sha256 } from "@oslojs/crypto/sha2";
-import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from "@oslojs/encoding";
-import { type Session } from "./types";
+import {
+  encodeHexLowerCase,
+  encodeBase32LowerCaseNoPadding,
+} from "@oslojs/encoding";
+
+import { type Session } from "./types"
 import { redis } from "@vit/db/redis";
 import type { CustomerSelectType } from "@vit/db/schema";
-import type { ActionAPIContext } from "astro:actions";
-
 
 export function generateSessionToken(): string {
   const bytes = new Uint8Array(20);
   crypto.getRandomValues(bytes);
   return encodeBase32LowerCaseNoPadding(bytes);
 }
+
 export async function createSession(
   user: CustomerSelectType
 ): Promise<Session> {
@@ -74,43 +77,38 @@ export async function validateSessionToken(
 }
 
 export async function invalidateSession(sessionId: string): Promise<void> {
-  await redis.del(`session:${sessionId}`);
+   await redis.del(`session:${sessionId}`);
 }
 
-export async function setSessionTokenCookie(
-  context: ActionAPIContext,
-  token: string,
-  expiresAt: Date
-): Promise<void> {
-  context.cookies.set("session", token, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    expires: expiresAt,
-    path: "/",
-  });
-}
+// export async function setSessionTokenCookie(
+//   token: string,
+//   expiresAt: Date
+// ): Promise<void> {
+//   const cookieStore = await cookies();
+//   cookieStore.set("session", token, {
+//     httpOnly: true,
+//     sameSite: "lax",
+//     secure: process.env.NODE_ENV === "production",
+//     expires: expiresAt,
+//     path: "/",
+//   });
+// }
 
-export async function deleteSessionTokenCookie(context:ActionAPIContext): Promise<void> {
-  const { cookies } = context;
-  const session= cookies.get("session")?.value ?? null;
+// export async function deleteSessionTokenCookie(): Promise<void> {
+//   const cookieStore = await cookies();
+//   cookieStore.set("session", "", {
+//     httpOnly: true,
+//     sameSite: "lax",
+//     secure: process.env.NODE_ENV === "production",
+//     maxAge: 0,
+//     path: "/",
+//   });
+// }
 
-  if (session) {
-    await invalidateSession(session);
+export const auth = async (token: string | null): Promise<Session | null> => {
   
-  context.cookies.set("session", "", {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 0,
-    path: "/",
-  })} else{
-    return
-  };
-}
 
-export const auth = async (context: ActionAPIContext): Promise<Session | null> => {
-  const token = context.cookies.get("session")?.value ?? null;
+  console.log("checking auth with session", token);
 
   if (token === null) {
     return null;

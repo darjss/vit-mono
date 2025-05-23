@@ -6,7 +6,7 @@ import { OTPInput, type SlotProps } from "input-otp";
 import { cn } from "@workspace/ui/lib/utils";
 import { Button } from "@workspace/ui/components/button";
 import { useMutation } from "@tanstack/react-query";
-import { trpc } from "@/lib/trpc";
+import { actions } from "astro:actions";
 
 interface AnimatedNumberProps {
   value: string | null;
@@ -79,7 +79,29 @@ const Otp = ({ phoneNumber }: { phoneNumber: string }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const otpRef = useRef<HTMLInputElement>(null);
-  const mutation = useMutation(trpc.customer.checkOtp.mutationOptions({}));
+  const mutation = useMutation({
+    mutationFn: actions.otpLogin,
+    onSuccess: (data) => {
+      if (data) {
+        setIsVerifying(false);
+      } else {
+        setIsShaking(true);
+        setErrorMessage("Буруу код");
+        setValue("");
+        setIsVerifying(false);
+      }
+    },
+    onError: () => {
+      setIsShaking(true);
+      setErrorMessage("Буруу код");
+      setValue("");
+      setIsVerifying(false);
+      if (otpRef.current) {
+        otpRef.current.focus();
+        otpRef.current.setSelectionRange(0, 0);
+      }
+    },
+  });
 
   useEffect(() => {
     setDisableSubmitButton(value.length !== 4);
@@ -94,29 +116,6 @@ const Otp = ({ phoneNumber }: { phoneNumber: string }) => {
 
     mutation.mutate(
       { phone: phoneNumber, otp: value },
-      {
-        onSuccess: (data) => {
-          if (data) {
-            setIsVerifying(false);
-          } else {
-            setIsShaking(true);
-            setErrorMessage("Буруу код");
-            setValue("");
-            setIsVerifying(false);
-          }
-        },
-        onError: () => {
-          setIsShaking(true);
-          setErrorMessage("Буруу код");
-          setValue("");
-          setIsVerifying(false);
-
-          if (otpRef.current) {
-            otpRef.current.focus();
-            otpRef.current.setSelectionRange(0, 0);
-          }
-        },
-      }
     );
   };
 

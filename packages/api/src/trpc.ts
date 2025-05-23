@@ -10,6 +10,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import { db } from "@vit/db";
+import { auth } from "./lib/session";
 
 /**
  * 1. CONTEXT
@@ -23,9 +24,13 @@ import { db } from "@vit/db";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
+export const createTRPCContext = async (opts: { headers: Headers}) => {
+  const cookies = opts.headers.get("Cookie");
+  const token = cookies?.match(/session=([^;]+)/)?.[1] ?? null;
+  const session = await auth(token);
   return {
     db,
+    session,
     ...opts,
   };
 };
@@ -95,6 +100,17 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   return result;
 });
 
+const authMiddleware = t.middleware(async ({ next, ctx }) => {
+  const { session } = ctx;
+  if (!session) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Unauthorized",
+    });
+  }
+  return next();
+});
+
 /**
  * Public (unauthenticated) procedure
  *
@@ -103,3 +119,4 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
+export const protectedProcedure = t.procedure.use(authMiddleware);
