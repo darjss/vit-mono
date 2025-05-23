@@ -71,5 +71,3 @@ export const trpc = createTRPCOptionsProxy<AppRouter>({
   client: api,
   queryClient,
 });
-
-
