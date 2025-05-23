@@ -14,11 +14,8 @@ export default defineConfig({
         ? { "react-dom/server": "react-dom/server.edge" }
         : undefined,
     },
-    optimizeDeps: {
-      include: ["@vit/api", "@vit/db", "@workspace/ui"],
-    },
     ssr: {
-      noExternal: ["@vit/api", "@vit/db", "@workspace/ui"],
+      noExternal: ["@vit/api", "@vit/db"],
     },
     plugins: [],
   },
