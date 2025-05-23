@@ -14,9 +14,6 @@ export default defineConfig({
         ? { "react-dom/server": "react-dom/server.edge" }
         : undefined,
     },
-    ssr: {
-      noExternal: ["@vit/api", "@vit/db"],
-    },
     plugins: [],
   },
   prefetch: {
