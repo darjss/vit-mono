@@ -15,11 +15,6 @@ export default defineConfig({
         : undefined,
     },
     plugins: [],
-    build: {
-      rollupOptions: {
-        external: ["@vit/api", "@vit/api/lib/schema", "@vit/db"],
-      },
-    },  
   },
   prefetch: {
     defaultStrategy: "viewport",
