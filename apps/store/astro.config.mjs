@@ -14,6 +14,24 @@ export default defineConfig({
         ? { "react-dom/server": "react-dom/server.edge" }
         : undefined,
     },
+    ssr: {
+      external: ["node:path", "node:url", "node:fs", "node:crypto"],
+    },
+    build: {
+      rollupOptions: {
+        external: (id, importer, isResolved) => {
+          // Externalize Node.js built-ins and @vit/db completely for client builds
+          if (
+            id.startsWith("node:") ||
+            id === "@vit/db" ||
+            id.startsWith("@vit/db/")
+          ) {
+            return true;
+          }
+          return false;
+        },
+      },
+    },
     plugins: [],
   },
   prefetch: {
