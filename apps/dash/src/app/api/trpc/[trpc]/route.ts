@@ -14,11 +14,10 @@ const allowedOrigin = "https://vit-mono-store.vercel.app";
  * handling a HTTP request (e.g. when you make requests from Client Components).
  */
 const createContext = async (req: NextRequest) => {
-
-  const cookieStore:ReadonlyRequestCookies = await cookies();
+  
   return createTRPCContext({
     headers: req.headers,
-    cookies: cookieStore,
+
   });
 };
 

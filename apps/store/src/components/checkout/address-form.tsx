@@ -12,7 +12,7 @@ import {
 } from "@workspace/ui/components/form";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
-import { orderSchema, type orderType } from "@vit/api/lib/schema";
+import { orderSchema, type orderType } from "@vit/api";
 import { useCart } from "@/hooks/use-cart";
 import { useMutation } from "@tanstack/react-query";
 import { trpc } from "@/lib/trpc";
