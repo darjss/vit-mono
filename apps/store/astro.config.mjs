@@ -15,12 +15,15 @@ export default defineConfig({
         : undefined,
     },
     ssr: {
-      external: ["node:path", "node:url", "node:fs", "node:crypto"],
+      external: ["node:path", "node:url", "node:fs", "node:crypto", "@vit/db"],
+    },
+    optimizeDeps: {
+      exclude: ["@vit/db"],
     },
     build: {
       rollupOptions: {
         external: (id, importer, isResolved) => {
-          // Externalize Node.js built-ins and @vit/db completely for client builds
+          // Externalize Node.js built-ins and @vit/db completely
           if (
             id.startsWith("node:") ||
             id === "@vit/db" ||
