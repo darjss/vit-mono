@@ -11,6 +11,10 @@
     "./lib/*": {
       "types": "./dist/lib/*.d.ts",
       "default": "./dist/lib/*.js"
+    },
+    "./lib/schema": {
+      "types": "./dist/lib/schema.d.ts",
+      "default": "./dist/lib/schema.js"
     }
   },
   "license": "MIT",
