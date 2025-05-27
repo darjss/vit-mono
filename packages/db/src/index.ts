@@ -19,8 +19,8 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 
 const getDbUrl = () => {
   if (isDevelopment) {
-    // Use a simple relative path for development
-    return "file:./packages/db/dev.db";
+    // Use database in monorepo root - simple relative path
+    return "file:dev.db";
   }
 
   if (!process.env.TURSO_CONNECTION_URL) {

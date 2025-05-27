@@ -57,7 +57,7 @@ const LoginComponent = () => {
               <Button
                 className="flex w-full justify-center rounded-md py-3 text-base font-medium"
                 onClick={() => {
-                  // mutation.mutate({ phone: phone });
+                  mutation.mutate({ phone: phone });
                   setStep("otp");
                 }}
               >

@@ -7,14 +7,14 @@ import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adap
 
 // Allowed origin check is now primarily handled in middleware,
 // but we still need it here to set the header on the *actual* response.
-const allowedOrigin = "https://vit-mono-store.vercel.app";
+const allowedOrigin = process.env.NODE_ENV === "development" ? "http://localhost:4321" : "https://vit-mono-store.vercel.app";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
  * handling a HTTP request (e.g. when you make requests from Client Components).
  */
 const createContext = async (req: NextRequest) => {
-  
+
   return createTRPCContext({
     headers: req.headers,
 
