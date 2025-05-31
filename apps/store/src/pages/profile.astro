@@ -1,7 +1,7 @@
 ---
 export const prerender = false;
 import { auth } from "../lib/session";
-
+import { actions } from "astro:actions";
 const session = await auth(Astro.cookies);
 console.log("session", session);
 if (!session) {
@@ -9,4 +9,35 @@ if (!session) {
   return Astro.redirect("/auth/login");
 }
 ---
-<div>Profile page {session.user.phone}</div>
+<div>
+    <form id="logout-form" action={actions.auth.logOut}>
+        <button type="submit">Logout</button>
+    </form>
+  <div>Profile page {session.user.phone}</div>
+</div>
+
+<script>
+  import { actions } from "astro:actions";
+  import { navigate } from "astro:transitions/client";
+
+  const form = document.getElementById("logout-form") as HTMLFormElement;
+  
+  if (form) {
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      
+      try {
+        const { error } = await actions.auth.logOut();
+        
+        if (!error) {
+          // Logout successful, redirect to login page
+          navigate("/auth/login");
+        } else {
+          console.error("Logout failed:", error);
+        }
+      } catch (error) {
+        console.error("Logout error:", error);
+      }
+    });
+  }
+</script>

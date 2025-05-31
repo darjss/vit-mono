@@ -136,9 +136,7 @@ export async function deleteSessionTokenCookie(
   }
 }
 
-export const auth = async (
-  cookies: AstroCookies
-): Promise<Session | null> => {
+export const auth = async (cookies: AstroCookies): Promise<Session | null> => {
   const token = cookies.get("store_session")?.value ?? null;
 
   if (token === null) {

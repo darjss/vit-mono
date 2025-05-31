@@ -16,18 +16,80 @@ const LoginComponent = () => {
     return "";
   });
 
+  // Add state to track navigation in progress
+  const [isNavigating, setIsNavigating] = useState(false);
+
   const mutation = useMutation({
     mutationFn: actions.auth.sendOtp,
     onSuccess: () => {
       console.log("🟢 mutation success, redirecting to OTP page", {
         phone,
       });
+
+      // Set navigating state before calling navigate
+      setIsNavigating(true);
+
+      // Navigate to OTP page
       navigate(`/auth/login/otp?phone=${encodeURIComponent(phone)}`);
     },
     onError: (error) => {
       console.error("🔴 mutation error", error);
+      setIsNavigating(false); // Reset navigation state on error
     },
   });
+
+  // Listen for navigation events to manage loading state
+  useEffect(() => {
+    const handleBeforePreparation = () => {
+      // This fires when navigation starts preparing
+      console.log("🟡 Navigation preparation starting");
+    };
+
+    const handleAfterPreparation = () => {
+      // This fires when new page is ready
+      console.log("🟡 Navigation preparation complete");
+    };
+
+    const handlePageLoad = () => {
+      // This fires when navigation is complete
+      console.log("🟢 Navigation complete");
+      setIsNavigating(false);
+    };
+
+    // Add event listeners for navigation events
+    if (typeof window !== "undefined") {
+      document.addEventListener(
+        "astro:before-preparation",
+        handleBeforePreparation
+      );
+      document.addEventListener(
+        "astro:after-preparation",
+        handleAfterPreparation
+      );
+      document.addEventListener("astro:page-load", handlePageLoad);
+    }
+
+    // Cleanup listeners
+    return () => {
+      if (typeof window !== "undefined") {
+        document.removeEventListener(
+          "astro:before-preparation",
+          handleBeforePreparation
+        );
+        document.removeEventListener(
+          "astro:after-preparation",
+          handleAfterPreparation
+        );
+        document.removeEventListener("astro:page-load", handlePageLoad);
+      }
+    };
+  }, []);
+
+  // Determine the current loading state
+  const isLoading = mutation.isPending || isNavigating;
+  const loadingText = isLoading
+    ? "Уншиж байна...	"
+      : "Үргэлжлүүлэх";
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
@@ -46,7 +108,7 @@ const LoginComponent = () => {
             className="space-y-6"
             onSubmit={(e) => {
               e.preventDefault();
-              if (phone.length >= 8) {
+              if (phone.length >= 8 && !isLoading) {
                 mutation.mutate({ phone: phone });
               }
             }}
@@ -70,11 +132,11 @@ const LoginComponent = () => {
                     const value = e.target.value;
                     if (value === "" || /^[6-9]/.test(value)) {
                       setPhone(value);
-                    }
+                    } 
                   }}
                   name="phone"
                   className="block w-full pl-10 focus:ring-2 focus:ring-indigo-500"
-                  disabled={mutation.isPending}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -83,13 +145,13 @@ const LoginComponent = () => {
               <Button
                 type="submit"
                 className="flex w-full justify-center rounded-md py-3 text-base font-medium"
-                disabled={mutation.isPending || phone.length < 8}
+                disabled={isLoading || phone.length < 8}
               >
-                {mutation.isPending
-                  ? "Илгээж байна..."
-                  : "Нэг удаагийн код илгээх"}
+                {loadingText}
               </Button>
             </div>
+
+           
           </form>
         </div>
       </div>

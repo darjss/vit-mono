@@ -48,7 +48,8 @@ export const auth = {
   }),
   logOut: defineAction({
     handler: async (input, context) => {
-      deleteSessionTokenCookie(context);
+      console.log("logOut", input, context);
+      await deleteSessionTokenCookie(context);
       return true;
     },
   }),
