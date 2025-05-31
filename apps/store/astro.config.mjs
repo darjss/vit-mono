@@ -7,9 +7,6 @@ import cloudflare from "@astrojs/cloudflare";
 // https://astro.build/config
 export default defineConfig({
   vite: {
-    optimizeDeps: {
-      include: ["@vit/api"],
-    },
     resolve: {
       // Use react-dom/server.edge instead of react-dom/server.browser for React 19.
       // Without this, MessageChannel from node:worker_threads needs to be polyfilled.
