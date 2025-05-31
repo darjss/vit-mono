@@ -85,7 +85,6 @@ const LoginComponent = () => {
     };
   }, []);
 
-  // Determine the current loading state
   const isLoading = mutation.isPending || isNavigating;
   const loadingText = isLoading
     ? "Уншиж байна...	"
