@@ -10,7 +10,13 @@
     "dist"
   ],
   "sideEffects": false,
-  "exports": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
   "license": "MIT",
   "scripts": {
     "build": "tsc",
