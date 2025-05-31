@@ -1,15 +1,12 @@
-import { Redis as UpstashRedis } from "@upstash/redis";
-import Redis from "ioredis";
+import { Redis } from "@upstash/redis";
 
-export let redis: Redis | UpstashRedis;
+export let redis: Redis;
 
 if (process.env.NODE_ENV === "development") {
-  redis = new Redis("redis://localhost:6379");
-
-  // Add connection event listeners for debugging
-  redis.on("connect", () => console.log("Redis connected to localhost:6379"));
-  redis.on("error", (err) => console.error("Redis connection error:", err));
-  redis.on("ready", () => console.log("Redis ready for commands"));
+  redis = new Redis({
+    url: "http://localhost:8080",
+    token: "token",
+  });
 } else {
-  redis = UpstashRedis.fromEnv(); // Use Upstash Redis in other environments (production)
+  redis = Redis.fromEnv(); // Use Upstash Redis in production
 }

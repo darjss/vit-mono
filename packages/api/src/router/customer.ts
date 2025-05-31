@@ -15,10 +15,11 @@ export const customer = createTRPCRouter({
     .mutation(async ({ input }) => {
       try {
       console.log("sendOtp called", input)
+      
       const nanoid = customAlphabet("1234567890", 4);
       const otp = nanoid();
       console.log("otp", otp, input.phone);
-      await redis.set(input.phone, otp);
+      await redis.set(input.phone, otp, { ex: 3600 });
       const body = {
         message: `Tanii nevtreh kod ${otp}`,
         phoneNumbers: [`+976${input.phone}`],

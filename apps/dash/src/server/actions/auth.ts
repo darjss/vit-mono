@@ -21,7 +21,7 @@ export const insertSession = async (session: Session) => {
 
 export const getSession = async (sessionId: string) => {
   console.log("Getting session from redis");
-  const session = (await redis.get(`session:${sessionId}`)) as Session;
+  const session = (await redis.get(`admin_session:${sessionId}`)) as Session;
   if (session === null || session === undefined) {
     return session;
   }
@@ -59,12 +59,15 @@ export const redisBenchmark = async () => {
 
 export const deleteSession = async (sessionId: string) => {
   revalidateTag("session");
-  return await redis.del(`session:${sessionId}`);
+  return await redis.del(`admin_session:${sessionId}`);
 };
 
 export const updateSession = async (session: Session) => {
   revalidateTag("session");
-  return await redis.set(session.id, JSON.stringify(session));
+  return await redis.set(
+    `admin_session:${session.id}`,
+    JSON.stringify(session),
+  );
 };
 
 export const createUser = async (

@@ -3,16 +3,33 @@ import { useMutation } from "@tanstack/react-query";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
-import { useState } from "react";
-import Otp from "./otp";
+import { useState, useEffect } from "react";
+import { actions } from "astro:actions";
+import { navigate } from "astro:transitions/client";
 
 const LoginComponent = () => {
-  const [step, setStep] = useState<"phone" | "otp">("phone");
-  const [phone, setPhone] = useState("");
-  const mutation = useMutation(trpc.customer.sendOtp.mutationOptions({}));
+  const [phone, setPhone] = useState(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get("phone") || "";
+    }
+    return "";
+  });
 
-  console.log("step", step);
-  return step === "phone" ? (
+  const mutation = useMutation({
+    mutationFn: actions.auth.sendOtp,
+    onSuccess: () => {
+      console.log("🟢 mutation success, redirecting to OTP page", {
+        phone,
+      });
+      navigate(`/auth/login/otp?phone=${encodeURIComponent(phone)}`);
+    },
+    onError: (error) => {
+      console.error("🔴 mutation error", error);
+    },
+  });
+
+  return (
     <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
@@ -25,7 +42,15 @@ const LoginComponent = () => {
         </div>
 
         <div className="mt-8 rounded-lg bg-white p-6 shadow-lg sm:p-8">
-          <form className="space-y-6">
+          <form
+            className="space-y-6"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (phone.length >= 8) {
+                mutation.mutate({ phone: phone });
+              }
+            }}
+          >
             <div className="space-y-2">
               <Label
                 htmlFor="phone"
@@ -49,48 +74,23 @@ const LoginComponent = () => {
                   }}
                   name="phone"
                   className="block w-full pl-10 focus:ring-2 focus:ring-indigo-500"
+                  disabled={mutation.isPending}
                 />
               </div>
             </div>
 
             <div>
               <Button
+                type="submit"
                 className="flex w-full justify-center rounded-md py-3 text-base font-medium"
-                onClick={() => {
-                  mutation.mutate({ phone: phone });
-                  setStep("otp");
-                }}
+                disabled={mutation.isPending || phone.length < 8}
               >
-                Нэг удаагийн код илгээх
+                {mutation.isPending
+                  ? "Илгээж байна..."
+                  : "Нэг удаагийн код илгээх"}
               </Button>
             </div>
           </form>
-        </div>
-      </div>
-    </div>
-  ) : (
-    <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-extrabold text-gray-900">Код оруулах</h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Таны утсанд очсон 4 оронтой кодыг оруулна уу.
-          </p>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <Otp phoneNumber={phone} />
-          <div className="mt-4 text-center text-sm text-gray-600">
-            Код очоогүй юу?{" "}
-            <button
-              onClick={() => {
-                mutation.mutate({ phone: phone });
-              }}
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-            >
-              Дахин илгээх
-            </button>
-          </div>
         </div>
       </div>
     </div>

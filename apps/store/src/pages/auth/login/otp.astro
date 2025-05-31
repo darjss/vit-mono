@@ -1,0 +1,59 @@
+---
+export const prerender = false; 
+import Layout from "@/layouts/Layout.astro";
+import OtpWrapper from "@/components/auth/otp-wrapper";
+
+const phone = Astro.url.searchParams.get('phone');
+const referrer = Astro.request.headers.get('referer');
+const currentOrigin = new URL(Astro.request.url).origin;
+
+const isFromLoginPage = (referrer: string | null): boolean => {
+  if (!referrer) return false;
+  try {
+    const referrerUrl = new URL(referrer);
+    // Check if referrer is from the same origin and is the login page
+    return referrerUrl.origin === currentOrigin && 
+           (referrerUrl.pathname === '/auth/login' || referrerUrl.pathname === '/auth/login/');
+  } catch {
+    return false;
+  }
+};
+
+const isValidPhone = (phone: string | null): boolean => {
+  if (!phone) return false;
+  return /^[6-9]\d{7}$/.test(phone);
+};
+
+console.log('OTP Page Access:', {
+  phone,
+  referrer,
+  isFromLogin: isFromLoginPage(referrer),
+  isValidPhone: isValidPhone(phone)
+});
+
+if (!phone) {
+  console.log('No phone provided, redirecting to login');
+  return Astro.redirect('/auth/login');
+}
+
+if (!isValidPhone(phone)) {
+  console.log('Invalid phone format, redirecting to login');
+  return Astro.redirect('/auth/login');
+}
+
+if (!isFromLoginPage(referrer)) {
+  console.log('Not referred from login page, redirecting to login with phone');
+  return Astro.redirect(`/auth/login?phone=${encodeURIComponent(phone)}`);
+}
+
+// const isDevelopment = import.meta.env.DEV;
+// if (!isDevelopment && !isFromLoginPage(referrer)) {
+//   console.log('Not referred from login page, redirecting to login with phone');
+//   // Preserve the phone number when redirecting back to login
+//   return Astro.redirect(`/auth/login?phone=${encodeURIComponent(phone)}`);
+// }
+---
+
+<Layout>
+  <OtpWrapper client:load phone={phone} />
+</Layout> 

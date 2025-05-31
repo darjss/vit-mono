@@ -22,7 +22,7 @@ const publicPaths = [
   "/_next",
   "/favicon.ico",
   "/public",
-  "/api/trpc", 
+  "/api/trpc",
 ];
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
@@ -63,12 +63,26 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   // Add CORS headers to the actual responses for allowed origins
   if (isAllowedOrigin) {
     response.headers.set("Access-Control-Allow-Origin", origin);
-    // Add other CORS headers if needed, e.g., credentials
-    // response.headers.set('Access-Control-Allow-Credentials', 'true');
+    // Only allow credentials for specific, trusted origins
+    if (
+      origin === "https://vit-mono-store.vercel.app" ||
+      (process.env.NODE_ENV === "development" &&
+        origin === "http://localhost:4321")
+    ) {
+      response.headers.set("Access-Control-Allow-Credentials", "true");
+    }
+    // Add additional security headers
+    response.headers.set(
+      "Access-Control-Allow-Headers",
+      "Content-Type, x-trpc-source, Authorization",
+    );
+    response.headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   } else if (origin) {
     console.warn(`Middleware: Request from disallowed origin: ${origin}`);
-    // Decide if you want to block here or let the route handler decide
-    // For now, we let it pass but without the CORS header
+    // Block requests from unknown origins in production
+    if (process.env.NODE_ENV === "production") {
+      return new NextResponse("Forbidden", { status: 403 });
+    }
   }
 
   // --- Rest of your middleware logic ---

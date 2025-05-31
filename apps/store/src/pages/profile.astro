@@ -1,4 +1,12 @@
 ---
-return Astro.redirect("/auth/login")
+export const prerender = false;
+import { auth } from "../lib/session";
+
+const session = await auth(Astro.cookies);
+console.log("session", session);
+if (!session) {
+  console.log("No session found");
+  return Astro.redirect("/auth/login");
+}
 ---
-<div>Profile page </div>
+<div>Profile page {session.user.phone}</div>

@@ -20,7 +20,7 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 const getDbUrl = () => {
   if (isDevelopment) {
     // Use database in monorepo root - simple relative path
-    return "file:dev.db";
+    return "file:/home/darjs/projects/vit-mono/dev.db";
   }
 
   if (!process.env.TURSO_CONNECTION_URL) {

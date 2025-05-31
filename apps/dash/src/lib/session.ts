@@ -12,7 +12,6 @@ import { cookies } from "next/headers";
 import { Session } from "./types";
 import { redis } from "@vit/db/redis";
 
-
 export async function createSession(
   token: string,
   user: UserSelectType,
@@ -24,7 +23,7 @@ export async function createSession(
     expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
   };
   await redis.set(
-    `session:${session.id}`,
+    `admin_session:${session.id}`,
     JSON.stringify({
       id: session.id,
       user: session.user,
@@ -34,7 +33,7 @@ export async function createSession(
       exat: Math.floor(session.expiresAt.getTime() / 1000),
     },
   );
-  await redis.sadd(`user_sessions:${user.id}`, sessionId);
+  await redis.sadd(`admin_user_sessions:${user.id}`, sessionId);
 
   return session;
 }
@@ -79,29 +78,37 @@ export async function setSessionTokenCookie(
   expiresAt: Date,
 ): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.set("session", token, {
+  cookieStore.set("admin_session", token, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     expires: expiresAt,
     path: "/",
+    domain:
+      process.env.NODE_ENV === "production"
+        ? process.env.DASHBOARD_DOMAIN
+        : undefined,
   });
 }
 
 export async function deleteSessionTokenCookie(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.set("session", "", {
+  cookieStore.set("admin_session", "", {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     maxAge: 0,
     path: "/",
+    domain:
+      process.env.NODE_ENV === "production"
+        ? process.env.DASHBOARD_DOMAIN
+        : undefined,
   });
 }
 
 export const auth = async (): Promise<SessionValidationResult> => {
   const cookieStore = await cookies();
-  const token = cookieStore.get("session")?.value ?? null;
+  const token = cookieStore.get("admin_session")?.value ?? null;
 
   console.log("checking auth with session", token);
 

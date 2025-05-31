@@ -10,7 +10,14 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "redis:start": "docker-compose -f packages/db/docker-compose.yml up -d",
+    "redis:stop": "docker-compose -f packages/db/docker-compose.yml down",
+    "redis:logs": "docker-compose -f packages/db/docker-compose.yml logs -f",
+    "redis:restart": "docker-compose -f packages/db/docker-compose.yml restart",
+    "redis:clean": "docker-compose -f packages/db/docker-compose.yml down -v",
+    "redis:cli": "docker exec -it vit-redis redis-cli",
+    "redis:monitor": "docker exec -it vit-redis redis-cli monitor"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",

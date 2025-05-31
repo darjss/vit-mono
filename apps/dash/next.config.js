@@ -7,7 +7,7 @@
 const config = {
   transpilePackages: ["@vit/api", "@vit/db"],
   experimental: {
-    ppr: "incremental",
+    // ppr: "incremental",
     dynamicIO: true,
     reactCompiler: true,
     useCache: true,
