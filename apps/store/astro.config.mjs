@@ -18,7 +18,19 @@ export default defineConfig({
         : undefined,
     },
     ssr: {
-      external: ["node:path", "node:url", "node:fs", "node:crypto"],
+      external: [
+        "node:path",
+        "node:url",
+        "node:fs",
+        "node:crypto",
+        "node:worker_threads",
+        "node:fs/promises",
+        "os",
+        "url",
+        "module",
+        "worker_threads",
+      ],
+      noExternal: ["@vit/api", "@vit/db"],
     },
     build: {
       rollupOptions: {

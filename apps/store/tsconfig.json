@@ -16,6 +16,7 @@
       "@/*": ["./src/*"],
       "@workspace/ui/*": ["../../packages/ui/src/*"],
       "@vit/api": ["../../packages/api/src"],
+      "@vit/api/*": ["../../packages/api/src/*"],
       "@vit/db/*": ["../../packages/db/src/*"]
     },
     "jsx": "react-jsx",
