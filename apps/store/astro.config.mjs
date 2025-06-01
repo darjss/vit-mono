@@ -8,8 +8,7 @@ import cloudflare from "@astrojs/cloudflare";
 export default defineConfig({
   vite: {
     optimizeDeps: {
-      include: ["@vit/api", "@vit/db"],
-      force: true,
+      exclude: ["@vit/api", "@vit/db"],
     },
     resolve: {
       // Use react-dom/server.edge instead of react-dom/server.browser for React 19.
