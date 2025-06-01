@@ -1,4 +1,3 @@
-import { trpc } from "@/lib/trpc";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";

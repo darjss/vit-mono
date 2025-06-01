@@ -7,6 +7,7 @@ import path from "node:path";
 import cloudflare from "@astrojs/cloudflare";
 // https://astro.build/config
 export default defineConfig({
+  output: "server",
   vite: {
     resolve: {
       alias: {
@@ -23,8 +24,13 @@ export default defineConfig({
         "node:url",
         "node:fs",
         "node:crypto",
+        "node:buffer",
+        "node:stream",
+        "node:util",
         "@vit/db",
         "@vit/api",
+        "redis",
+        "drizzle-orm",
       ],
     },
     optimizeDeps: {
@@ -39,13 +45,18 @@ export default defineConfig({
             id === "@vit/db" ||
             id.startsWith("@vit/db/") ||
             id === "@vit/api" ||
-            id.startsWith("@vit/api/")
+            id.startsWith("@vit/api/") ||
+            id === "redis" ||
+            id.startsWith("redis/") ||
+            id === "drizzle-orm" ||
+            id.startsWith("drizzle-orm/")
           ) {
             return true;
           }
           return false;
         },
       },
+      minify: false,
     },
     plugins: [],
   },
@@ -53,5 +64,10 @@ export default defineConfig({
     defaultStrategy: "viewport",
   },
   integrations: [react(), tailwind()],
-  adapter: cloudflare(),
+  adapter: cloudflare({
+    platformProxy: {
+      enabled: true,
+    },
+    cloudflareModules: false,
+  }),
 });
