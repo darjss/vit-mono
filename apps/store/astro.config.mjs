@@ -7,9 +7,6 @@ import cloudflare from "@astrojs/cloudflare";
 // https://astro.build/config
 export default defineConfig({
   vite: {
-    optimizeDeps: {
-      exclude: ["@vit/api", "@vit/db"],
-    },
     resolve: {
       // Use react-dom/server.edge instead of react-dom/server.browser for React 19.
       // Without this, MessageChannel from node:worker_threads needs to be polyfilled.
@@ -18,25 +15,20 @@ export default defineConfig({
         : undefined,
     },
     ssr: {
-      external: [
-        "node:path",
-        "node:url",
-        "node:fs",
-        "node:crypto",
-        "node:worker_threads",
-        "node:fs/promises",
-        "os",
-        "url",
-        "module",
-        "worker_threads",
-      ],
-      noExternal: ["@vit/api", "@vit/db"],
+      external: ["node:path", "node:url", "node:fs", "node:crypto", "@vit/db"],
+    },
+    optimizeDeps: {
+      exclude: ["@vit/db"],
     },
     build: {
       rollupOptions: {
         external: (id, importer, isResolved) => {
-          // Externalize Node.js built-ins only
-          if (id.startsWith("node:")) {
+          // Externalize Node.js built-ins and @vit/db completely
+          if (
+            id.startsWith("node:") ||
+            id === "@vit/db" ||
+            id.startsWith("@vit/db/")
+          ) {
             return true;
           }
           return false;
