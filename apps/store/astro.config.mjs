@@ -27,9 +27,14 @@ export default defineConfig({
         "node:buffer",
         "node:stream",
         "node:util",
+        "redis",
+      ],
+      // Ensure actions and their dependencies are bundled
+      noExternal: [
+        "astro:actions",
+        "astro:schema",
         "@vit/db",
         "@vit/api",
-        "redis",
         "drizzle-orm",
       ],
     },
@@ -39,17 +44,25 @@ export default defineConfig({
     build: {
       rollupOptions: {
         external: (id, importer, isResolved) => {
-          // Externalize Node.js built-ins and @vit packages completely
+          // Always bundle actions-related imports
+          if (id.includes("astro:actions") || id.includes("astro:schema")) {
+            return false;
+          }
+
+          // Don't externalize anything from src/actions directory
+          if (
+            importer &&
+            (importer.includes("/src/actions/") ||
+              importer.includes("\\src\\actions\\"))
+          ) {
+            return false;
+          }
+
+          // Only externalize Node.js built-ins and redis
           if (
             id.startsWith("node:") ||
-            id === "@vit/db" ||
-            id.startsWith("@vit/db/") ||
-            id === "@vit/api" ||
-            id.startsWith("@vit/api/") ||
             id === "redis" ||
-            id.startsWith("redis/") ||
-            id === "drizzle-orm" ||
-            id.startsWith("drizzle-orm/")
+            id.startsWith("redis/")
           ) {
             return true;
           }

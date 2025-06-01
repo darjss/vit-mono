@@ -1,5 +1,9 @@
 import { auth } from "./auth";
 
-export const server = {
+// Explicitly construct the server object to ensure proper bundling
+const server = {
   auth,
 };
+
+export { server };
+export default server;
