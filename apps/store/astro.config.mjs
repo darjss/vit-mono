@@ -29,14 +29,8 @@ export default defineConfig({
         "node:util",
         "redis",
       ],
-      // Ensure actions and their dependencies are bundled
-      noExternal: [
-        "astro:actions",
-        "astro:schema",
-        "@vit/db",
-        "@vit/api",
-        "drizzle-orm",
-      ],
+      // Ensure actions are properly bundled
+      noExternal: ["astro:actions", "astro:schema"],
     },
     optimizeDeps: {
       exclude: ["@vit/db", "@vit/api"],
@@ -44,16 +38,16 @@ export default defineConfig({
     build: {
       rollupOptions: {
         external: (id, importer, isResolved) => {
-          // Always bundle actions-related imports
+          // Always bundle Astro actions
           if (id.includes("astro:actions") || id.includes("astro:schema")) {
             return false;
           }
 
-          // Don't externalize anything from src/actions directory
+          // Bundle all @vit packages for actions to work
           if (
-            importer &&
-            (importer.includes("/src/actions/") ||
-              importer.includes("\\src\\actions\\"))
+            id.startsWith("@vit/") ||
+            id === "drizzle-orm" ||
+            id.startsWith("drizzle-orm/")
           ) {
             return false;
           }
