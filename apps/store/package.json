@@ -26,7 +26,7 @@
     "@vit/api": "workspace:*",
     "@vit/db": "workspace:*",
     "@workspace/ui": "workspace:*",
-    "astro": "^5.7.3",
+    "astro": "^5.8.1",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.38.4",
     "input-otp": "^1.4.2",
