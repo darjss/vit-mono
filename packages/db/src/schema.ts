@@ -403,5 +403,5 @@ export type PaymentInsertType = InferInsertModel<typeof PaymentsTable>;
 export type CartInsertType = InferInsertModel<typeof CartsTable>;
 export type CartItemInsertType = InferInsertModel<typeof CartItemsTable>;
 
-export type PurchaseInsertType = InferSelectModel<typeof PurchasesTable>;
-export type SalesInsertType = InferSelectModel<typeof SalesTable>;
+export type PurchaseInsertType = InferInsertModel<typeof PurchasesTable>;
+export type SalesInsertType = InferInsertModel<typeof SalesTable>;

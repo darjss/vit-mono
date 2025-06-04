@@ -5,7 +5,7 @@ import { drizzle } from "drizzle-orm/libsql";
 import * as schema from "./schema";
 
 // Re-export drizzle-orm functions
-export { and, between, eq, gte, sql, desc, asc, type SQL } from "drizzle-orm";
+export { and, between, eq, gte, sql, desc, asc, or, like, gt, lt, count, type SQL } from "drizzle-orm";
 
 /**
  * Cache the database connection in development to avoid creating

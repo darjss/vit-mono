@@ -9,6 +9,9 @@ catalog:
   tailwindcss: ^3.4.15
   typescript: ^5.8.2
 
+  # Database
+  drizzle-orm: ^0.44.2
+
   # Misc
   zod: ^3.24.2
 

@@ -8,9 +8,18 @@
  */
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
+import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
 import { ZodError } from "zod";
 import { db } from "@vit/db";
 import { auth } from "./lib/session";
+import type { Session } from "./lib/types";
+
+export interface TRPCContext {
+  db: typeof db;
+  session: Session | null;
+  req: CreateNextContextOptions['req'];
+  res: CreateNextContextOptions['res'];
+}
 
 /**
  * 1. CONTEXT
@@ -24,14 +33,14 @@ import { auth } from "./lib/session";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers}) => {
-  const cookies = opts.headers.get("Cookie");
-  const token = cookies?.match(/session=([^;]+)/)?.[1] ?? null;
+export const createTRPCContext = async ({req, res}: CreateNextContextOptions): Promise<TRPCContext> => {
+  const token = req.cookies.store_session ?? null;
   const session = await auth(token);
   return {
     db,
     session,
-    ...opts,
+    req,
+    res,
   };
 };
 

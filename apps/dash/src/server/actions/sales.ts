@@ -16,7 +16,7 @@ import {
   TimeRange,
   TransactionType,
 } from "@/lib/types";
-import { and, between, eq, gte, sql } from "drizzle-orm";
+import { and, between, eq, gte, sql } from "@vit/db";
 import {
   calculateExpiration,
   getDaysFromTimeRange,
@@ -232,9 +232,9 @@ export const getDashboardHomePageData = async (): Promise<
         monthly: mostSoldProductsMonthly,
       },
       orderCounts: {
-        daily: dailyOrders,
-        weekly: weeklyOrders,
-        monthly: monthlyOrders,
+        daily: dailyOrders.count ?? 0,
+        weekly: weeklyOrders.count ?? 0,
+        monthly: monthlyOrders.count ?? 0,
       },
       pendingOrders,
       lastFetched: new Date().toISOString(),

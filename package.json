@@ -11,6 +11,7 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "typecheck": "turbo typecheck",
     "redis:start": "docker-compose -f packages/db/docker-compose.yml up -d",
     "redis:stop": "docker-compose -f packages/db/docker-compose.yml down",
     "redis:logs": "docker-compose -f packages/db/docker-compose.yml logs -f",
@@ -31,7 +32,6 @@
     "node": ">=20"
   },
   "dependencies": {
-    "js-cookie": "^3.0.5",
     "lucide-react": "^0.507.0"
   }
 }

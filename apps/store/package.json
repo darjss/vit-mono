@@ -28,7 +28,7 @@
     "@workspace/ui": "workspace:*",
     "astro": "^5.8.1",
     "clsx": "^2.1.1",
-    "drizzle-orm": "^0.38.4",
+    "drizzle-orm": "catalog:",
     "input-otp": "^1.4.2",
     "motion": "^12.9.4",
     "nanoid": "^5.1.3",

@@ -27,7 +27,7 @@ import {
   lt,
   SQL,
   count,
-} from "drizzle-orm";
+} from "@vit/db";
 import { revalidateTag } from "next/cache";
 import { unstable_cacheTag as cacheTag } from "next/cache";
 import { updateStock } from "./product";
@@ -45,7 +45,6 @@ import {
 import { addSale } from "./sales";
 import { getAverageCostOfProduct } from "./purchases";
 
-import { redirect } from "next/navigation";
 import { redis } from "@vit/db/redis";
 
 export const addOrder = async (orderInfo: addOrderType, createdAt?: Date) => {
@@ -126,7 +125,6 @@ export const addOrder = async (orderInfo: addOrderType, createdAt?: Date) => {
     });
 
     revalidateTag("orders");
-    redirect("/orders");
     console.log("added order");
     return { message: "Order added successfully" };
   } catch (e) {

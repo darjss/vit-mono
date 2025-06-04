@@ -26,7 +26,7 @@
     "@vit/db": "workspace:*",
     "@trpc/server": "catalog:",
     "superjson": "2.2.2",
-    "drizzle-orm": "^0.38.4",
+    "drizzle-orm": "catalog:",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "zod": "catalog:",
