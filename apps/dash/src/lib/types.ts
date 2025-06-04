@@ -35,7 +35,12 @@ export type OrderType = Exclude<
 export type PaymentProviderType = (typeof paymentProvider)[number];
 export type PaymentStatusType = (typeof paymentStatus)[number];
 export type OrderDeliveryProviderType = (typeof deliveryProvider)[number];
-export type TransactionType = SQLiteTransaction<"async", any, any, any>;
+export type TransactionType =SQLiteTransaction<
+"async",
+ResultSet,
+typeof import("@vit/db/schema"),
+ExtractTablesWithRelations<typeof import("@vit/db/schema")>
+>;
 export interface ProductImageType {
   id: number;
   url: string;

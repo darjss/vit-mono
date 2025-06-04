@@ -232,9 +232,9 @@ export const getDashboardHomePageData = async (): Promise<
         monthly: mostSoldProductsMonthly,
       },
       orderCounts: {
-        daily: dailyOrders.count ?? 0,
-        weekly: weeklyOrders.count ?? 0,
-        monthly: monthlyOrders.count ?? 0,
+        daily: dailyOrders,
+        weekly: weeklyOrders,
+        monthly: monthlyOrders,
       },
       pendingOrders,
       lastFetched: new Date().toISOString(),
