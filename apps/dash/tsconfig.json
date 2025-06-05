@@ -15,7 +15,7 @@
     "checkJs": true,
 
     /* Bundled projects */
-    
+
     "lib": ["dom", "dom.iterable", "ES2023.Array", "ES6", "ES5"],
     "noEmit": true,
     "module": "ESNext",
@@ -24,11 +24,11 @@
     "plugins": [{ "name": "next" }],
     "incremental": true,
     "baseUrl": ".",
-    "paths": {  
+    "paths": {
       "@/*": ["./src/*"],
       "@workspace/ui/*": ["../../packages/ui/src/*"],
       "@vit/api": ["../../packages/api/src"],
-      "@vit/db": ["../../packages/db/src"],
+      "@vit/db": ["../../packages/db/src"]
     }
   },
   "include": [
@@ -40,5 +40,5 @@
     "**/*.js",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules",""]
+  "exclude": ["node_modules", ""]
 }

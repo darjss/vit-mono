@@ -4,7 +4,11 @@
     "baseUrl": ".",
     "paths": {
       "drizzle-orm": ["node_modules/drizzle-orm"],
-      "drizzle-orm/*": ["node_modules/drizzle-orm/*"]
+      "drizzle-orm/*": ["node_modules/drizzle-orm/*"],
+      "react-hook-form": ["node_modules/react-hook-form"],
+      "react-hook-form/*": ["node_modules/react-hook-form/*"],
+      "@hookform/resolvers": ["node_modules/@hookform/resolvers"],
+      "@hookform/resolvers/*": ["node_modules/@hookform/resolvers/*"]
     }
   },
   "include": ["apps/*/src", "packages/*/src"]

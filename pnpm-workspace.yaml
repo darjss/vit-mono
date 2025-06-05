@@ -20,3 +20,6 @@ catalog:
   "@trpc/client": ^11.1.0
   "@trpc/tanstack-react-query": ^11.1.0
   "@trpc/server": ^11.1.0
+
+  react-hook-form: ^7.54.2
+  "@hookform/resolvers": ^4.1.3

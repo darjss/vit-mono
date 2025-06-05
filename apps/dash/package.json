@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^9.6.0",
-    "@hookform/resolvers": "^4.1.3",
+    "@hookform/resolvers": "catalog:",
     "@libsql/client": "^0.15.2",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
@@ -51,7 +51,7 @@
     "nuqs": "^2.4.1",
     "react": "19.2.0-canary-b07717d8-20250528",
     "react-dom": "19.2.0-canary-b07717d8-20250528",
-    "react-hook-form": "^7.54.2",
+    "react-hook-form": "catalog:",
     "recharts": "^2.15.1",
     "server-only": "^0.0.1",
     "sonner": "^1.7.4",
