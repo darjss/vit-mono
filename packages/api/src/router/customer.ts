@@ -71,7 +71,7 @@ export const customer = createTRPCRouter({
         if (process.env.NODE_ENV === "development") {
           isValidOtp = true;
         } else {
-          const otpFromRedis = await redis.get(input.phone);
+          const otpFromRedis = await redis.get(input.phone) as string;
           isValidOtp = otpFromRedis === input.otp;
           
           if (isValidOtp) {
@@ -107,7 +107,6 @@ export const customer = createTRPCRouter({
         return {
           success: true,
           user: session.user,
-          // Return token only if we can't set cookies
           token: ctx.resHeaders ? undefined : token,
         };
       } catch (error) {
