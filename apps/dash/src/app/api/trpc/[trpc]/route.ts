@@ -5,26 +5,39 @@ import { appRouter, createTRPCContext } from "@vit/api";
 
 
 /**
- * Configure basic CORS headers
- * You should extend this to match your needs
+ * Configure CORS headers for specific allowed origins
  */
-const setCorsHeaders = (res: Response) => {
-  res.headers.set("Access-Control-Allow-Origin", "*");
+const allowedOrigins = [
+  "http://localhost:4321",
+  "https://localhost:4321",
+  "https://vit-store.darjs.workers.dev"
+];
+
+const setCorsHeaders = (res: Response, origin?: string | null) => {
+  // Check if the origin is in the allowed list
+  if (origin && allowedOrigins.includes(origin)) {
+    res.headers.set("Access-Control-Allow-Origin", origin);
+  }
+  
   res.headers.set("Access-Control-Request-Method", "*");
   res.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
   res.headers.set("Access-Control-Allow-Headers", "*");
+  res.headers.set("Access-Control-Allow-Credentials", "true");
 };
 
-export const OPTIONS = () => {
+export const OPTIONS = (req: NextRequest) => {
   const response = new Response(null, {
     status: 204,
   });
-  setCorsHeaders(response);
+  const origin = req.headers.get("origin");
+  setCorsHeaders(response, origin);
   return response;
 };
 
 const handler = async (req: NextRequest) => {
   const resheaders = new Headers();
+  const origin = req.headers.get("origin");
+  
   const response = await fetchRequestHandler({
     endpoint: "/api/trpc",
     router: appRouter,
@@ -41,7 +54,7 @@ const handler = async (req: NextRequest) => {
   for (const [key, value] of resheaders.entries()) {
     response.headers.set(key, value);
   }
-  setCorsHeaders(response);
+  setCorsHeaders(response, origin);
   return response;
 };
 
