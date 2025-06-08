@@ -1,65 +1,43 @@
+import type { NextRequest } from "next/server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-import { type NextRequest } from "next/server";
-import { cookies } from "next/headers";
-import { appRouter } from "@vit/api";
-import { createTRPCContext } from "@vit/api";
-import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
-// Allowed origin check is now primarily handled in middleware,
-// but we still need it here to set the header on the *actual* response.
-const allowedOrigin = process.env.NODE_ENV === "development" ? "http://localhost:4321" : "https://vit-mono-store.vercel.app";
+import { appRouter, createTRPCContext } from "@vit/api";
+
 
 /**
- * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
- * handling a HTTP request (e.g. when you make requests from Client Components).
+ * Configure basic CORS headers
+ * You should extend this to match your needs
  */
-const createContext = async (req: NextRequest) => {
+const setCorsHeaders = (res: Response) => {
+  res.headers.set("Access-Control-Allow-Origin", "*");
+  res.headers.set("Access-Control-Request-Method", "*");
+  res.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
+  res.headers.set("Access-Control-Allow-Headers", "*");
+};
 
-  return createTRPCContext({
-    headers: req.headers,
-
+export const OPTIONS = () => {
+  const response = new Response(null, {
+    status: 204,
   });
+  setCorsHeaders(response);
+  return response;
 };
 
 const handler = async (req: NextRequest) => {
-  console.log(
-    "tRPC Handler: Received request for",
-    req.url,
-    "Method:",
-    req.method,
-  );
-
-
-  // Handle actual GET/POST requests
   const response = await fetchRequestHandler({
     endpoint: "/api/trpc",
-    req,
     router: appRouter,
-    createContext: () => createContext(req),
-    onError:
-      process.env.NODE_ENV === "development"
-        ? ({ path, error }) => {
-            console.error(
-              `❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`,
-            );
-          }
-        : undefined,
+    req,
+    createContext: () =>
+      createTRPCContext({
+        headers: req.headers,
+      }),
+    onError({ error, path }) {
+      console.error(`>>> tRPC Error on '${path}'`, error);
+    },
   });
 
-
-  const requestOrigin = req.headers.get("origin");
-  if (requestOrigin === allowedOrigin) {
-    response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
-  } else if (requestOrigin) {
-    console.warn(
-      `tRPC Handler: Request origin "${requestOrigin}" not in allowed list "${allowedOrigin}". Not adding CORS header.`,
-    );
-  } else {
-    console.log("tRPC Handler: Request does not have an Origin header.");
-  }
-
-
-  console.log("tRPC Handler: Sending response with status", response.status);
+  setCorsHeaders(response);
   return response;
 };
 

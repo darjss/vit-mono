@@ -23,18 +23,19 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@vit/db": "workspace:*",
-    "@trpc/server": "catalog:",
-    "superjson": "2.2.2",
-    "drizzle-orm": "catalog:",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
-    "zod": "catalog:",
-    "nanoid": "^5.1.3"
+    "@trpc/server": "catalog:",
+    "@vit/db": "workspace:*",
+    "cookie": "^1.0.2",
+    "drizzle-orm": "catalog:",
+    "nanoid": "^5.1.3",
+    "superjson": "2.2.2",
+    "zod": "catalog:"
   },
   "devDependencies": {
-    "eslint": "catalog:",
     "@types/node": "^20",
+    "eslint": "catalog:",
     "typescript": "catalog:"
   }
 }

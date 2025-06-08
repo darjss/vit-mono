@@ -371,6 +371,9 @@ importers:
       '@vit/db':
         specifier: workspace:*
         version: link:../db
+      cookie:
+        specifier: ^1.0.2
+        version: 1.0.2
       drizzle-orm:
         specifier: 'catalog:'
         version: 0.44.2(@cloudflare/workers-types@4.20250605.0)(@libsql/client@0.15.8)(@types/better-sqlite3@7.6.13)(@upstash/redis@1.35.0)(better-sqlite3@11.10.0)(gel@2.1.0)

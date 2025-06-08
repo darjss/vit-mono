@@ -17,8 +17,7 @@ import type { Session } from "./lib/types";
 export interface TRPCContext {
   db: typeof db;
   session: Session | null;
-  req: CreateNextContextOptions['req'];
-  res: CreateNextContextOptions['res'];
+  headers: Headers;
 }
 
 /**
@@ -33,14 +32,13 @@ export interface TRPCContext {
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async ({req, res}: CreateNextContextOptions): Promise<TRPCContext> => {
-  const token = req.cookies.store_session ?? null;
+export const createTRPCContext = async ({headers}: {headers: Headers}): Promise<TRPCContext> => {
+  const token = headers.get("cookie")?.split(";").find(c => c.trim().startsWith("store_session="))?.split("=")[1] ?? null;
   const session = await auth(token);
   return {
     db,
     session,
-    req,
-    res,
+    headers,
   };
 };
 
