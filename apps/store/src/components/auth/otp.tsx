@@ -7,6 +7,7 @@ import { cn } from "@workspace/ui/lib/utils";
 import { Button } from "@workspace/ui/components/button";
 import { useMutation } from "@tanstack/react-query";
 import { actions } from "astro:actions";
+import { trpc } from "@/lib/trpc";
 
 interface AnimatedNumberProps {
   value: string | null;
@@ -81,7 +82,7 @@ const Otp = ({ phoneNumber }: { phoneNumber: string }) => {
   const otpRef = useRef<HTMLInputElement>(null);
 
   const mutation = useMutation({
-    mutationFn: actions.auth.otpLogin,
+    ...trpc.customer.login.mutationOptions(),
     onSuccess: (data) => {
       if (data) {
         setIsVerifying(false);

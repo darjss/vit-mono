@@ -5,6 +5,7 @@ import { Label } from "@workspace/ui/components/label";
 import { useState, useEffect } from "react";
 import { actions } from "astro:actions";
 import { navigate } from "astro:transitions/client";
+import { trpc } from "@/lib/trpc";
 
 const LoginComponent = () => {
   const [phone, setPhone] = useState(() => {
@@ -15,17 +16,17 @@ const LoginComponent = () => {
     return "";
   });
 
-  // Add state to track navigation in progress
   const [isNavigating, setIsNavigating] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: actions.auth.sendOtp,
+     ...trpc.customer.sendOtp.mutationOptions(),
+     
     onSuccess: () => {
       console.log("🟢 mutation success, redirecting to OTP page", {
         phone,
       });
 
-      // Set navigating state before calling navigate
+
       setIsNavigating(true);
 
       // Navigate to OTP page

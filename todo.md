@@ -1,6 +1,6 @@
 # todo Vite Mono Store
 
-[ ] -fix nextjs deployment issues
+[x] -fix nextjs deployment issues
 [ ] -change store auth to be in trpc api
 [ ] -migrate monorepo to t3 turbo
 [ ] -add auth middleware in trpc-1 hour

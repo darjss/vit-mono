@@ -7,6 +7,7 @@ import {
 import { type Session } from "./types"
 import { redis } from "@vit/db/redis";
 import type { CustomerSelectType } from "@vit/db/schema";
+import {serialize, parse} from "cookie"
 
 export function generateSessionToken(): string {
   const bytes = new Uint8Array(20);
@@ -14,31 +15,39 @@ export function generateSessionToken(): string {
   return encodeBase32LowerCaseNoPadding(bytes);
 }
 
-// export async function createSession(
-//   user: CustomerSelectType
-// ): Promise<Session> {
-//     const token = generateSessionToken();
-//   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-//   const session: Session = {
-//     id: sessionId,
-//     user,
-//     expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-//   };
-//   await redis.set(
-//     `session:${session.id}`,
-//     JSON.stringify({
-//       id: session.id,
-//       user: session.user,
-//       expires_at: Math.floor(session.expiresAt.getTime() / 1000),
-//     }),
-//     {
-//       exat: Math.floor(session.expiresAt.getTime() / 1000),
-//     }
-//   );
-//   await redis.sadd(`user_sessions:${user.phone}`, sessionId);
+const cookieConfig = {
+  httpOnly: true,
+  sameSite: "lax",
+  secure: process.env.NODE_ENV === "production",
+  maxAge: 60*60*24*7,
+  path: "/",
+};
 
-//   return session;
-// }
+export async function createSession(
+  user: CustomerSelectType
+): Promise<{ session: Session; token: string }> {
+    const token = generateSessionToken();
+  const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+  const session: Session = {
+    id: sessionId,
+    user,
+    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+  };
+  await redis.set(
+    `session:${session.id}`,
+    JSON.stringify({
+      id: session.id,
+      user: session.user,
+      expires_at: Math.floor(session.expiresAt.getTime() / 1000),
+    }),
+    {
+      exat: Math.floor(session.expiresAt.getTime() / 1000),
+    }
+  );
+  await redis.sadd(`user_sessions:${user.phone}`, sessionId);
+
+  return { session, token };
+}
 
 export async function validateSessionToken(
   token: string
@@ -67,7 +76,7 @@ export async function validateSessionToken(
   if (Date.now() >= expiresAt.getTime() - 1000 * 60 * 30) {
     const updatedSession = {
       ...session,
-      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
     };
     await redis.set(session.id, JSON.stringify(session));
     return session;
@@ -80,30 +89,31 @@ export async function invalidateSession(sessionId: string): Promise<void> {
    await redis.del(`session:${sessionId}`);
 }
 
-// export async function setSessionTokenCookie(
-//   token: string,
-//   expiresAt: Date
-// ): Promise<void> {
-//   const cookieStore = await cookies();
-//   cookieStore.set("session", token, {
-//     httpOnly: true,
-//     sameSite: "lax",
-//     secure: process.env.NODE_ENV === "production",
-//     expires: expiresAt,
-//     path: "/",
-//   });
-// }
+export function setSessionTokenCookie(
+  resHeaders: Headers,
+  token: string,
+  expiresAt: Date
+): void {
+  const cookieString = serialize("store_session", token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    expires: expiresAt,
+    path: "/",
+  });
+  resHeaders.set("Set-Cookie", cookieString);
+}
 
-// export async function deleteSessionTokenCookie(): Promise<void> {
-//   const cookieStore = await cookies();
-//   cookieStore.set("session", "", {
-//     httpOnly: true,
-//     sameSite: "lax",
-//     secure: process.env.NODE_ENV === "production",
-//     maxAge: 0,
-//     path: "/",
-//   });
-// }
+export function deleteSessionTokenCookie(resHeaders: Headers): void {
+  const cookieString = serialize("store_session", "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 0,
+    path: "/",
+  });
+  resHeaders.set("Set-Cookie", cookieString);
+}
 
 export const auth = async (token: string | null): Promise<Session | null> => {
   

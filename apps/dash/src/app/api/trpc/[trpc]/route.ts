@@ -24,6 +24,7 @@ export const OPTIONS = () => {
 };
 
 const handler = async (req: NextRequest) => {
+  const resheaders = new Headers();
   const response = await fetchRequestHandler({
     endpoint: "/api/trpc",
     router: appRouter,
@@ -31,12 +32,15 @@ const handler = async (req: NextRequest) => {
     createContext: () =>
       createTRPCContext({
         headers: req.headers,
+        resHeaders: resheaders,
       }),
     onError({ error, path }) {
       console.error(`>>> tRPC Error on '${path}'`, error);
     },
   });
-
+  for (const [key, value] of resheaders.entries()) {
+    response.headers.set(key, value);
+  }
   setCorsHeaders(response);
   return response;
 };
