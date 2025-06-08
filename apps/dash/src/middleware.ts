@@ -10,9 +10,9 @@ const postRequestBucket = new TokenBucket<string>(30, 1);
 
 // Define allowed origins - update if you need more
 const allowedOrigins = [
-  "https://vit-mono-store.vercel.app",
   "http://localhost:4321",
-  // Add localhost for development if needed: e.g., "http://localhost:4321"
+  "https://localhost:4321",
+  "https://vit-store.darjs.workers.dev",
 ];
 
 const publicPaths = [
@@ -65,9 +65,9 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     response.headers.set("Access-Control-Allow-Origin", origin);
     // Only allow credentials for specific, trusted origins
     if (
-      origin === "https://vit-mono-store.vercel.app" ||
+      origin === "https://vit-store.darjs.workers.dev" ||
       (process.env.NODE_ENV === "development" &&
-        origin === "http://localhost:4321")
+        (origin === "http://localhost:4321" || origin === "https://localhost:4321"))
     ) {
       response.headers.set("Access-Control-Allow-Credentials", "true");
     }
