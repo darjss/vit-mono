@@ -47,9 +47,11 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
       const preflightHeaders = {
         "Access-Control-Allow-Origin": origin,
         "Access-Control-Allow-Methods": "GET, POST, OPTIONS", // Add other methods if needed
-        "Access-Control-Allow-Headers": "Content-Type, x-trpc-source", // Add other headers if needed by client
+        "Access-Control-Allow-Headers": "Content-Type, x-trpc-source, Authorization", // Add other headers if needed by client
+        "Access-Control-Allow-Credentials": "true", // This is crucial for credentials
         "Access-Control-Max-Age": "86400", // Cache preflight response for 1 day
       };
+      console.log("🔴", preflightHeaders);
       return new NextResponse(null, { status: 204, headers: preflightHeaders });
     } else {
       console.warn(
@@ -62,16 +64,9 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
   // Add CORS headers to the actual responses for allowed origins
   if (isAllowedOrigin) {
+    console.log("🔴 allowed origin", origin);
     response.headers.set("Access-Control-Allow-Origin", origin);
-    // Only allow credentials for specific, trusted origins
-    if (
-      origin === "https://vit-store.darjs.workers.dev" ||
-      (process.env.NODE_ENV === "development" &&
-        (origin === "http://localhost:4321" || origin === "https://localhost:4321"))
-    ) {
-      response.headers.set("Access-Control-Allow-Credentials", "true");
-    }
-    // Add additional security headers
+    response.headers.set("Access-Control-Allow-Credentials", "true");
     response.headers.set(
       "Access-Control-Allow-Headers",
       "Content-Type, x-trpc-source, Authorization",
@@ -145,15 +140,16 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 }
 
 export const config = {
-  // Adjust matcher if needed, ensure it covers /api/trpc
+  // Ensure middleware covers /api/trpc routes
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * Explicitly include /api routes
      */
     "/((?!_next/static|_next/image|favicon.ico).*)",
-    "/api/trpc/:path*", // Explicitly include tRPC routes if necessary
+    "/api/:path*",
   ],
 };

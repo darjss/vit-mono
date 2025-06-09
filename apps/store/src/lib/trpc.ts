@@ -13,7 +13,7 @@ const getBackendUrl = () => {
   if (import.meta.env.DEV) {
     return "http://localhost:3000/api/trpc";
   }
-  console.warn("API URL not configured via VITE_API_URL environment variable.");
+  console.warn("API URL not configured via PUBLIC_API_URL environment variable.");
   return "http://localhost:3000/api/trpc";
 };
 
@@ -58,6 +58,12 @@ export const api = createTRPCClient<AppRouter>({
     httpBatchLink({
       url: getBackendUrl(),
       transformer: SuperJSON,
+      fetch(url, options) {
+        return fetch(url, {
+          ...options,
+          credentials: 'include',
+        });
+      },
       headers: () => {
         const headers = new Headers();
         headers.set("x-trpc-source", "nextjs-react");

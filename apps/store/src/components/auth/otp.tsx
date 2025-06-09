@@ -84,13 +84,11 @@ const Otp = ({ phoneNumber }: { phoneNumber: string }) => {
   const mutation = useMutation({
     ...trpc.customer.login.mutationOptions(),
     onSuccess: (data) => {
-      if (data) {
+      if (data && data.success) {
         setIsVerifying(false);
-        if (typeof window !== "undefined") {
-          setTimeout(() => {
-            window.location.href = "/profile";
-          }, 100);
-        }
+        setTimeout(() => {
+          window.location.href = "/profile";
+        }, 100);
       } else {
         setIsShaking(true);
         setErrorMessage("Буруу код");
@@ -122,9 +120,7 @@ const Otp = ({ phoneNumber }: { phoneNumber: string }) => {
     setErrorMessage("");
 
     mutation.mutate({ phone: phoneNumber, otp: value });
-    console.log("mutation.data", mutation.data);
   };
-  console.log("mutation.data", mutation.data);
   return (
     <div className="flex flex-col space-y-6">
       <motion.div

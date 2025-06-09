@@ -94,23 +94,33 @@ export function setSessionTokenCookie(
   token: string,
   expiresAt: Date
 ): void {
+  const isProduction = process.env.NODE_ENV === "production";
+  const isDevelopment = process.env.NODE_ENV === "development";
+  
   const cookieString = serialize("store_session", token, {
     httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    // In production: "lax" for same-domain, in dev: "none" for cross-origin  
+    sameSite: isProduction ? "lax" : "none",
+    // Secure required for sameSite: "none", but only if HTTPS is available
+    secure: isProduction || process.env.HTTPS === "true",
     expires: expiresAt,
     path: "/",
+    // Set domain only in production for subdomain sharing (store.com -> admin.store.com)
+    domain: isProduction ? process.env.STORE_DOMAIN : undefined,
   });
   resHeaders.set("Set-Cookie", cookieString);
 }
 
 export function deleteSessionTokenCookie(resHeaders: Headers): void {
+  const isProduction = process.env.NODE_ENV === "production";
+  
   const cookieString = serialize("store_session", "", {
     httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    sameSite: isProduction ? "lax" : "none",
+    secure: isProduction || process.env.HTTPS === "true",
     maxAge: 0,
     path: "/",
+    domain: isProduction ? process.env.STORE_DOMAIN : undefined,
   });
   resHeaders.set("Set-Cookie", cookieString);
 }

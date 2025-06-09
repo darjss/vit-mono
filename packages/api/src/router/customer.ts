@@ -100,15 +100,19 @@ export const customer = createTRPCRouter({
         // Create session
         const { session, token } = await createSession(user);
         
-        // Set cookie if response headers are available
+        // Always set cookie since we assume server can set it
+        console.log("Setting session cookie for user:", user.phone);
+        console.log("resHeaders available:", !!ctx.resHeaders);
+        
         if (ctx.resHeaders) {
           setSessionTokenCookie(ctx.resHeaders, token, session.expiresAt);
+          console.log("Session cookie set via resHeaders");
         }
 
         return {
           success: true,
           user: session.user,
-          token: ctx.resHeaders ? undefined : token,
+          // Always assume cookie was set successfully
         };
       } catch (error) {
         console.error("Login error:", error);

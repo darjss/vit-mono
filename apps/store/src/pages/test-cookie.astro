@@ -1,0 +1,55 @@
+---
+// Simple test to debug cookie issues
+console.log("🔴 Testing cookie functionality");
+
+// Test setting a simple cookie
+Astro.cookies.set("test_simple", "simple_value", {
+  httpOnly: false, // Make it visible in browser for testing
+  path: "/",
+  maxAge: 3600,
+});
+
+// Test setting a session-like cookie
+Astro.cookies.set("test_session", "session_value_123", {
+  httpOnly: true,
+  sameSite: "lax",
+  secure: false, // Force false for testing
+  path: "/",
+  maxAge: 3600,
+});
+
+console.log("🔴 Cookies set, checking...");
+console.log("🔴 test_simple:", Astro.cookies.get("test_simple")?.value);
+console.log("🔴 test_session:", Astro.cookies.get("test_session")?.value);
+console.log("🔴 Request cookies:", Astro.request.headers.get("cookie"));
+
+// Check environment
+console.log("🔴 Environment info:");
+console.log("  NODE_ENV:", process.env.NODE_ENV);
+console.log("  Request URL:", Astro.url.toString());
+console.log("  Request host:", Astro.url.host);
+---
+
+<html>
+<head>
+  <title>Cookie Test</title>
+</head>
+<body>
+  <h1>Cookie Test Page</h1>
+  <p>Check the server logs and browser dev tools.</p>
+  <p>This page sets test cookies to debug the issue.</p>
+  
+  <h2>Browser Info</h2>
+  <p>URL: {Astro.url.toString()}</p>
+  <p>Host: {Astro.url.host}</p>
+  
+  <script>
+    console.log("🔴 Client-side cookies:", document.cookie);
+    
+    // Check if cookies are being set
+    setTimeout(() => {
+      console.log("🔴 Client-side cookies after delay:", document.cookie);
+    }, 1000);
+  </script>
+</body>
+</html> 

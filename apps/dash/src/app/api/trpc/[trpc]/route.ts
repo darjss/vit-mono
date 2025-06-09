@@ -17,22 +17,15 @@ const setCorsHeaders = (res: Response, origin?: string | null) => {
   // Check if the origin is in the allowed list
   if (origin && allowedOrigins.includes(origin)) {
     res.headers.set("Access-Control-Allow-Origin", origin);
+    res.headers.set("Access-Control-Allow-Credentials", "true");
   }
   
-  res.headers.set("Access-Control-Request-Method", "*");
   res.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
-  res.headers.set("Access-Control-Allow-Headers", "*");
-  res.headers.set("Access-Control-Allow-Credentials", "true");
+  res.headers.set("Access-Control-Allow-Headers", "Content-Type, x-trpc-source, Authorization, Cookie");
+  res.headers.set("Access-Control-Expose-Headers", "Set-Cookie");
 };
 
-export const OPTIONS = (req: NextRequest) => {
-  const response = new Response(null, {
-    status: 204,
-  });
-  const origin = req.headers.get("origin");
-  setCorsHeaders(response, origin);
-  return response;
-};
+// OPTIONS requests are handled by middleware
 
 const handler = async (req: NextRequest) => {
   const resheaders = new Headers();
@@ -52,6 +45,7 @@ const handler = async (req: NextRequest) => {
     },
   });
   for (const [key, value] of resheaders.entries()) {
+    console.log("🔴", key, value);
     response.headers.set(key, value);
   }
   setCorsHeaders(response, origin);

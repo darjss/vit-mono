@@ -19,13 +19,11 @@ const LoginComponent = () => {
   const [isNavigating, setIsNavigating] = useState(false);
 
   const mutation = useMutation({
-     ...trpc.customer.sendOtp.mutationOptions(),
-     
+    ...trpc.customer.sendOtp.mutationOptions(),
     onSuccess: () => {
       console.log("🟢 mutation success, redirecting to OTP page", {
         phone,
       });
-
 
       setIsNavigating(true);
 

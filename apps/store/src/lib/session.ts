@@ -24,18 +24,28 @@ export async function createSession(
     user,
     expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
   };
+
+  const sessionDataToStore = {
+    id: session.id,
+    user: session.user,
+    expires_at: Math.floor(session.expiresAt.getTime() / 1000),
+  };
+
+  console.log("🔴 Creating session with ID:", sessionId);
+  console.log("🔴 Session data to store:", sessionDataToStore);
+  console.log("🔴 Redis key:", `store_session:${session.id}`);
+
   await redis.set(
     `store_session:${session.id}`,
-    JSON.stringify({
-      id: session.id,
-      user: session.user,
-      expires_at: Math.floor(session.expiresAt.getTime() / 1000),
-    }),
+    JSON.stringify(sessionDataToStore),
     {
       exat: Math.floor(session.expiresAt.getTime() / 1000),
     }
   );
+  
   await redis.sadd(`store_user_sessions:${user.phone}`, sessionId);
+
+  console.log("🔴 Session stored successfully");
 
   return { session, token };
 }
@@ -44,35 +54,72 @@ export async function validateSessionToken(
   token: string
 ): Promise<Session | null> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-  const session = (await redis.get(`store_session:${sessionId}`)) as Session;
+  console.log("🔴 sessionId", sessionId);
+  
+  const sessionData = await redis.get(`store_session:${sessionId}`);
+  console.log("🔴 Raw session data from Redis:", sessionData);
 
-  if (
-    session === null ||
-    session === undefined ||
-    session.user === null ||
-    session.user === undefined ||
-    session.id === null ||
-    session.id === undefined
-  ) {
+  if (!sessionData) {
+    console.log("🔴 No session data found in Redis");
     return null;
   }
 
-  const expiresAt = new Date(session.expiresAt);
+  let parsedSession: any;
+  try {
+    parsedSession = typeof sessionData === 'string' ? JSON.parse(sessionData) : sessionData;
+    console.log("🔴 Parsed session data:", parsedSession);
+  } catch (error) {
+    console.log("🔴 Failed to parse session data:", error);
+    return null;
+  }
+
+  if (
+    !parsedSession ||
+    !parsedSession.user ||
+    !parsedSession.id
+  ) {
+    console.log("🔴 Invalid session structure:", parsedSession);
+    return null;
+  }
+
+  // Convert the stored format back to Session format
+  const expiresAt = new Date(parsedSession.expires_at * 1000); // Convert seconds to milliseconds
+  console.log("🔴 Session expires at:", expiresAt);
 
   if (Date.now() >= expiresAt.getTime()) {
+    console.log("🔴 Session expired, deleting");
     await redis.del(`store_session:${sessionId}`);
     return null;
   }
 
+  const session: Session = {
+    id: parsedSession.id,
+    user: parsedSession.user,
+    expiresAt: expiresAt,
+  };
+
+  // Refresh session if it's close to expiry (30 minutes)
   if (Date.now() >= expiresAt.getTime() - 1000 * 60 * 30) {
-    const updatedSession = {
+    console.log("🔴 Refreshing session");
+    const newExpiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
+    const updatedSession: Session = {
       ...session,
-      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+      expiresAt: newExpiresAt,
     };
+    
+    // Store in the same format as createSession
     await redis.set(
       `store_session:${session.id}`,
-      JSON.stringify(updatedSession)
+      JSON.stringify({
+        id: session.id,
+        user: session.user,
+        expires_at: Math.floor(newExpiresAt.getTime() / 1000),
+      }),
+      {
+        exat: Math.floor(newExpiresAt.getTime() / 1000),
+      }
     );
+    
     return updatedSession;
   }
 
@@ -88,24 +135,34 @@ export async function setSessionTokenCookie(
   token: string,
   expiresAt: Date
 ): Promise<void> {
-  console.log("Setting cookie with token:", token.substring(0, 10) + "...");
-  console.log("Cookie expires at:", expiresAt);
-  console.log("NODE_ENV:", process.env.NODE_ENV);
-  console.log("STORE_DOMAIN:", process.env.STORE_DOMAIN);
+  console.log("🔴 Setting cookie with token:", token.substring(0, 10) + "...");
+  console.log("🔴 Cookie expires at:", expiresAt);
+  console.log("🔴 NODE_ENV:", process.env.NODE_ENV);
+  console.log("🔴 STORE_DOMAIN:", process.env.STORE_DOMAIN);
+  console.log("🔴 Token length:", token.length);
 
-  context.cookies.set("store_session", token, {
+  const cookieOptions = {
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: "lax" as const,
     secure: process.env.NODE_ENV === "production",
     expires: expiresAt,
     path: "/",
-    domain:
-      process.env.NODE_ENV === "production" && process.env.STORE_DOMAIN
-        ? process.env.STORE_DOMAIN
-        : undefined,
-  });
+    domain: undefined, // Remove domain for now to test
+  };
 
-  console.log("Cookie set successfully");
+  console.log("🔴 Cookie options:", cookieOptions);
+
+  try {
+    context.cookies.set("store_session", token, cookieOptions);
+    console.log("🔴 Cookie set successfully via context.cookies.set");
+    
+    // Verify cookie was set by reading it back
+    const readBack = context.cookies.get("store_session");
+    console.log("🔴 Cookie read back:", readBack?.value?.substring(0, 10) + "...");
+    
+  } catch (error) {
+    console.error("🔴 Error setting cookie:", error);
+  }
 }
 
 export async function deleteSessionTokenCookie(
@@ -138,6 +195,8 @@ export async function deleteSessionTokenCookie(
 
 export const auth = async (cookies: AstroCookies): Promise<Session | null> => {
   const token = cookies.get("store_session")?.value ?? null;
+
+  console.log("🔴 Auth function - checking token:", token);
 
   if (token === null) {
     return null;
