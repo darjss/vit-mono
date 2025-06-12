@@ -71,7 +71,7 @@ export const customer = createTRPCRouter({
         if (process.env.NODE_ENV === "development") {
           isValidOtp = true;
         } else {
-          const otpFromRedis = await redis.get(input.phone) as string;
+          const otpFromRedis = (await redis.get(input.phone)+"") ;
           console.log("otpFromRedis", otpFromRedis, input.otp, typeof otpFromRedis, typeof input.otp);
           isValidOtp = otpFromRedis === input.otp;
           

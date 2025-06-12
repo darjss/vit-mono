@@ -45,7 +45,19 @@ export async function validateSessionToken(
   token: string
 ): Promise<Session | null> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-  const session = (await redis.get(`store_session:${sessionId}`)) as Session;
+  const raw = (await redis.get(`store_session:${sessionId}`)) as string;
+  if (raw === null || raw === undefined) return null;
+  const stored = JSON.parse(raw) as {
+    id: string;
+    user: CustomerSelectType;
+    expires_at: number;
+  };
+
+  const session: Session = {
+    id: stored.id,
+    user: stored.user,
+    expiresAt: new Date(stored.expires_at * 1000),
+  };
 
   if (
     session === null ||
@@ -70,8 +82,16 @@ export async function validateSessionToken(
       ...session,
       expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
     };
-    await redis.set(`store_session:${session.id}`, JSON.stringify(session));
-    return session;
+    await redis.set(
+      `store_session:${session.id}`,
+      JSON.stringify({
+        id: updatedSession.id,
+        user: updatedSession.user,
+        expires_at: Math.floor(updatedSession.expiresAt.getTime() / 1000),
+      }),
+      { exat: Math.floor(updatedSession.expiresAt.getTime() / 1000) }
+    );
+    return updatedSession;
   }
 
   return session;
@@ -91,9 +111,7 @@ export function setSessionTokenCookie(
   
   const cookieString = serialize("store_session", token, {
     httpOnly: true,
-    // In production: "lax" for same-domain, in dev: "none" for cross-origin  
     sameSite: isProduction ? "none" : "lax",
-    // Secure required for sameSite: "none", but only if HTTPS is available
     secure: isProduction || process.env.HTTPS === "true",
     expires: expiresAt,
     path: "/",

@@ -15,6 +15,7 @@ interface AnimatedNumberProps {
   placeholder: string;
 }
 
+
 const AnimatedNumber = ({ value, placeholder }: AnimatedNumberProps) => {
   return (
     <div className="relative flex h-[56px] w-[48px] items-center justify-center overflow-hidden">

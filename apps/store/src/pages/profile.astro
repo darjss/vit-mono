@@ -3,17 +3,6 @@
 import { auth } from "../lib/session";
 import { actions } from "astro:actions";
 
-Astro.cookies.set("testcookie", "testvalue");
-
-
-console.log("🔴 Specific cookies:");
-console.log("  testcookie:", Astro.cookies.get("testcookie")?.value);
-console.log("  store_session:", Astro.cookies.get("store_session")?.value);
-
-console.log("🔴 Cookie existence checks:");
-console.log("  has testcookie:", Astro.cookies.has("testcookie"));
-console.log("  has store_session:", Astro.cookies.has("store_session"));
-console.log("🔴 Request cookies header:", Astro.request.headers.get("cookie"));
 
 const session = await auth(Astro.cookies);
 

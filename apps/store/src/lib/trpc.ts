@@ -55,14 +55,8 @@ const httpBatchLinkWithHeaderLogging = (opts: Parameters<typeof httpBatchLink>[0
         ...options,
         credentials: 'include',
       });
-      // Log all response headers
-      if (typeof window !== "undefined") {
-        // Only log in browser
-        console.log(`[TRPC Response Headers] for ${url}:`);
-        for (const [key, value] of response.headers.entries()) {
-          console.log(`  ${key}: ${value}`);
-        }
-      }
+      
+     
       return response;
     },
   });
