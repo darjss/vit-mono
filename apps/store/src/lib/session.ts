@@ -135,34 +135,24 @@ export async function setSessionTokenCookie(
   token: string,
   expiresAt: Date
 ): Promise<void> {
-  console.log("🔴 Setting cookie with token:", token.substring(0, 10) + "...");
-  console.log("🔴 Cookie expires at:", expiresAt);
-  console.log("🔴 NODE_ENV:", process.env.NODE_ENV);
-  console.log("🔴 STORE_DOMAIN:", process.env.STORE_DOMAIN);
-  console.log("🔴 Token length:", token.length);
+  console.log("Setting cookie with token:", token.substring(0, 10) + "...");
+  console.log("Cookie expires at:", expiresAt);
+  console.log("NODE_ENV:", process.env.NODE_ENV);
+  console.log("STORE_DOMAIN:", process.env.STORE_DOMAIN);
 
-  const cookieOptions = {
+  context.cookies.set("store_session", token, {
     httpOnly: true,
-    sameSite: "lax" as const,
+    sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     expires: expiresAt,
     path: "/",
-    domain: undefined, // Remove domain for now to test
-  };
+    domain:
+      process.env.NODE_ENV === "production" && process.env.STORE_DOMAIN
+        ? process.env.STORE_DOMAIN
+        : undefined,
+  });
 
-  console.log("🔴 Cookie options:", cookieOptions);
-
-  try {
-    context.cookies.set("store_session", token, cookieOptions);
-    console.log("🔴 Cookie set successfully via context.cookies.set");
-    
-    // Verify cookie was set by reading it back
-    const readBack = context.cookies.get("store_session");
-    console.log("🔴 Cookie read back:", readBack?.value?.substring(0, 10) + "...");
-    
-  } catch (error) {
-    console.error("🔴 Error setting cookie:", error);
-  }
+  console.log("Cookie set successfully");
 }
 
 export async function deleteSessionTokenCookie(

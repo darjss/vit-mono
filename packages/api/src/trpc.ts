@@ -18,7 +18,7 @@ export interface TRPCContext {
   db: typeof db;
   session: Session | null;
   headers: Headers;
-  resHeaders?: Headers;
+  resHeaders: Headers;
 }
 
 /**
@@ -38,7 +38,7 @@ export const createTRPCContext = async ({
   resHeaders,
 }: {
   headers: Headers;
-  resHeaders?: Headers;
+  resHeaders: Headers;
 }): Promise<TRPCContext> => {
   const token = headers.get("cookie")?.split(";").find(c => c.trim().startsWith("store_session="))?.split("=")[1] ?? null;
   const session = await auth(token);

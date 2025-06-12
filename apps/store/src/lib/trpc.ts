@@ -46,6 +46,28 @@ const timingLink: TRPCLink<AppRouter> = () => {
   };
 };
 
+// Custom httpBatchLink that logs response headers
+const httpBatchLinkWithHeaderLogging = (opts: Parameters<typeof httpBatchLink>[0]) => {
+  return httpBatchLink({
+    ...opts,
+    fetch: async (url, options) => {
+      const response = await fetch(url, {
+        ...options,
+        credentials: 'include',
+      });
+      // Log all response headers
+      if (typeof window !== "undefined") {
+        // Only log in browser
+        console.log(`[TRPC Response Headers] for ${url}:`);
+        for (const [key, value] of response.headers.entries()) {
+          console.log(`  ${key}: ${value}`);
+        }
+      }
+      return response;
+    },
+  });
+};
+
 export const api = createTRPCClient<AppRouter>({
   links: [
     loggerLink({
@@ -55,15 +77,9 @@ export const api = createTRPCClient<AppRouter>({
         (opts.direction === "down" && opts.result instanceof Error),
     }),
     timingLink,
-    httpBatchLink({
+    httpBatchLinkWithHeaderLogging({
       url: getBackendUrl(),
       transformer: SuperJSON,
-      fetch(url, options) {
-        return fetch(url, {
-          ...options,
-          credentials: 'include',
-        });
-      },
       headers: () => {
         const headers = new Headers();
         headers.set("x-trpc-source", "nextjs-react");

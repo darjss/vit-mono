@@ -8,6 +8,7 @@ import { Button } from "@workspace/ui/components/button";
 import { useMutation } from "@tanstack/react-query";
 import { actions } from "astro:actions";
 import { trpc } from "@/lib/trpc";
+import { navigate } from "astro:transitions/client";
 
 interface AnimatedNumberProps {
   value: string | null;
@@ -86,9 +87,7 @@ const Otp = ({ phoneNumber }: { phoneNumber: string }) => {
     onSuccess: (data) => {
       if (data && data.success) {
         setIsVerifying(false);
-        setTimeout(() => {
-          window.location.href = "/profile";
-        }, 100);
+        navigate("/profile");
       } else {
         setIsShaking(true);
         setErrorMessage("Буруу код");

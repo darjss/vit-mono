@@ -36,52 +36,52 @@ const LoginComponent = () => {
     },
   });
 
-  // Listen for navigation events to manage loading state
-  useEffect(() => {
-    const handleBeforePreparation = () => {
-      // This fires when navigation starts preparing
-      console.log("🟡 Navigation preparation starting");
-    };
+  // // Listen for navigation events to manage loading state
+  // useEffect(() => {
+  //   const handleBeforePreparation = () => {
+  //     // This fires when navigation starts preparing
+  //     console.log("🟡 Navigation preparation starting");
+  //   };
 
-    const handleAfterPreparation = () => {
-      // This fires when new page is ready
-      console.log("🟡 Navigation preparation complete");
-    };
+  //   const handleAfterPreparation = () => {
+  //     // This fires when new page is ready
+  //     console.log("🟡 Navigation preparation complete");
+  //   };
 
-    const handlePageLoad = () => {
-      // This fires when navigation is complete
-      console.log("🟢 Navigation complete");
-      setIsNavigating(false);
-    };
+  //   const handlePageLoad = () => {
+  //     // This fires when navigation is complete
+  //     console.log("🟢 Navigation complete");
+  //     setIsNavigating(false);
+  //   };
 
-    // Add event listeners for navigation events
-    if (typeof window !== "undefined") {
-      document.addEventListener(
-        "astro:before-preparation",
-        handleBeforePreparation
-      );
-      document.addEventListener(
-        "astro:after-preparation",
-        handleAfterPreparation
-      );
-      document.addEventListener("astro:page-load", handlePageLoad);
-    }
+  //   // Add event listeners for navigation events
+  //   if (typeof window !== "undefined") {
+  //     document.addEventListener(
+  //       "astro:before-preparation",
+  //       handleBeforePreparation
+  //     );
+  //     document.addEventListener(
+  //       "astro:after-preparation",
+  //       handleAfterPreparation
+  //     );
+  //     document.addEventListener("astro:page-load", handlePageLoad);
+  //   }
 
-    // Cleanup listeners
-    return () => {
-      if (typeof window !== "undefined") {
-        document.removeEventListener(
-          "astro:before-preparation",
-          handleBeforePreparation
-        );
-        document.removeEventListener(
-          "astro:after-preparation",
-          handleAfterPreparation
-        );
-        document.removeEventListener("astro:page-load", handlePageLoad);
-      }
-    };
-  }, []);
+  //   // Cleanup listeners
+  //   return () => {
+  //     if (typeof window !== "undefined") {
+  //       document.removeEventListener(
+  //         "astro:before-preparation",
+  //         handleBeforePreparation
+  //       );
+  //       document.removeEventListener(
+  //         "astro:after-preparation",
+  //         handleAfterPreparation
+  //       );
+  //       document.removeEventListener("astro:page-load", handlePageLoad);
+  //     }
+  //   };
+  // }, []);
 
   const isLoading = mutation.isPending || isNavigating;
   const loadingText = isLoading

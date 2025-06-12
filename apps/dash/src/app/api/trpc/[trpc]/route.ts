@@ -25,7 +25,6 @@ const setCorsHeaders = (res: Response, origin?: string | null) => {
   res.headers.set("Access-Control-Expose-Headers", "Set-Cookie");
 };
 
-// OPTIONS requests are handled by middleware
 
 const handler = async (req: NextRequest) => {
   const resheaders = new Headers();

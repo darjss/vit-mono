@@ -15,14 +15,6 @@ export function generateSessionToken(): string {
   return encodeBase32LowerCaseNoPadding(bytes);
 }
 
-const cookieConfig = {
-  httpOnly: true,
-  sameSite: "lax",
-  secure: process.env.NODE_ENV === "production",
-  maxAge: 60*60*24*7,
-  path: "/",
-};
-
 export async function createSession(
   user: CustomerSelectType
 ): Promise<{ session: Session; token: string }> {
@@ -34,7 +26,7 @@ export async function createSession(
     expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
   };
   await redis.set(
-    `session:${session.id}`,
+    `store_session:${session.id}`,
     JSON.stringify({
       id: session.id,
       user: session.user,
@@ -44,7 +36,7 @@ export async function createSession(
       exat: Math.floor(session.expiresAt.getTime() / 1000),
     }
   );
-  await redis.sadd(`user_sessions:${user.phone}`, sessionId);
+  await redis.sadd(`store_user_sessions:${user.phone}`, sessionId);
 
   return { session, token };
 }
@@ -53,7 +45,7 @@ export async function validateSessionToken(
   token: string
 ): Promise<Session | null> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-  const session = (await redis.get(`session:${sessionId}`)) as Session;
+  const session = (await redis.get(`store_session:${sessionId}`)) as Session;
 
   if (
     session === null ||
@@ -69,7 +61,7 @@ export async function validateSessionToken(
   const expiresAt = new Date(session.expiresAt);
 
   if (Date.now() >= expiresAt.getTime()) {
-    await redis.del(`session:${sessionId}`);
+    await redis.del(`store_session:${sessionId}`);
     return null;
   }
 
@@ -78,7 +70,7 @@ export async function validateSessionToken(
       ...session,
       expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
     };
-    await redis.set(session.id, JSON.stringify(session));
+    await redis.set(`store_session:${session.id}`, JSON.stringify(session));
     return session;
   }
 
@@ -86,7 +78,7 @@ export async function validateSessionToken(
 }
 
 export async function invalidateSession(sessionId: string): Promise<void> {
-   await redis.del(`session:${sessionId}`);
+   await redis.del(`store_session:${sessionId}`);
 }
 
 export function setSessionTokenCookie(
@@ -100,7 +92,7 @@ export function setSessionTokenCookie(
   const cookieString = serialize("store_session", token, {
     httpOnly: true,
     // In production: "lax" for same-domain, in dev: "none" for cross-origin  
-    sameSite: isProduction ? "lax" : "none",
+    sameSite: isProduction ? "none" : "lax",
     // Secure required for sameSite: "none", but only if HTTPS is available
     secure: isProduction || process.env.HTTPS === "true",
     expires: expiresAt,
