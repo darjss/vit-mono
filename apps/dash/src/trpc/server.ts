@@ -18,6 +18,7 @@ const createContext = cache(async () => {
 
   return createTRPCContext({
     headers: heads,
+    resHeaders: heads,
   });
 });
 
