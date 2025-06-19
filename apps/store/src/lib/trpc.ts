@@ -13,7 +13,9 @@ const getBackendUrl = () => {
   if (import.meta.env.DEV) {
     return "http://localhost:3000/api/trpc";
   }
-  console.warn("API URL not configured via PUBLIC_API_URL environment variable.");
+  console.warn(
+    "API URL not configured via PUBLIC_API_URL environment variable."
+  );
   return "http://localhost:3000/api/trpc";
 };
 
@@ -47,16 +49,35 @@ const timingLink: TRPCLink<AppRouter> = () => {
 };
 
 // Custom httpBatchLink that logs response headers
-const httpBatchLinkWithHeaderLogging = (opts: Parameters<typeof httpBatchLink>[0]) => {
+const httpBatchLinkWithHeaderLogging = (
+  opts: Parameters<typeof httpBatchLink>[0]
+) => {
   return httpBatchLink({
     ...opts,
     fetch: async (url, options) => {
+      console.log("🟡 [TRPC Client] Making request to:", url);
+      console.log("🟡 [TRPC Client] Request options:", {
+        method: options?.method,
+        credentials: options?.credentials,
+        headers: options?.headers,
+      });
+      console.log("🟡 [TRPC Client] Document cookies:", document.cookie);
+
       const response = await fetch(url, {
         ...options,
-        credentials: 'include',
+        credentials: "include",
       });
-      
-     
+
+      console.log("🟡 [TRPC Client] Response status:", response.status);
+      console.log(
+        "🟡 [TRPC Client] Response headers:",
+        Object.fromEntries(response.headers.entries())
+      );
+      console.log(
+        "🟡 [TRPC Client] Set-Cookie header:",
+        response.headers.get("set-cookie")
+      );
+
       return response;
     },
   });

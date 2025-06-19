@@ -139,8 +139,9 @@ export const customer = createTRPCRouter({
       }
     }),
 
-  me: protectedProcedure
+  me: publicProcedure
     .query(async ({ ctx }) => {
       return ctx.session?.user;
     }),
+
 });

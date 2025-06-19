@@ -4,11 +4,11 @@
 - [x] add shadcn components
 - [x] add header/footer
 - [ ] add faq/about page
-- [ ] add home page
-- [ ] add product page
+- [x] add home page
+- [x] add product page
 - [ ] add products page with filter
-- [ ] add cart page
+- [x] add cart page
 - [ ] add checkout page
-- [ ] add auth
+- [x] add auth
 - [ ] add search
 - [ ] connect payments

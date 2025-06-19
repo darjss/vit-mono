@@ -8,11 +8,12 @@
  */
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
+import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { ZodError } from "zod";
 import { db } from "@vit/db";
 import { auth } from "./lib/session";
 import type { Session } from "./lib/types";
+import { parse } from "cookie";
 
 export interface TRPCContext {
   db: typeof db;
@@ -40,8 +41,19 @@ export const createTRPCContext = async ({
   headers: Headers;
   resHeaders: Headers;
 }): Promise<TRPCContext> => {
-  const token = headers.get("cookie")?.split(";").find(c => c.trim().startsWith("store_session="))?.split("=")[1] ?? null;
+  const cookieHeader = headers.get("cookie");
+  console.log("🔴 Raw cookie header:", cookieHeader);
+
+  let token: string | null = null;
+  if (cookieHeader) {
+    const cookies = parse(cookieHeader);
+    token = cookies.store_session || null;
+  }
+
+  console.log("🔴 Parsed token:", token);
   const session = await auth(token);
+  console.log("🔴 Session result:", session ? "Found session" : "No session");
+
   return {
     db,
     session,
@@ -125,7 +137,6 @@ const authMiddleware = t.middleware(async ({ next, ctx }) => {
   }
   return next();
 });
-
 
 /**
  * Public (unauthenticated) procedure

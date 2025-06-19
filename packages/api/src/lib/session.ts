@@ -4,10 +4,10 @@ import {
   encodeBase32LowerCaseNoPadding,
 } from "@oslojs/encoding";
 
-import { type Session } from "./types"
+import { type Session } from "./types";
 import { redis } from "@vit/db/redis";
 import type { CustomerSelectType } from "@vit/db/schema";
-import {serialize, parse} from "cookie"
+import { serialize, parse } from "cookie";
 
 export function generateSessionToken(): string {
   const bytes = new Uint8Array(20);
@@ -18,7 +18,7 @@ export function generateSessionToken(): string {
 export async function createSession(
   user: CustomerSelectType
 ): Promise<{ session: Session; token: string }> {
-    const token = generateSessionToken();
+  const token = generateSessionToken();
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
   const session: Session = {
     id: sessionId,
@@ -45,18 +45,16 @@ export async function validateSessionToken(
   token: string
 ): Promise<Session | null> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-  const raw = (await redis.get(`store_session:${sessionId}`)) as string;
-  if (raw === null || raw === undefined) return null;
-  const stored = JSON.parse(raw) as {
+  const result = (await redis.get(`store_session:${sessionId}`)) as {
     id: string;
     user: CustomerSelectType;
     expires_at: number;
   };
 
   const session: Session = {
-    id: stored.id,
-    user: stored.user,
-    expiresAt: new Date(stored.expires_at * 1000),
+    id: result.id,
+    user: result.user,
+    expiresAt: new Date(result.expires_at * 1000),
   };
 
   if (
@@ -98,7 +96,7 @@ export async function validateSessionToken(
 }
 
 export async function invalidateSession(sessionId: string): Promise<void> {
-   await redis.del(`store_session:${sessionId}`);
+  await redis.del(`store_session:${sessionId}`);
 }
 
 export function setSessionTokenCookie(
@@ -107,15 +105,13 @@ export function setSessionTokenCookie(
   expiresAt: Date
 ): void {
   const isProduction = process.env.NODE_ENV === "production";
-  const isDevelopment = process.env.NODE_ENV === "development";
-  
+
   const cookieString = serialize("store_session", token, {
     httpOnly: true,
-    sameSite: isProduction ? "none" : "lax",
-    secure: isProduction || process.env.HTTPS === "true",
+    sameSite: "lax",
+    secure: isProduction,
     expires: expiresAt,
     path: "/",
-    // Set domain only in production for subdomain sharing (store.com -> admin.store.com)
     domain: isProduction ? process.env.STORE_DOMAIN : undefined,
   });
   resHeaders.set("Set-Cookie", cookieString);
@@ -123,11 +119,11 @@ export function setSessionTokenCookie(
 
 export function deleteSessionTokenCookie(resHeaders: Headers): void {
   const isProduction = process.env.NODE_ENV === "production";
-  
+
   const cookieString = serialize("store_session", "", {
     httpOnly: true,
-    sameSite: isProduction ? "lax" : "none",
-    secure: isProduction || process.env.HTTPS === "true",
+    sameSite: "lax",
+    secure: isProduction,
     maxAge: 0,
     path: "/",
     domain: isProduction ? process.env.STORE_DOMAIN : undefined,
@@ -136,8 +132,6 @@ export function deleteSessionTokenCookie(resHeaders: Headers): void {
 }
 
 export const auth = async (token: string | null): Promise<Session | null> => {
-  
-
   console.log("checking auth with session", token);
 
   if (token === null) {

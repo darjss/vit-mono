@@ -1,9 +1,9 @@
 # todo Vite Mono Store
 
 [x] -fix nextjs deployment issues
-[ ] -change store auth to be in trpc api
+[x] -change store auth to be in trpc api
 [ ] -migrate monorepo to t3 turbo
-[ ] -add auth middleware in trpc-1 hour
+[x] -add auth middleware in trpc
 [ ] -checkout flow create order/confirm payment
 [ ] -telegram bot confirm payment
 [ ] -add orders page/user profile page
