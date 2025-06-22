@@ -112,7 +112,7 @@ export function setSessionTokenCookie(
     secure: isProduction,
     expires: expiresAt,
     path: "/",
-    domain: isProduction ? process.env.STORE_DOMAIN : "localhost",
+    domain: isProduction ? process.env.STORE_DOMAIN : undefined,
   });
   resHeaders.set("Set-Cookie", cookieString);
 }
@@ -126,7 +126,7 @@ export function deleteSessionTokenCookie(resHeaders: Headers): void {
     secure: isProduction,
     maxAge: 0,
     path: "/",
-    domain: isProduction ? process.env.STORE_DOMAIN : "localhost",
+    domain: isProduction ? process.env.STORE_DOMAIN : undefined,
   });
   resHeaders.set("Set-Cookie", cookieString);
 }

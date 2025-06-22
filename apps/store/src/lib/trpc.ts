@@ -11,9 +11,12 @@ const getBackendUrl = () => {
   if (apiUrlFromEnv) return apiUrlFromEnv;
 
   if (import.meta.env.DEV) {
-    return "http://localhost:3000/api/trpc";
+    // Use the proxied path in development to avoid cross-origin issues
+    return "/api/trpc";
   }
-  console.warn("API URL not configured via PUBLIC_API_URL environment variable.");
+  console.warn(
+    "API URL not configured via PUBLIC_API_URL environment variable."
+  );
   return "http://localhost:3000/api/trpc";
 };
 
@@ -47,16 +50,17 @@ const timingLink: TRPCLink<AppRouter> = () => {
 };
 
 // Custom httpBatchLink that logs response headers
-const httpBatchLinkWithHeaderLogging = (opts: Parameters<typeof httpBatchLink>[0]) => {
+const httpBatchLinkWithHeaderLogging = (
+  opts: Parameters<typeof httpBatchLink>[0]
+) => {
   return httpBatchLink({
     ...opts,
     fetch: async (url, options) => {
       const response = await fetch(url, {
         ...options,
-        credentials: 'include',
+        credentials: "include",
       });
-      
-     
+
       return response;
     },
   });

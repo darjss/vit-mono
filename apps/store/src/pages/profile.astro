@@ -4,6 +4,14 @@ import { auth } from "../lib/auth";
 
 
 
+   const cookies=Astro.cookies;
+   Astro.cookies.set('test', 'test',{
+    httpOnly: true,
+    secure: true,
+    sameSite: 'strict',
+    maxAge: 60 * 60 * 24 * 30, // 30 days
+   })
+   console.log("🔴 Cookies:", cookies);
 const user = await auth();
 
 console.log("🔴 Session result:", user);

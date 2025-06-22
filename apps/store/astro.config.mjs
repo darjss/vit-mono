@@ -18,6 +18,20 @@ export default defineConfig({
           : {}),
       },
     },
+    // Add proxy configuration for development
+    server: {
+      proxy: {
+        // Proxy API calls to the backend
+        "/api": {
+          target: "http://localhost:3000",
+          changeOrigin: true,
+          secure: false,
+          cookieDomainRewrite: {
+            "*": "",
+          },
+        },
+      },
+    },
     ssr: {
       external: [
         "node:path",

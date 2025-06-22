@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
 import { appRouter, createTRPCContext } from "@vit/api";
+import { cookies } from "next/headers";
 
 /**
  * Configure CORS headers for specific allowed origins
@@ -17,23 +18,66 @@ const setCorsHeaders = (res: Response, origin?: string | null) => {
   if (origin && allowedOrigins.includes(origin)) {
     res.headers.set("Access-Control-Allow-Origin", origin);
     res.headers.set("Access-Control-Allow-Credentials", "true");
+  } else {
+    // For debugging: log when origin is not in allowed list
+    console.log(
+      "🔴 Origin not in allowed list:",
+      origin,
+      "Allowed:",
+      allowedOrigins,
+    );
   }
 
   res.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
   res.headers.set(
     "Access-Control-Allow-Headers",
-    "Content-Type, x-trpc-source, Authorization, Cookie",
+    "Content-Type, x-trpc-source, Authorization, Cookie, x-requested-with",
   );
   res.headers.set("Access-Control-Expose-Headers", "Set-Cookie");
+  res.headers.set("Access-Control-Max-Age", "86400"); // Cache preflight for 24 hours
 };
 
 const handler = async (req: NextRequest) => {
   const resheaders = new Headers();
   const origin = req.headers.get("origin");
 
-  // Debug cookie information
-  console.log("🔴 NextJS req.cookies:", req.cookies.getAll());
-  console.log("🔴 Raw Cookie header:", req.headers.get("cookie"));
+  // Handle OPTIONS preflight requests
+  if (req.method === "OPTIONS") {
+    const response = new Response(null, { status: 200 });
+    setCorsHeaders(response, origin);
+    return response;
+  }
+
+  const cookieStore = await cookies();
+  // Comprehensive cookie debugging
+  console.log("🔴 === COOKIE DEBUG START ===");
+  console.log("🔴 Request URL:", req.url);
+  console.log("🔴 Request method:", req.method);
+  console.log("🔴 Request origin:", origin);
+  console.log("🔴 Cookie store:", cookieStore);
+
+  // Check all possible ways to access cookies
+  console.log("🔴 NextJS req.cookies.getAll():", req.cookies.getAll());
+  console.log(
+    "🔴 NextJS req.cookies.get('store_session'):",
+    req.cookies.get("store_session"),
+  );
+  console.log(
+    "🔴 Raw Cookie header from req.headers:",
+    req.headers.get("cookie"),
+  );
+
+  // Check all headers
+  console.log("🔴 All request headers:");
+  for (const [key, value] of req.headers.entries()) {
+    if (
+      key.toLowerCase().includes("cookie") ||
+      key.toLowerCase().includes("authorization")
+    ) {
+      console.log(`🔴   ${key}: ${value}`);
+    }
+  }
+  console.log("🔴 === COOKIE DEBUG END ===");
 
   const response = await fetchRequestHandler({
     endpoint: "/api/trpc",
@@ -57,4 +101,4 @@ const handler = async (req: NextRequest) => {
   return response;
 };
 
-export { handler as GET, handler as POST };
+export { handler as GET, handler as POST, handler as OPTIONS };
