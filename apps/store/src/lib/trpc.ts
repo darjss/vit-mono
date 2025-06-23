@@ -78,11 +78,6 @@ export const api = createTRPCClient<AppRouter>({
     httpBatchLinkWithHeaderLogging({
       url: getBackendUrl(),
       transformer: SuperJSON,
-      headers: () => {
-        const headers = new Headers();
-        headers.set("x-trpc-source", "nextjs-react");
-        return headers;
-      },
     }),
   ],
 });

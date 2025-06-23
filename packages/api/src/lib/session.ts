@@ -108,8 +108,8 @@ export function setSessionTokenCookie(
 
   const cookieString = serialize("store_session", token, {
     httpOnly: true,
-    sameSite: "lax",
-    secure: isProduction,
+    sameSite: "none", // Changed from "lax" to "none" for cross-origin support
+    secure: true, // Must be true when sameSite is "none"
     expires: expiresAt,
     path: "/",
     domain: isProduction ? process.env.STORE_DOMAIN : undefined,
@@ -122,8 +122,8 @@ export function deleteSessionTokenCookie(resHeaders: Headers): void {
 
   const cookieString = serialize("store_session", "", {
     httpOnly: true,
-    sameSite: "lax",
-    secure: isProduction,
+    sameSite: "none", // Changed from "lax" to "none" for cross-origin support
+    secure: true, // Must be true when sameSite is "none"
     maxAge: 0,
     path: "/",
     domain: isProduction ? process.env.STORE_DOMAIN : undefined,

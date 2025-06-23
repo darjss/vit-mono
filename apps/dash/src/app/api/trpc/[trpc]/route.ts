@@ -49,35 +49,12 @@ const handler = async (req: NextRequest) => {
   }
 
   const cookieStore = await cookies();
-  // Comprehensive cookie debugging
-  console.log("🔴 === COOKIE DEBUG START ===");
-  console.log("🔴 Request URL:", req.url);
-  console.log("🔴 Request method:", req.method);
-  console.log("🔴 Request origin:", origin);
-  console.log("🔴 Cookie store:", cookieStore);
-
-  // Check all possible ways to access cookies
-  console.log("🔴 NextJS req.cookies.getAll():", req.cookies.getAll());
+  // Cookie debugging - now that SameSite is fixed, these should show cookies
+  console.log("🔴 Raw Cookie header:", req.headers.get("cookie"));
   console.log(
-    "🔴 NextJS req.cookies.get('store_session'):",
-    req.cookies.get("store_session"),
+    "🔴 Store session cookie:",
+    req.cookies.get("store_session")?.value,
   );
-  console.log(
-    "🔴 Raw Cookie header from req.headers:",
-    req.headers.get("cookie"),
-  );
-
-  // Check all headers
-  console.log("🔴 All request headers:");
-  for (const [key, value] of req.headers.entries()) {
-    if (
-      key.toLowerCase().includes("cookie") ||
-      key.toLowerCase().includes("authorization")
-    ) {
-      console.log(`🔴   ${key}: ${value}`);
-    }
-  }
-  console.log("🔴 === COOKIE DEBUG END ===");
 
   const response = await fetchRequestHandler({
     endpoint: "/api/trpc",

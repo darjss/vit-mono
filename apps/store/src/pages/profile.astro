@@ -5,13 +5,14 @@ import { auth } from "../lib/auth";
 
 
    const cookies=Astro.cookies;
-   Astro.cookies.set('test', 'test',{
+   cookies.set('test', 'test123',{
     httpOnly: true,
     secure: true,
-    sameSite: 'strict',
+    sameSite: 'none', // Changed from 'strict' to 'none' for cross-origin support
     maxAge: 60 * 60 * 24 * 30, // 30 days
    })
    console.log("🔴 Cookies:", cookies);
+   console.log("🔴 Cookies:", cookies.get('store_session'));
 const user = await auth();
 
 console.log("🔴 Session result:", user);
@@ -22,5 +23,5 @@ if (!user) {
 ---
 <div>
     <button type="submit">Logout</button>
-  <div>Profile page {user.phone}</div>
+  <div>Profile page {user?.phone}</div>
 </div>
