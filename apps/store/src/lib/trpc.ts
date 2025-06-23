@@ -11,6 +11,7 @@ const getBackendUrl = () => {
   if (apiUrlFromEnv) return apiUrlFromEnv;
 
   if (import.meta.env.DEV) {
+    console.log("🔴 DEV getBackendUrl");
     // Use the proxied path in development to avoid cross-origin issues
     return "/api/trpc";
   }
